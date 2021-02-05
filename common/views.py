@@ -11,12 +11,19 @@ from staff.models import Staff
 # from common.models import AppUser
 from .methods import id_generator
 
+#announcements
+from common.models import Announcement
 # Create your views here.
 
 
 
 def login_view(request, *args, **kwargs):
     next_url = request.POST.get('next')
+
+    #announcement
+    announcement_data=Announcement.objects.all()
+    print(announcement_data)
+
     if request.method == 'POST':
         form = LoginForm(request.POST or None)
         if form.is_valid():
@@ -101,8 +108,10 @@ def login_view(request, *args, **kwargs):
             return render(request, 'common/home.html', {'form': form})
     else:
         form = LoginForm()
-        return render(request, 'common/home.html', {'form': form})
+        return render(request, 'common/home.html', {'form': form,'announcement_data':announcement_data})
+    #return render(request,'common/home.html',{'announcement_data':announcement_data})
 
+    
 def admin_login(request,*args,**kwargs):
     return render(request,"admins/home.html")
 

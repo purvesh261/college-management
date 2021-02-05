@@ -20,7 +20,7 @@
         <h3>Notifications</h3>
     </div>
     <table id="staff_notification_list">
-       
+        
         <tr>
             <td>Notification  1</td>
         </tr>
@@ -38,18 +38,12 @@
         <h3>Announcements <input type="button" value="Manage Announcements" onclick="location.href='../announcement/'" /></h3>
     </div>
     <table id="staff_announcement_list">
-
+        {% for i in announcement_data %}
         <tr>
-            
-            <td>Announcement 1</td>
-           
+            <td><b>{{i.title}}:</b> {{i.description}},<i>&nbsp&nbsp&nbsp{{i.date}}</i></td>
         </tr>
-        <tr>
-            <td>Announcement 2</td>
-        </tr>
-        <tr>
-            <td>Announcement 3</td>
-        </tr>
+        
+        {% endfor %}
     </table>
 </div>
 {% endblock %}

@@ -9,7 +9,7 @@ class Announcement(models.Model):
                             verbose_name="Title")
     description=models.CharField(max_length=100,
                             default='',
-                            verbose_name="Decription")
+                            verbose_name="Description")
     account_id = models.CharField(max_length=20,
                             verbose_name="Account Id", default='')
     date = models.DateTimeField(default=datetime.now, blank=True)

@@ -51,15 +51,11 @@
                         </table>
                     </div>
                     <table id="announcements_table">
+                        {% for i in announcement_data %}
                         <tr>
-                            <td>Announcement 1</td>
+                        <td><b>{{i.title}}:</b> {{i.description}},<i>&nbsp&nbsp&nbsp{{i.date}}</i></td>
                         </tr>
-                        <tr>
-                            <td>Announcement 2</td>
-                        </tr>
-                        <tr>
-                            <td>Announcement 3</td>
-                        </tr>
+                        {% endfor %}
                     </table>
                 </div>
             </div>

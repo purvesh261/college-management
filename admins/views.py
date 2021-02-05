@@ -113,14 +113,14 @@ def admins_announcement_edit(request,account_id):
 # Create your views here.
 #@login_required(login_url=common.views.login_view)
 def admins_home_view(request, *args, **kwargs):
-   
     time = datetime.now()
+    announcement_data=Announcement.objects.all()
     currentTime = time.strftime("%d/%m/%Y %I:%M %p")
     context = {
         'timestamp': currentTime,
         
     }
-    return render(request, "admins/home.html",context)
+    return render(request, "admins/home.html",{'context':context,'announcement_data':announcement_data})
 
 
 #@login_required(login_url=common.views.login_view)

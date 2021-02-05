@@ -13,12 +13,16 @@ from django.contrib import messages
 
 def staff_home_view(request, *args, **kwargs):
     time = datetime.now()
+    announcement_data=Announcement.objects.all()
+    print(announcement_data)
+    #for i in announcement_data:
+        #print(i.title)
     currentTime = time.strftime("%d/%m/%Y %I:%M %p")
     context = {
         'timestamp': currentTime,
         
     }
-    return render(request, "staff/home.html",context)
+    return render(request, "staff/home.html",{'context':context,'announcement_data':announcement_data})
 
 #staff announcement
 

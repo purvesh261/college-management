@@ -60,18 +60,12 @@
 >>>>>>> c5642c334e1c7ec194423fbd481c691d2311e9a5
     </div>
     <table id="table_list">
-
+        {% for i in announcement_data %}
         <tr>
-            
-            <td>Announcement 1</td>
-           
+            <td><b>{{i.title}}:</b> {{i.description}},<i>&nbsp&nbsp&nbsp{{i.date}}</i></td>
         </tr>
-        <tr>
-            <td>Announcement 2</td>
-        </tr>
-        <tr>
-            <td>Announcement 3</td>
-        </tr>
+        
+        {% endfor %}
     </table>
 </div>
 {% endblock %}

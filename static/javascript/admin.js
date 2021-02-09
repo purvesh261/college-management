@@ -14,7 +14,6 @@ input=document.getElementById("searchtxt");
 filter=input.value.toUpperCase();
 table=document.getElementById("student_list1");
 tr=table.getElementsByTagName("tr");
-
 for(j=0;j<tr.length;j++)
 {
 td=tr[j].getElementsByTagName("td")[1];

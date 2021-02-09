@@ -9,16 +9,17 @@
     <body id="base" onload="changeActive(this.id)">
     {% endblock %}
         <div class="header">
-            <a href="{{ '../home' }}"><img src="{% static 'ganpat_logo.png' %}" alt="My image" class="top-logo"></a>
+            <a href="{{ '/college-admin/home' }}"><img src="{% static 'ganpat_logo.png' %}" alt="My image" class="top-logo"></a>
+            {% block navbar %}
             <div class="navbar">
                 {% include './navbar.html' %}
             </div>
+            {% endblock %}
         </div>
 
         <div class='main'>
             <div class="content">
                 {% block content %}
-
                     content here
                 {% endblock %}
             </div>

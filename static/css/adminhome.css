@@ -1,3 +1,14 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
 h1 {
     color:red;
 }
@@ -52,6 +63,7 @@ body{
 .navbar a:hover {
   background: #ddd;
   color: black;
+  transition: 0.3s;
 }
 
 .top-logo {
@@ -68,7 +80,6 @@ body{
 }
 
 #welcome-msg {
-    
     width: auto;
     margin: 2px 1% 5px 2%;
 }
@@ -118,6 +129,115 @@ input {
     border-radius: 4px;
     box-sizing: border-box;
 }
+
+/* Admin Courses */
+#courses {
+    padding-right: 1%;
+}
+
+#title {
+    width: auto;
+    /* margin: 2px 1% 5px 2%; */
+    background-color: white;
+    /* margin-top: 3%; */
+    margin: 1% 1% 0px 1%;
+    width:98%;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 3px;
+    padding: 3px 3px 3px 10px;
+    font-size: 30px;
+    color: blue;
+    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.30);
+}
+
+#courses-content {
+    background-color: white;
+    margin: 10px 1% 2% 1%;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 3px;
+    height: min-content;
+    float: left;
+    width: 98.5%;
+    padding: 3px 0px 3px 3px;
+    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.30);
+}
+
+#content-title {
+    padding: 3px 15px 3px 10px;
+    font-size: 30px;
+    display:flex;
+    justify-content: space-between;
+    color: blue;
+}
+
+#white-button{
+    border-radius: 4px;
+    background-color: white;
+    border: none;
+    color: rgb(19, 15, 235);
+    text-align: center;
+    font-size: 16px;
+    padding: 10px;
+    width: fit-content;
+    min-width: 7%;
+    height: auto;
+    border: 1px solid rgb(19, 15, 235);
+    cursor: pointer;
+    margin: 5px;
+}
+
+
+#white-button:hover {
+    background-color: rgb(19, 15, 235);
+    color: white;
+    transition: 0.3s;
+}
+
+#content-title #add-branch:active{
+    background-color: white;
+}
+#courses-content a {
+    text-decoration: none;
+    color: black;
+    height: max-content;
+}
+
+.course-cards {
+    margin: auto;
+    width: 100%;
+}
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 23%;
+    float: left;
+    height: 50%;
+    text-overflow: ellipsis;
+    background-color: white;
+    padding-bottom: 5px;
+    margin: 5px 5px 10px 10px;
+  }
+  
+  .card h4 {
+      text-align: center;
+  }
+
+  .card p {
+    margin: auto;
+    margin-left: 5%;
+    text-align: left;
+    color: rgb(95, 95, 95);
+  }
+
+  .card desc {
+    padding-right: 10px;
+  }
+
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+
+
 
 /*for student
 .searchstudent input[type=text]{
@@ -843,3 +963,168 @@ margin: 5px;
     margin: 5px;
     }
 
+
+
+/* CSS for Add Branch Form */
+.form {
+    text-align: center;
+    background-color: white;
+    margin: auto;
+    width: max-content;
+    margin-top: 3%;
+    border: 1px rgb(255, 255, 255);
+    padding-right: 10%;
+    padding-left: 10%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    height: auto;
+    box-shadow: 0px 0px 5px 0px rgba(58, 57, 57, 0.3);
+    border-radius: 3px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form input[class='text']{
+    width: 80%;
+    padding: 6px 10px;
+    margin: 8px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -ms-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    -webkit-box-sizing:content-box; 
+    box-sizing:content-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form input:hover {
+    background: #ddd;
+    color: black;
+}
+
+.form input:focus {
+    background-color: rgb(241, 241, 241);
+}
+
+.label{
+    text-align: left;
+    padding-top: 4%;
+}
+
+.field {
+    float:right;
+    width: 100%;
+    box-sizing:content-box;
+}
+
+.field .errorlist{
+    list-style: symbols('*');
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: left;
+    color: red;
+    text-decoration:none;
+}
+.form input[type=submit],.form input[type=button]{
+    border-radius: 4px;
+    background-color: rgb(19, 15, 235);
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    padding: 15px;
+    width: 80%;
+    height: auto;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.form input[type=button]{
+    margin-top: 5px;
+}
+
+.form textarea {
+    resize: none;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+.form input[type=submit]:hover ,.form input[type=button]:hover{
+    background-color:  rgb(12, 10, 102);
+}
+
+.form input[type=submit]:active, .form input[type=button]:active{
+    background-color: rgb(19, 15, 235);
+}
+
+.form .choice1{
+    font-size: 16px;
+    width: 80%;
+    padding: 6px 10px;
+    margin: 8px 0;
+    -ms-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    -webkit-box-sizing:content-box; 
+    box-sizing:content-box;
+}
+
+.courses-info {
+    /* margin: 2px 1% 5px 2%; */
+    background-color: white;
+    /* margin-top: 3%; */
+    margin: 1% 1% 1% 1%;
+    width:97%;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 3px;
+    padding: 3px 3px 3px 10px;
+    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.30);
+}
+
+.courses-title {
+    font-size: 30px;
+    color: blue;
+    display: flex;
+    justify-content: space-between;
+}
+
+.courses-description {
+    margin: 1% 0% 1% 1%;
+    color: rgb(95, 95, 95);
+    width: 80%;
+}
+
+#person-details:not(:first-child){
+    margin-top: 5px;
+}
+
+.person-description {
+    color: rgb(95, 95, 95);
+}
+
+#courses-table {
+    padding: 10px;
+} 
+
+#courses-info table {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-spacing:0px;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#courses-table th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+#courses-table tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+#courses-table tr {
+    background-color: rgb(218, 218, 218);
+}
+
+#courses-table th {
+    background-color: rgb(19, 15, 235);
+    color: white;
+}

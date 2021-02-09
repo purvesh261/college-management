@@ -84,7 +84,6 @@ def login_view(request, *args, **kwargs):
                     return redirect("../students/home")
                 
             else:
-                print("bro..")
                 return render(request, 'common/home.html', {'form': form})
             # try:
             #     if str(passwd_input) != str(correct_password):

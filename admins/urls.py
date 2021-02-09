@@ -21,6 +21,9 @@ urlpatterns = [
     path('edit-announcement/<int:account_id>',admins_announcement_edit,name='announcemenedit'),
     #path('update-announcement/<int:account_id>/',edit_announcement,name='announcementupdate'),
 
+    path('delete-announcement/<int:account_id>',staff_delete_view,name='staffannouncementdelete'),
+
+
 
 
     path('student-account-pending-details/',admins_student_pending_detail_view,name='studentsdetails'),

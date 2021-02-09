@@ -13,7 +13,7 @@ from django.contrib import messages
 
 def staff_home_view(request, *args, **kwargs):
     time = datetime.now()
-    announcement_data=Announcement.objects.all()
+    announcement_data=reversed(Announcement.objects.all())
     print(announcement_data)
     #for i in announcement_data:
         #print(i.title)
@@ -25,7 +25,6 @@ def staff_home_view(request, *args, **kwargs):
     return render(request, "staff/home.html",{'context':context,'announcement_data':announcement_data})
 
 #staff announcement
-
 def staff_announcement(request,*args,**kwargs):
     announcementform1 = announcementform(request.POST or None)
     if request.method == 'POST':
@@ -109,6 +108,20 @@ def staff_announcement_edit(request,account_id):
 #     print(form.errors)
 
 # staff announcement end
+
+#delete announcement 
+def staff_delete_view(request, account_id):
+    obj=Announcement.objects.get(account_id=account_id)
+    print(obj)
+    print(request.method)
+    if request.method=="GET":
+        print('get')
+        obj.delete()
+        return redirect("../all-announcement")
+    else:
+        return HttpResponse(messages)
+    return render(request,'common/allannouncement.html',{'announcementform1':obj}) 
+    
 
 
 def staff_courses_view(request, *args, **kwargs):

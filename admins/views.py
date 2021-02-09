@@ -105,7 +105,18 @@ def admins_announcement_edit(request,account_id):
 #         else:
 #             return HttpResponse(messages)
 
-    
+#announcement delete
+def staff_delete_view(request, account_id):
+    obj=Announcement.objects.get(account_id=account_id)
+    print(obj)
+    print(request.method)
+    if request.method=="GET":
+        print('get')
+        obj.delete()
+        return redirect("../all-announcement")
+    else:
+        return HttpResponse(messages)
+    return render(request,'common/allannouncement.html',{'announcementform1':obj})     
 
 
 
@@ -114,7 +125,7 @@ def admins_announcement_edit(request,account_id):
 #@login_required(login_url=common.views.login_view)
 def admins_home_view(request, *args, **kwargs):
     time = datetime.now()
-    announcement_data=Announcement.objects.all()
+    announcement_data=reversed(Announcement.objects.all())
     currentTime = time.strftime("%d/%m/%Y %I:%M %p")
     context = {
         'timestamp': currentTime,
@@ -190,7 +201,7 @@ def admins_student_approved_detail_view(request,*args,**kwargs):
     return render(request,"admins/studentapproved.html",{'student':obj})
 
 
-#for edit page will be called to edit approved accounts
+#approve page will be called to to approve accounts
 def admins_student_approve(request,account_id):
     print(account_id)
     displaydata=Student.objects.get(account_id=account_id)
@@ -229,6 +240,7 @@ def admins_student_approve(request,account_id):
 
 #edit page will be called for unapproved details of students
 
+#edit student details
 #@login_required(login_url=common.views.login_view)
 def admins_student_detail_view(request,*args,**kwargs):
     return render(request,"admins/students.html")
@@ -274,7 +286,6 @@ def admins_student_edit(request,account_id):
 
 
 #for extraction of staff
-
 def admins_staff_pending_detail_view(request,*args,**kwargs):
     obj=Staff.objects.filter(isPending=True)
     print(obj)
@@ -284,7 +295,7 @@ def admins_staff_approved_detail_view(request,*args,**kwargs):
     obj=Staff.objects.filter(isPending=False)
     return render(request,"admins/staffapproved.html",{'staff':obj})
 
-#for edit add
+#to approve staff accounts
 def admins_staff_approve(request,account_id):
     print(account_id)
     displaydata=Staff.objects.get(account_id=account_id)
@@ -319,6 +330,7 @@ def admins_staff_approve(request,account_id):
 #             return HttpResponse(messages)
 #     print(form.errors)
 
+#edit staff details
 def admins_staff_edit(request,account_id):
     print(account_id)
     displaydata=Staff.objects.get(account_id=account_id)

@@ -8,16 +8,16 @@
     <h2>All Announcement</h2>
     <a href="../home"><button>Back</button></a>
     <hr>
-<form  method="POST" > {% csrf_token %}
     
 </div>
-</form>
 <div class="announcement_section">
+<form  method="POST" > {% csrf_token %}
     <table id="announcement_list2" border="1">
         <tr>
             <th>Title</th>
             <th>Description</th>
-            <th>Action</th>
+            <th colspan="2">Action</th>
+
         </tr>
 
     {% for i in announcementform1 %}
@@ -25,10 +25,17 @@
             <td>{{i.title}}</td>
             <td>{{i.description}}</td>
             <td> <a href="../edit-announcement/{{i.account_id}}">Edit</a></td>
+            <td><a href="../delete-announcement/{{i.account_id}}" onclick="announcement_delete()">Delete</a></td>
         </tr>
         {% endfor %}
     </table>
+<script>
+    function announcement_delete() {
+        alert("Announcement Deleted");
+        }
+</script>
 </div>
+</form>
 </br>
 <div class="announcement_footer">
     <hr>

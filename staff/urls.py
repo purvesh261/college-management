@@ -20,4 +20,6 @@ urlpatterns = [
     path('edit-announcement/<int:account_id>',staff_announcement_edit,name='announcemenedit'),
     #path('update-announcement/<int:account_id>/',edit_announcement,name='announcementupdate'),
 
+    path('delete-announcement/<int:account_id>',staff_delete_view,name='staffannouncementdelete'),
+
 ]

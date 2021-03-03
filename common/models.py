@@ -35,7 +35,8 @@ class Course(models.Model):
     
     description = models.TextField(max_length=300,
                             verbose_name='Description',
-                            default = '')
+                            default = '',
+                            blank=True)
 
     semester = models.CharField(max_length=2,
                             verbose_name='Semester')

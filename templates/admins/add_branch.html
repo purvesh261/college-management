@@ -1,0 +1,45 @@
+{% extends './base.html' %}
+{% load static %}
+
+<!-- {% block bodyclass %}
+    <body id="courses" onload="changeActive(this.id)">
+{% endblock %} -->
+
+<!-- {% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/registration_pages.css' %}"/>
+{% endblock %} -->
+
+{% block title %}Add Department{% endblock%}
+
+{% block content %}
+<div id="add-branch-form">
+    <div class="form">
+        <h2>Create Department</h2>
+    
+
+    <form method='POST'> {% csrf_token %}
+        <table>
+            {% for field in form %}
+            <tr>
+                <td class="label" style="vertical-align: top;">
+                    {{ field.label }}
+                </td>
+                <td class="field"  style="vertical-align: top;">
+                    {{ field }}
+                    <p> {{ field.errors }} </p>
+                </td>
+            </tr>
+            {% endfor %}
+    
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Create"/>
+                </td>
+            </tr>
+        </table>
+
+    </form>
+</div>
+</div>
+{% endblock %}

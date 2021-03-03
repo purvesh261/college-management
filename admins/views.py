@@ -8,13 +8,13 @@ from django.contrib.auth.decorators import login_required
 import common
 from staff.models import Staff
 from  . import forms
-from .forms import editforms, AddBranchForm, EditBranchForm, AddCourseForm
+from .forms import editforms, AddBranchForm, EditBranchForm, AddCourseForm, AddFacultyForm
 from .models import Branch
 from datetime import datetime
 from common.forms import LoginForm
 from common.methods import id_generator, course_id_generator
 from common.announcementform import announcementform
-from common.models import Announcement, Course
+from common.models import Announcement, Course, CourseFaculty
 from admins.forms2 import editforms2
 
 '''
@@ -432,7 +432,6 @@ def edit_branch_view(request, branch_code, *args, **kwargs):
         'description':selectedBranch.description
     }
     if request.method == "POST":
-        print("whyyyy")
         form = EditBranchForm(request.POST, instance=selectedBranch)
         if form.is_valid():
             form.save()
@@ -488,7 +487,7 @@ def add_course_view(request, *args, **kwargs):
                 active=newActive
             )
             newCourse.save()
-            path = "college-admin/courses/" + newBranchCode + "/"
+            path = "college-admin/courses/" + newBranch + "/"
             return redirect('..')
     else:
         form = AddCourseForm(request.POST or None)
@@ -499,6 +498,54 @@ def add_course_view(request, *args, **kwargs):
     }
 
     return render(request,'admins/add_course.html',context)
+
+def manage_course_view(request,course_code, *args, **kwargs):
+    selectedCourse = get_object_or_404(Course,course_id=course_code)
+    courseBranch = Branch.objects.get(code=selectedCourse.branch)
+    CourseFacultySet = CourseFaculty.objects.filter(course_id=selectedCourse)
+
+    assignedFaculties = []
+    for faculty in CourseFacultySet:
+        currentFaculty = Staff.objects.get(employee_id=faculty.faculty_id)
+        assignedFaculties.append([faculty.faculty_id, currentFaculty.firstName + " " + currentFaculty.lastName])
+    
+    facultyList = Staff.objects.filter(branch=courseBranch.branch_name, isPending=False).order_by('firstName')
+
+    for faculty in facultyList:
+        add = True
+        for assfac in assignedFaculties:
+            print(assfac[0], faculty.employee_id)
+            if assfac[0] == faculty.employee_id:
+                add = False
+        if add:
+            facultyChoiceList = ((faculty.employee_id,faculty.firstName + " " + faculty.lastName))
+    if request.method == "POST":
+        form = AddFacultyForm(facultyList,assignedFaculties, request.POST or None)
+        if form.is_valid():
+            details = form.cleaned_data
+            faculty = details['faculty']
+            course = selectedCourse
+            NewFaculty = CourseFaculty(course_id=course,
+                            faculty_id=faculty)
+            NewFaculty.save()
+            return redirect('.')
+    else:
+        form = AddFacultyForm(facultyList, assignedFaculties)
+        for field in form.errors:
+            form[field].field.widget.attrs['class'] += 'error'
+    context = {
+        'course': selectedCourse,
+        'branch': courseBranch,
+        'form': form,
+        'faculties': assignedFaculties
+    }
+
+    return render(request,"admins/manage_course.html", context)
+
+def remove_faculty_view(request,course_code,emp_id, *args, **kwargs):
+    deleteObj = CourseFaculty.objects.get(faculty_id=emp_id)
+    deleteObj.delete()
+    return redirect('/college-admin/courses/' + course_code)
 
 #@login_required(login_url=common.views.login_view)
 def logout_view(request, *args, **kwargs):

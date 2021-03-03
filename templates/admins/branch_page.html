@@ -1,0 +1,138 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}{{ branch.branch_name }}{% endblock %}
+
+{% block content %}
+<div class="courses-info">
+    <div class="courses-title">
+        {{ branch.branch_name }}
+        <button onclick="location.href='./edit'" id="white-button">
+            Edit
+        </button>
+    </div>
+    {% if branch.description %}
+    <div class='courses-description'>
+        {{ branch.description|linebreaksbr }}
+    </div>
+    {% endif %}
+</div>
+
+<div class="courses-info">
+    <div class="courses-title">
+        Courses
+        <button onclick="location.href='./add-course'" id="white-button">
+            <b>+</b> New Course
+        </button>
+    </div>
+    <span id="search" style="white-space: nowrap; overflow-x: auto; overflow-y: hidden;">
+        <form method="GET">
+            <input type="text" class="text" style="display: inline-block; width: 20%; margin-left: 1%;"/>
+            <input type="submit" value="Search" style="display: inline-block; width: max-content;"/>
+        </form>
+    </span>
+    <div id="courses-table">
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Course</th>
+                <th>Subject Code</th>
+                <th>Semester</th>
+                <th>Credits</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Manage</th>
+            </tr>
+            {% for course in courses %}
+            <tr>
+                <td> {{ course.course_id }}</td>
+                <td> {{ course.course_name }}</td>
+                <td> {{ course.subject_code }} </td>
+                <td> {{ course.semester }} </td>
+                <td> {{ course.course_credits }} </td>
+                <td> {{ course.start_date }} </td>
+                <td> {{ course.end_date }} </td>
+                <td> 
+                    {% if course.active %}
+                    Active
+                    {% elif course.completed %}
+                    Completed
+                    {% else %}
+                    Inactive
+                    {% endif %}
+                </td>
+                <td><a href="../{{ course.course_id }}">Manage</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+
+<!-- <div class="courses-info">
+    <div class="courses-title">
+        Courses
+        <button onclick="location.href='{{ branch.code }}/add-course'" id="white-button">
+            <b>+</b> New Course
+        </button>
+    </div>
+    <div class="table">
+        <div class="row-header">
+            <div class='cell'>ID</div>
+            <div class='cell'>Course</div>
+            <div class='cell'>Subject Code</div>
+            <div class='cell'>Semester</div>
+            <div class='cell'>Credits</div>
+            <div class='cell'>Start Date</div>
+            <div class='cell'>End Date</div>
+            <div class='cell'>Status</div>
+        </div>
+        {% for course in courses %}
+        <div class="row">
+            <div class='cell'> {{ course.course_id }}</div>
+            <a href="#course">
+            <div class='cell'> {{ course.course_name }}</div>
+            </a>
+            <div class='cell'> {{ course.subject_code }} </div>
+            <div class='cell'> {{ course.semester }} </div>
+            <div class='cell'> {{ course.course_credits }} </div>
+            <div class='cell'> {{ course.start_date }} </div>
+            <div class='cell'> {{ course.end_date }} </div>
+            <div class='cell'> 
+                {% if course.active %}
+                Active
+                {% elif course.completed %}
+                Completed
+                {% else %}
+                Inactive
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+</div> -->
+
+<div class="courses-info">
+    <div class="courses-title" style="margin-bottom: 0px;">Staff</div></br>
+    {% if staff %}
+    {% for person in staff %}
+        <div id="person-details">
+            <b>{{ person.firstName }} {{ person.lastName }}</b></br>
+            <span class="person-description">
+            Designation: {{ person.designation }} </br>
+            Email: {{ person.email }} </br>
+            Phone: {{ person.mobile }}
+        </span>
+        </div>
+    {% endfor %}
+    {% else %}
+    <span class="person-description">
+        There are currently no staff members...
+    </span>
+    {% endif %}
+</div>
+
+
+
+{% endblock %}

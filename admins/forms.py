@@ -1,6 +1,7 @@
 from django import forms
 from .models import Branch
 from students.models import Student
+from staff.models import Staff
 from common.models import Course
 from django.utils.safestring import mark_safe
 import re
@@ -254,3 +255,28 @@ class AddCourseForm(forms.ModelForm):
             'end_date',
             'active'
         ]
+
+class AddFacultyForm(forms.Form):
+    def __init__(self, facultyChoices, assignedFaculties,*args, **kwargs):
+        super(AddFacultyForm, self).__init__(*args, **kwargs)
+        facultyChoiceList = []
+        for faculty in facultyChoices:
+            add = True
+            for assfac in assignedFaculties:
+                print(assfac[0], faculty.employee_id)
+                if assfac[0] == faculty.employee_id:
+                    add = False
+            if add:
+                facultyChoiceList.append((faculty.employee_id,faculty.firstName + " " + faculty.lastName + " (" + faculty.employee_id + ")"))
+        facultyChoiceList = tuple(facultyChoiceList)
+        self.fields['faculty'] = forms.ChoiceField(choices=facultyChoiceList,
+                         widget=forms.Select(attrs={
+                             "class":"choice1"}))
+        
+
+    # faculties = ()
+
+    # def setFacultyChoices():
+    #     facultySet = self.facultyChoices
+    #     facultyChoiceList = ((faculty.employee_id,faculty.firstName + " " + faculty.lastName) for faculty in facultySet)
+    #     return facultyChoiceList

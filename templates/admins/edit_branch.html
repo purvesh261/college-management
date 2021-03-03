@@ -1,0 +1,43 @@
+{% extends './base.html' %}
+{% block title %}Edit{% endblock%}
+{% block navbar %} {% endblock %}
+{% block content %}
+<div id="add-branch-form">
+    <div class="form">
+        <h2>Edit Branch</h2>
+    
+
+    <form method='POST'> {% csrf_token %}
+        <table>
+            {% for field in form %}
+            <tr>
+                <td class="label" style="vertical-align: top;">
+                    {{ field.label }}
+                </td>
+                <td class="field"  style="vertical-align: top;">
+                    {{ field }}
+                    <p> {{ field.errors }} </p>
+                </td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Edit" id="edit-profile-button"/>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="button" value="Cancel" id="cancel-edit-button" onclick="location.href='.'"/>
+                </td>
+            </tr>
+                <!-- <td>
+                    <input type="button" value="Cancel"/>
+                </td> -->
+        </table>
+
+    </form>
+</div>
+</div>
+{% endblock %}

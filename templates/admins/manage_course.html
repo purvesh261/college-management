@@ -1,0 +1,111 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}{{ course.course_name }}{% endblock %}
+
+{% block content %}
+<div class="courses-info">
+    <div class="courses-title">
+        {{ course.course_name }}
+    </div>
+    {% if course.description %}
+    <div class='courses-description'>
+        <pre style="font-family: Arial, Helvetica, sans-serif;">{{ course.description }}</pre>
+    </div>
+    {% endif %}
+</div>
+<div class="courses-info">
+    <div class="courses-title">
+        Details
+        <button onclick="location.href='./edit-course'" id="white-button">
+            Edit
+        </button>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td>Name:</td>
+                <td>{{ course.course_name }}</td>
+            </tr>
+            <tr>
+                <td>Subject Code:</td>
+                <td>{{ course.subject_code }}</td>
+            </tr>
+            <tr>
+                <td>Course Id:</td>
+                <td>{{ course.course_id }}</td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top;">Description:</td>
+                <td>{{ course.description|linebreaksbr }}</td>
+            </tr>
+            <tr>
+                <td>Semester:</td>
+                <td>{{ course.semester }}</td>
+            </tr>
+            <tr>
+                <td>Branch:</td>
+                <td>{{ branch.branch_name }}</td>
+            </tr>
+            <tr>
+                <td>Credits:</td>
+                <td>{{ course.course_credits }}</td>
+            </tr>
+            <tr>
+                <td>Type:</td>
+                <td>{{ course.course_type }}</td>
+            </tr>
+            <tr>
+                <td>Start Date:</td>
+                <td>{{ course.start_date }}</td>
+            </tr>
+            <tr>
+                <td>End Date:</td>
+                <td>{{ course.end_date }}</td>
+            </tr>
+            <tr>
+                <td>Status:</td>
+                {% if course.active == True %}
+                <td>Ongoing</td>
+                {% elif course.completed == True %}
+                <td>Completed</td>
+                {% else %}
+                <td>Inactive</td>
+                {% endif %}
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="courses-info">
+    <div class="courses-title">
+        Faculties
+    </div>
+    <div style="margin: 1% 0 0 0">
+        <table border="1" style="min-width: 20%;">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Remove</th>
+            </tr>
+            {% if faculties %}
+            {% for faculty in faculties %}
+            <tr>
+                <td>{{ faculty.0 }}</td>
+                <td>{{ faculty.1 }}</td>
+                <td><a href='/college-admin/remove/{{ course.course_id }}/{{ faculty.0 }}' >Remove</a></td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="3" style="padding: 10px; color: gray; text-align: center;"> No faculties assigned... </td>
+            </tr>
+            {% endif %}
+        </table>
+        <form method="POST" style="margin: 1% 0 0 0"> {% csrf_token %}
+            {{ form.faculty }}
+            <input type='submit' value='+ Add' id="add-faculty-button"/>
+        </form>
+        
+    </div>
+</div>
+{% endblock %}

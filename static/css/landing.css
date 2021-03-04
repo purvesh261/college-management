@@ -21,7 +21,7 @@ body{
     display: inline-block;
     position: fixed; /* Set the navbar to fixed position */
     top: 0; /* Position the navbar at the top of the page */
-    width: 100%; /* Full width */-
+    width: 100%; /* Full width */
     box-shadow: 0px 5px 14px 0px rgba(0,0,0,0.45);
 }
 
@@ -198,7 +198,7 @@ label{
     width: 100%;
     background-color: rgb(247, 244, 241);
     float: right;
-    margin-top: 50px;
+    margin-top: 50%;
     padding-bottom: 30px;
     bottom: 10;
     border-top: 1px solid;
@@ -319,4 +319,110 @@ input[type=button] {
 }
 
 /*staff announcement*/
+
+
+/*staff results*/
+#results {
+    padding-right: 1%;
+}
+
+#title {
+    width: auto;
+    background-color: white;
+    /* margin-top: 3%; */
+    margin: 1% 1% 0px 1%;
+    width:98%;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 3px;
+    padding: 3px 3px 3px 10px;
+    font-size: 30px;
+    color: blue;
+    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.30);
+}
+
+#result-title {
+    padding: 3px 15px 3px 10px;
+    font-size: 30px;
+    display:flex;
+    justify-content: space-between;
+    color: blue;
+}
+#results-content {
+    background-color: white;
+    margin: 10px 1% 2% 1%;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 3px;
+    height: min-content;
+    float: left;
+    width: 98.5%;
+    padding: 3px 0px 3px 3px;
+    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.30);
+}
+
+#results-content a {
+    text-decoration: none;
+    color: black;
+    height: max-content;
+}
+
+.result-cards {
+    margin: auto;
+    width: 100%;
+}
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 23%;
+    float: left;
+    height: 50%;
+    text-overflow: ellipsis;
+    background-color: white;
+    padding-bottom: 5px;
+    margin: 5px 5px 10px 10px;
+  }
+  
+  .card h4 {
+      text-align: center;
+  }
+
+  .card p {
+    margin: auto;
+    margin-left: 5%;
+    text-align: left;
+    color: rgb(95, 95, 95);
+  }
+
+  .card desc {
+    padding-right: 10px;
+  }
+
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+.sem{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    background-color: white;
+    margin-left: 20%;
+    margin-right: 20%;
+    height: auto;
+    width: auto;
+}
+.sem button{
+    width: 25%;
+    display: block;
+    margin-left: 40%;
+    margin-right: 20%;
+    border-radius: 4px;
+    background-color: rgb(252, 252, 252);
+    color: #5c05ff;
+    text-align: center;
+    font-size: 130%;
+    padding: 15px;
+    height: auto;
+    cursor: pointer;
+    margin-top: 2%;
+   
+
+}
+
 

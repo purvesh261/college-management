@@ -1,5 +1,34 @@
 {% extends './base.html' %}
+{% load static %}
 
+{% block bodyclass %}
+    <body id="results" onload="changeActive(this.id)">
+{% endblock %}
 {% block content %}
+
+<div id="results-content">
+    <div id="result-title">
+        Results
+    </div>
+<div class="result-cards">
+    {% for branch in branches %}
+    <a href="{{ branch.code }}">
+        <div class="card">
+                <div class="card-content">
+                    <div class="image">
+                        <img src="{% static 'result.png' %}" alt="course-image" style="width:100%">
+                    </div>
+                    <div class="branch-name">
+                
+                        <h4><b>{{ branch.branch_name }}</b></h4>
+                       
+                    </div>
+                    
+                </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+</div>
 
 {% endblock %}

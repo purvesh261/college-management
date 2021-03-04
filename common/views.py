@@ -21,7 +21,7 @@ def login_view(request, *args, **kwargs):
     next_url = request.POST.get('next')
 
     #announcement
-    announcement_data=Announcement.objects.all()
+    announcement_data=reversed(Announcement.objects.all())
     print(announcement_data)
 
     if request.method == 'POST':

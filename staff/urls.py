@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,re_path
 from .views import *
 
 app_name = 'staff'
@@ -22,4 +22,9 @@ urlpatterns = [
 
     path('delete-announcement/<int:account_id>',staff_delete_view,name='staffannouncementdelete'),
 
+
+
+    re_path(r'^results/(?P<branch_code>[0-9]{2})/$', result_view, name="sem-details"),
+    #re_path(r'courses/(?P<branch_code>[0-9]{2})/edit/$', edit_branch_view, name="edit-branch"),
+    #re_path(r'courses/(?P<course_code>[0-9]{2})/add-course/$', add_course_view, name="add-course"),
 ]

@@ -7,6 +7,11 @@ from common.methods import id_generator
 from django.http import HttpResponse
 from  . import forms
 from django.contrib import messages
+from .models import Branch
+from staff.models import Staff
+from common.models import  Course
+from students.models import Student
+
 
 
 # Create your views here.
@@ -121,6 +126,8 @@ def staff_delete_view(request, account_id):
     else:
         return HttpResponse(messages)
     return render(request,'common/allannouncement.html',{'announcementform1':obj}) 
+
+    
     
 
 
@@ -131,7 +138,19 @@ def staff_attendance_view(request, *args, **kwargs):
     return render(request, "staff/attendance.html")
 
 def staff_results_view(request, *args, **kwargs):
-    return render(request, "staff/results.html")
+    branches = Branch.objects.all().order_by('branch_name')
+    context = {
+        'branches' : branches,
+            }
+    return render(request, "staff/results.html",context)
+
+def result_view(request, *args,**kwargs):
+    branches = Branch.objects.all().order_by('branch_name')
+    
+    context = {
+        'branches' : branches,
+            }
+    return render(request,"staff/semresult.html")
 
 def staff_profile_view(request, *args, **kwargs):
     return render(request, "staff/profile.html")

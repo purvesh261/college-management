@@ -5,10 +5,11 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django import forms as djforms
 import common
 from staff.models import Staff
 from  . import forms
-from .forms import editforms, AddBranchForm, EditBranchForm, AddCourseForm, AddFacultyForm
+from .forms import editforms, AddBranchForm, EditBranchForm, AddCourseForm, AddFacultyForm,EditCourseForm
 from .models import Branch
 from datetime import datetime
 from common.forms import LoginForm
@@ -375,17 +376,6 @@ def admins_staff_edit(request,account_id):
 #     return render(request,"admins/home.html",{'student':obj1,'staff':obj2})
 
 
-
-
-
-
-
-
-
-
-
-
-
 #@login_required(login_url=common.views.login_view)
 def admins_courses_view(request, *args, **kwargs):
     branches = Branch.objects.all().order_by('branch_name')
@@ -394,12 +384,13 @@ def admins_courses_view(request, *args, **kwargs):
         branch_info[branch.branch_name] = {}
         branch_info[branch.branch_name]["staff"] = len(Staff.objects.filter(branch=branch.branch_name, isPending=False))
         hod = Staff.objects.filter(designation="Head Of Department", branch=branch.branch_name, isPending=False)
-        print(branch_info)
+        # print(branch_info)
         if hod:
             branch_info[branch.branch_name]["hod"] = hod[0].firstName + " " + hod[0].lastName
         else:
             branch_info[branch.branch_name]["hod"] = "Unspecified"
-        courses = Course.objects.filter(branch=branch.branch_name)
+        courses = Course.objects.filter(branch=branch.code)
+        print(courses)
         branch_info[branch.branch_name]["number"] = len(courses)
     context = {
         'branches' : branches,
@@ -448,13 +439,6 @@ def branch_view(request, branch_code, *args, **kwargs):
 #@login_required(login_url=common.views.login_view)
 def edit_branch_view(request, branch_code, *args, **kwargs):
     selectedBranch = get_object_or_404(Branch,code=branch_code)
-    print("ok",selectedBranch)
-    print(selectedBranch)
-    intial_data = {
-        'branchName':selectedBranch.branch_name,
-        'branchCode':selectedBranch.code,
-        'description':selectedBranch.description
-    }
     if request.method == "POST":
         form = EditBranchForm(request.POST, instance=selectedBranch)
         if form.is_valid():
@@ -482,8 +466,6 @@ def add_course_view(request, *args, **kwargs):
         if form.is_valid():
             details = form.cleaned_data
             newBranch = details['branch']
-            print("hellollooooo",newBranch)
-            # newBranchCode =  Branch.objects.filter(branch_name=newBranch)[0].code
             newCourseId = course_id_generator(newBranch)
             newCourse = details['course_name']
             newSubjectCode = details['subject_code']
@@ -538,7 +520,6 @@ def manage_course_view(request,course_code, *args, **kwargs):
     for faculty in facultyList:
         add = True
         for assfac in assignedFaculties:
-            print(assfac[0], faculty.employee_id)
             if assfac[0] == faculty.employee_id:
                 add = False
         if add:
@@ -565,6 +546,34 @@ def manage_course_view(request,course_code, *args, **kwargs):
     }
 
     return render(request,"admins/manage_course.html", context)
+
+def edit_course_view(request, course_code, *args, **kwargs):
+    selectedCourse = get_object_or_404(Course,course_id=course_code)
+    initialSubCode = selectedCourse.subject_code
+    if request.method == 'POST':
+        editForm = EditCourseForm(request.POST or None, instance=selectedCourse)
+        if editForm.is_valid():
+            details = editForm.cleaned_data
+            newSubCode = details['subject_code']
+            if initialSubCode != newSubCode:
+                try:
+                    if Course.objects.filter(subject_code=newSubCode):
+                        raise djforms.ValidationError("Subject code already exists.")
+                except djforms.ValidationError as e:
+                    editForm.add_error('subject_code', e)
+                    return render(request,"admins/edit_course.html", {'form': editForm})
+                
+            editForm.save()
+            return redirect('..')
+    else:
+        editForm = EditCourseForm(instance=selectedCourse)
+        for field in editForm.errors:
+            editForm[field].field.widget.attrs['class'] += 'error'
+
+    context = {
+        'form': editForm,
+    }
+    return render(request,"admins/edit_course.html", context)
 
 def remove_faculty_view(request,course_code,emp_id, *args, **kwargs):
     deleteObj = CourseFaculty.objects.get(faculty_id=emp_id)

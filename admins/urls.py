@@ -42,15 +42,15 @@ urlpatterns = [
     path('staff-account-approved-details/',admins_staff_approved_detail_view,name='staffdetails2'),
 
     #for edit
-    path('approve-staff/<int:account_id>/',admins_staff_approve,name='staffapprove'),
+    path('approve-staff/<int:account_id>',admins_staff_approve,name='staffapprove'),
     #path('approved-staff/<int:account_id>/',approve_staff,name='staffapproved'),
 
-    path('edit-staff/<int:account_id>/',admins_staff_edit,name='staffedit'),
+    path('edit-staff/<int:account_id>',admins_staff_edit,name='staffedit'),
     #path('update-staff/<int:account_id>/',edit_staff,name='staffupdate'),
 
 
     # for admin profile edit
-    path('edit-profile/<int:account_id>/',admins_profile_edit,name='adminedit'),
+    path('edit-profile/<int:account_id>',admins_profile_edit,name='adminedit'),
     #path('update-profile/<int:account_id>/',edit_profile,name='adminupdate'),
 
     # to create a new branch

@@ -123,10 +123,16 @@ def admins_home_view(request, *args, **kwargs):
     time = datetime.now()
     announcement_data=reversed(Announcement.objects.all())
     currentTime = time.strftime("%d/%m/%Y %I:%M %p")
+    obj1=Student.objects.filter(isPending=True)
+    obj2=Staff.objects.filter(isPending=True)
+    s1=len(obj1)
+    s2=len(obj2)
+    print(s1)
     context = {
         'timestamp': currentTime,
     }
-    return render(request, "admins/home.html",{'context':context,'announcement_data':announcement_data})
+   
+    return render(request, "admins/home.html",{'context':context,'announcement_data':announcement_data,'student':s1,'staff':s2})
 
 #@login_required(login_url=common.views.login_view)
 def admins_students_view(request, *args, **kwargs):
@@ -362,6 +368,24 @@ def admins_staff_edit(request,account_id):
 #             return HttpResponse(messages)
 #     print(form.errors)
 
+
+#notification od admin home
+# def admins_notification(request,*args,**kwargs):
+    
+#     return render(request,"admins/home.html",{'student':obj1,'staff':obj2})
+
+
+
+
+
+
+
+
+
+
+
+
+
 #@login_required(login_url=common.views.login_view)
 def admins_courses_view(request, *args, **kwargs):
     branches = Branch.objects.all().order_by('branch_name')
@@ -370,7 +394,7 @@ def admins_courses_view(request, *args, **kwargs):
         branch_info[branch.branch_name] = {}
         branch_info[branch.branch_name]["staff"] = len(Staff.objects.filter(branch=branch.branch_name, isPending=False))
         hod = Staff.objects.filter(designation="Head Of Department", branch=branch.branch_name, isPending=False)
-
+        print(branch_info)
         if hod:
             branch_info[branch.branch_name]["hod"] = hod[0].firstName + " " + hod[0].lastName
         else:

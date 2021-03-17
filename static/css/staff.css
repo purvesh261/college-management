@@ -1,0 +1,323 @@
+@import "landing.css"; 
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.header {
+    box-shadow: 0px 5px 7px 0px rgba(0,0,0,0.45);
+}
+
+.main{
+    margin-top: 0;
+    padding-left: 0;
+}
+
+#wrapper {
+    display: flex;
+    height: 100%;
+}
+
+#wrapper #sidebar-title{
+    padding: 10px;
+    color: blue;
+    font-weight: bold;
+    font-size: large;
+    border-bottom: 1px solid rgb(148, 148, 148);
+}
+
+#content {
+    margin: 60px 10px 10px 10px;
+    width: 100%;
+    min-height: 95%;
+    height: max-content;
+    padding-bottom: 10px;
+    background: white;
+    border: 1px solid rgb(221, 221, 221);;
+}
+
+
+#content-none {
+    margin: 60px 10px 10px 10px;
+    width: 100%;
+    background: rgb(255, 255, 255);
+    color: gray;
+    border: 1px solid rgb(221, 221, 221);
+    text-align: center;
+}
+
+#content-none div{
+    padding-top: 25%;
+}
+
+#welcome-msg {
+    margin-top: 50;
+}
+.sidenav {
+    background: rgb(255, 255, 255);
+    width: 25%;
+    height: auto;
+    margin-top: 50;
+    height: 80%;
+    border-right : 1px solid rgb(221, 221, 221);
+    border-bottom : 1px solid rgb(221, 221, 221);
+}
+
+.sidenav ul#sem{
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidenav #sem-head{
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    padding-top: 10px;
+    text-indent: 10px;
+    padding-bottom: 10px;
+}
+
+.sidenav ul#course{
+    background-color: rgb(243, 243, 243);
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-indent: 20px;
+}
+
+.sidenav a {
+    color: rgb(56, 56, 56);
+    text-decoration: none;
+}
+
+.sidenav ul#course:hover{
+    background-color: #F7F4F1;
+    cursor: pointer;
+}
+
+#empty-list{
+    color: gray;
+    text-align: center;
+    padding-top: 5%;
+}
+
+#empty-table{
+    color: gray;
+    text-align: center;
+    padding: 20;
+}
+/* 
+#courses-item {
+} */
+
+#course li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.course-title {
+    padding: 10px 3px 3px 15px;
+    font-size: 30px;
+    color: blue;
+    border-bottom : 1px solid rgb(221, 221, 221);
+}
+
+.btm-border {
+    border-bottom : 1px solid rgb(221, 221, 221);
+    display: flex;
+    justify-content: space-between;
+}
+#course-description {
+    color: rgb(95, 95, 95);
+    width: 100%;
+    min-height: 10%;
+    padding: 10px 0px 10px 0px;
+    border-bottom : 1px solid rgb(221, 221, 221);
+}
+
+#course-description-content {
+    padding-left: 15px;
+}
+
+#course-sub-title {
+    padding: 10px 3px 10px 15px;
+    font-size: 25px;
+    color: blue;
+    display: flex;
+    justify-content: space-between;
+}
+
+#white-button{
+    border-radius: 4px;
+    background-color: white;
+    border: none;
+    color: rgb(19, 15, 235);
+    text-align: center;
+    font-size: 16px;
+    padding: 10px;
+    width: fit-content;
+    min-width: 7%;
+    height: auto;
+    border: 1px solid rgb(19, 15, 235);
+    cursor: pointer;
+    margin: 5px;
+}
+
+
+#white-button:hover {
+    background-color: rgb(19, 15, 235);
+    color: white;
+    transition: 0.3s;
+}
+
+#delete {
+    color: rgb(207, 0, 0);
+    border-radius: 4px;
+    background-color: white;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+    padding: 10px;
+    width: fit-content;
+    min-width: 7%;
+    height: auto;
+    cursor: pointer;
+    border: 1px solid rgb(207, 0, 0);
+    margin: 5px;
+}
+
+
+#delete:hover {
+    background-color: red;
+    color: white;
+    transition: 0.3s;
+}
+
+#assignment table {
+    margin: auto;
+    border: 0;
+    border-spacing:0px;
+    border-collapse: collapse;
+    width: 95%;
+}
+
+#assignment table th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+#assignment table tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+#assignment table tr {
+    background-color: rgb(218, 218, 218);
+}
+
+#assignment table th {
+    background-color: rgb(19, 15, 235);
+    color: white;
+}
+
+.form {
+    text-align: center;
+    background-color: white;
+    margin: auto;
+    width: max-content;
+    margin-top: 3%;
+    border: 1px rgb(255, 255, 255);
+    padding-right: 10%;
+    padding-left: 10%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    height: auto;
+    box-shadow: 0px 0px 5px 0px rgba(58, 57, 57, 0.3);
+    border-radius: 3px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form input[class='text']{
+    width: 80%;
+    padding: 6px 10px;
+    margin: 8px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -ms-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    -webkit-box-sizing:content-box; 
+    box-sizing:content-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form input:hover {
+    background: #ddd;
+    color: black;
+}
+
+.form input:focus {
+    background-color: rgb(241, 241, 241);
+}
+
+.label{
+    text-align: left;
+    padding-top: 4%;
+}
+
+.form .desc-box {
+    resize: none;
+}
+
+.form .file {
+    border: none;
+}
+
+.form .file:hover{
+    background: white;
+}
+.field {
+    float:right;
+    width: 100%;
+    box-sizing:content-box;
+}
+
+.field .errorlist{
+    list-style: symbols('*');
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: left;
+    color: red;
+    text-decoration:none;
+}
+.form input[type=submit]{
+    border-radius: 4px;
+    background-color: rgb(19, 15, 235);
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 16px;
+    padding: 15px;
+    width: 80%;
+    height: auto;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.form input[type=submit]:hover {
+    background-color:  rgb(12, 10, 102);
+}
+
+.form input[type=submit]:active{
+    background-color: rgb(19, 15, 235);
+}
+
+
+.footer {
+    margin-top: 50;
+}
+

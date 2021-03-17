@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import datetime    
-
-
+from .validators import validate_file_extension
+from staff.models import Staff
 
 class Announcement(models.Model):
     title=models.CharField(max_length=100,
@@ -68,6 +68,26 @@ class CourseFaculty(models.Model):
     
     faculty_id = models.CharField(max_length=30, default='', verbose_name='Faculty ID')
 
+class Assignment(models.Model):
+    assignment_id = models.CharField(max_length=20,
+                            primary_key=True)
+
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+    start_date = models.DateField(verbose_name="Start Date", blank=True)
+
+    end_date = models.DateField(verbose_name="End Date", blank=True, null=True)
+
+    faculty = models.ForeignKey(Staff, on_delete=models.CASCADE)
+
+    title = models.CharField(max_length=160, verbose_name="Title")
+
+    description = models.TextField(max_length=300,
+                            verbose_name='Description',
+                            default = '',
+                            blank=True)
+
+    assignment_file = models.FileField(verbose_name="Assignment File", blank=True, upload_to='assignments', validators=[validate_file_extension])
 
 
 # Create your models here.

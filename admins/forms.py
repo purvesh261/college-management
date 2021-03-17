@@ -406,11 +406,7 @@ class EditCourseForm(forms.ModelForm):
         except forms.ValidationError as e:
             self.add_error('course_credits', e)
 
-        try:
-            if startDate > endDate:
-                raise forms.ValidationError("Start date is greater than end date")
-        except forms.ValidationError as e:
-            self.add_error('end_date', e)
+        c
             
         try:
             codeNotValid = False

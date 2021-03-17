@@ -247,13 +247,13 @@ def admins_student_detail_view(request,*args,**kwargs):
   
 #@login_required(login_url=common.views.login_view)
 def admins_student_edit(request,account_id):
-    print(account_id)
+    # print(account_id)
     displaydata=Student.objects.get(account_id=account_id)
-    print(displaydata)
+    # print(displaydata)
     updatedata=Student.objects.get(account_id=account_id)
-    print(account_id)
+    # print(account_id)
     if request.method == "POST":
-        print('post')
+        # print('post')
         form=editforms(request.POST or None,instance=updatedata)
         #error here
         if form.is_valid():
@@ -576,7 +576,8 @@ def edit_course_view(request, course_code, *args, **kwargs):
     return render(request,"admins/edit_course.html", context)
 
 def remove_faculty_view(request,course_code,emp_id, *args, **kwargs):
-    deleteObj = CourseFaculty.objects.get(faculty_id=emp_id)
+    DeleteCourse = Course.objects.get(course_id=course_code)
+    deleteObj = CourseFaculty.objects.get(faculty_id=emp_id,course_id=DeleteCourse)
     deleteObj.delete()
     return redirect('/college-admin/courses/' + course_code)
 

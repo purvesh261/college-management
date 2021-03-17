@@ -178,10 +178,8 @@ def student_registration(request,*args,**kwargs):
                         email=str(new_email.lower()),
             )
 
-            # newDjangoUser.save()
             newUser.save()
             newStudent.save()
-            # Student.objects.create(**form.cleaned_data)
             return redirect("../pending-account")
     else:
         form = StudentForm(request.POST or None)

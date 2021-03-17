@@ -169,17 +169,6 @@ def student_registration(request,*args,**kwargs):
                         gender=str(new_gender),
                         isPending=True
                         )
-            
-            # newUser = AppUser(
-            #             firstName=str(new_fName.capitalize()),
-            #             lastName=str(new_lName.capitalize()),
-            #             username=str(new_username),
-            #             passwd=str(new_passwd),
-            #             email=str(new_email.lower()),
-            #             category='Student',
-            #             isAdmin=False,
-            #             isPending=True
-            # )
 
             newUser = User.objects.create_user(
                         username=str(new_username),
@@ -189,10 +178,8 @@ def student_registration(request,*args,**kwargs):
                         email=str(new_email.lower()),
             )
 
-            # newDjangoUser.save()
             newUser.save()
             newStudent.save()
-            # Student.objects.create(**form.cleaned_data)
             return redirect("../pending-account")
     else:
         form = StudentForm(request.POST or None)

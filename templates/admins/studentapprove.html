@@ -53,11 +53,23 @@
             <td><input type="text" name="mobile" value="{{editdata.mobile}}" readonly></td>
         </tr>
        
-        <tr>
+        <!-- <tr>
             <th>Branch:</th>
             <td><input type="text" name="branch" value="{{editdata.branch}}" readonly></td>
+        </tr> -->
+        <tr>
+            <th>Branch:</th>
+            <td>
+                <select  name="branch">
+                    {% for branch in branch_name %}
+                    {% if branch.code == editdata.branch %}
+                    <option value="{{branch.code}}" selected >{{branch.branch_name}}</option>
+                    {% else %}
+                    <option value="{{branch.code}}" >{{branch.branch_name}}</option>
+                    {% endif %}
+                    {% endfor %}
+            </td>
         </tr>
-
         <tr>
             <th>Sem:</th>
             <td><input type="text" name="sem" value="{{editdata.sem}}" readonly></td>

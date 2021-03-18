@@ -1,0 +1,62 @@
+{% extends './base.html' %}
+{% load static %}
+{% block css %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/landing.css' %}"/>
+        {% endblock %}
+{% block content %}
+<div class="result_branch" id=result_branch><p>Branch:{{branch}}</p>
+    <p>Exam:{{examname}}</p>
+
+</div>
+<input type="text" name="searchtext" id="searchtxt" placeholder="Search by Enrolment" onkeyup="searchrecords();">
+<div class="student_result">
+    <table id="student_result_list" border="1">
+       
+        <tr>
+            <th>Account-Id</th>
+            <th>Enrolment-No</th>
+            <th>Sem</th>
+            <th>Sub</th>
+            <th>Marks</th>
+            <th>Action</th>
+        </tr>
+       
+        {% for i in student %}
+        <tr>
+            <td>{{i.account_id}}</td>
+            <td>{{i.enrolment}} </td>
+            <td>{{i.sem}}</td>
+            <td>{{i.course_name}}</td>
+            <td>{{i.marks}}</td>
+            <td><a href="../edit-result/{{i.account_id}}">Edit</a></td>
+        </tr>
+        {% endfor %}
+</table>
+</div>
+<script>
+    function searchrecords(){
+        
+        var input,tr,td,filter,table,j,txtdata;
+        input=document.getElementById("searchtxt");
+        filter=input.value.toUpperCase();
+        table=document.getElementById("student_result_list");
+        tr=table.getElementsByTagName("tr");
+        
+        for(j=0;j<tr.length;j++)
+        {
+        td=tr[j].getElementsByTagName("td")[1];
+        
+        if(td)
+        {
+        txtdata=td.innerText;
+        if(txtdata.toUpperCase().indexOf(filter)>-1){
+            tr[j].style.display="";
+        }
+        else{
+            tr[j].style.display="none";
+        }
+    }
+        }
+    }
+</script>
+{%endblock%}

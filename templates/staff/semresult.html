@@ -1,15 +1,21 @@
 {% extends './base.html' %}
+{% load static %}
+{% block css %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/landing.css' %}"/>
+        {% endblock %}
 
 {% block content %}
 
+<h2 align=center>{{branch}}</h2> 
+
 <div class="sem">
-    <button>Sem 1</button>
-    <button>Sem 2</button>
-    <button>Sem 3</button>
-    <button>Sem 4</button>
-    <button>Sem 5</button>
-    <button>Sem 6</button>
-    <button>Sem 7</button>
-    <button>Sem 8</button>
+    <button onclick="location.href='./1/add-result'">Sem I</button>
+    <button onclick="location.href='./2/add-result'" >Sem II</button>
+    <button onclick="location.href='./3/add-result'">Sem III</button>
+    <button onclick="location.href='./4/add-result'">Sem IV</button>
+    <button onclick="location.href='./5/add-result'">Sem V</button>
+    <button onclick="location.href='./6/add-result'">Sem VI</button>
+    <button onclick="location.href='./7/add-result'">Sem VII</button>
+    <button onclick="location.href='./8/add-result'">Sem VIII</button>
 </div>
 {% endblock %}

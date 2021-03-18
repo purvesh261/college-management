@@ -1,0 +1,57 @@
+{% extends './base.html' %}
+{% load static %}
+
+
+{% block title %}Result-Edit{% endblock %}
+{% block css %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/landing.css' %}"/>
+        {% endblock %}
+{% block content %}
+<center>
+<div class="result-edit">    
+<h2>Result Edit</h2>
+<form method="POST" action="../edit-result/{{editdata.account_id}}">   
+    {% csrf_token %}
+    {{ form.errors }}
+    {{ form.non_field_errors }}
+    <table align="center" class="result_edit_list"> 
+        <tr>
+            <th>Account-Id:</th>
+            <td><input type="text" name="account_id" value="{{editdata.account_id}}" readonly ></td>
+        </tr>
+        <tr>
+            <th>Enrolment:</th>
+            <td><input type="text" name="enrolment" value="{{editdata.enrolment}}" readonly></td>
+        </tr>
+        <tr>
+            <th>Sem:</th>
+            <td><input type="text" name="sem" value="{{editdata.sem}}" readonly></td>
+        </tr>
+        <tr>
+            <th>Course Name:</th>
+            <td><input type="text" name="course_name" value="{{editdata.course_name}}" readonly></td>
+        </tr>
+        <tr>
+            <th>Marks</th>
+            <td><input type="text" name="marks" value="{{editdata.marks}}"></td>
+        </tr>
+</table>
+<input type="submit" value="Update" onclick="result_update()"/>
+<input type="button" value="Cancel"  onclick="location.href='../add-result'">
+<input type="button" value="Back"  onclick="location.href='../add-result'">
+<!-- {% if messages %}
+{% for j in messages %}
+<h2>{{j}}</h2>
+{% endfor %}
+{% endif %} -->
+
+</form> 
+</center>
+<script>
+    function result_update() {
+      alert("Student Marks Updated");
+    }
+    </script>
+</div>
+
+{% endblock %}

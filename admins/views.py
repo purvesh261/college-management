@@ -17,6 +17,7 @@ from common.methods import id_generator, course_id_generator
 from common.announcementform import announcementform
 from common.models import Announcement, Course, CourseFaculty
 from admins.forms2 import editforms2
+from django.template.defaulttags import register
 
 '''
 TODO:
@@ -187,17 +188,27 @@ def admins_profile_edit(request,account_id):
 
 
 # for data extraction for student
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
 #@login_required(login_url=common.views.login_view)
 def admins_student_pending_detail_view(request,*args,**kwargs):
     obj=Student.objects.filter(isPending=True)
+    branch_dict={}
+    for student in obj:
+        branch_dict[student.enrolment] = Branch.objects.get(code=student.branch).branch_name
     print(obj)
-    return render(request,"admins/students.html",{'student':obj})
+    print(branch_dict)
+    return render(request,"admins/students.html",{'student':obj,'branch_name':branch_dict})
     
 # load approved acounts
 # @login_required(login_url=common.views.login_view)  
 def admins_student_approved_detail_view(request,*args,**kwargs):
     obj=Student.objects.filter(isPending=False)
-    return render(request,"admins/studentapproved.html",{'student':obj})
+    branch_dict={}
+    for student in obj:
+        branch_dict[student.enrolment] = Branch.objects.get(code=student.branch).branch_name
+    return render(request,"admins/studentapproved.html",{'student':obj,'branch_name':branch_dict})
 
 
 #approve page will be called to to approve accounts
@@ -208,6 +219,7 @@ def admins_student_approve(request,account_id):
     print(displaydata)
     updatedata=Student.objects.get(account_id=account_id)
     print(account_id)
+    branch_name=Branch.objects.all()
     if request.method == "POST":
         print('post')
         form=editforms(request.POST or None,instance=updatedata)
@@ -219,7 +231,7 @@ def admins_student_approve(request,account_id):
             return redirect("../student-account-pending-details")
         else:
             return HttpResponse(messages)
-    return render(request,'admins/studentapprove.html',{'editdata':displaydata})
+    return render(request,'admins/studentapprove.html',{'editdata':displaydata,'branch_name':branch_name})
 
 
 #edit approved details will be validated
@@ -252,6 +264,7 @@ def admins_student_edit(request,account_id):
     # print(displaydata)
     updatedata=Student.objects.get(account_id=account_id)
     # print(account_id)
+    branch_name=Branch.objects.all()
     if request.method == "POST":
         # print('post')
         form=editforms(request.POST or None,instance=updatedata)
@@ -264,7 +277,7 @@ def admins_student_edit(request,account_id):
         else:
             return HttpResponse(messages)
     #print(form.errors)
-    return render(request,'admins/studentedit.html',{'editdata':displaydata})
+    return render(request,'admins/studentedit.html',{'editdata':displaydata,'branch_name':branch_name})
 
 #to edit unapproved students
 #@login_required(login_url=common.views.login_view)
@@ -290,12 +303,18 @@ def admins_student_edit(request,account_id):
 def admins_staff_pending_detail_view(request,*args,**kwargs):
     obj=Staff.objects.filter(isPending=True)
     print(obj)
-    return render(request,"admins/staff.html",{'staff':obj})
+    branch_dict={}
+    for staff in obj:
+        branch_dict[staff.employee_id] = Branch.objects.get(code=staff.branch).branch_name
+    return render(request,"admins/staff.html",{'staff':obj,'branch_name':branch_dict})
 
 #@login_required(login_url=common.views.login_view)
 def admins_staff_approved_detail_view(request,*args,**kwargs):
     obj=Staff.objects.filter(isPending=False)
-    return render(request,"admins/staffapproved.html",{'staff':obj})
+    branch_dict={}
+    for staff in obj:
+        branch_dict[staff.employee_id] = Branch.objects.get(code=staff.branch).branch_name
+    return render(request,"admins/staffapproved.html",{'staff':obj,'branch_name':branch_dict})
 
 #to approve staff accounts
 #@login_required(login_url=common.views.login_view)
@@ -305,6 +324,8 @@ def admins_staff_approve(request,account_id):
     print(displaydata)
     updatedata=Staff.objects.get(account_id=account_id)
     print(account_id)
+    branch_name=Branch.objects.all()
+
     if request.method == "POST":
         print('post')
         form=editforms1(request.POST or None,instance=updatedata)
@@ -316,7 +337,7 @@ def admins_staff_approve(request,account_id):
             return redirect("../staff-account-pending-details")
         else:
             return HttpResponse(messages)
-    return render(request,'admins/staffapprove.html',{'editdata':displaydata})
+    return render(request,'admins/staffapprove.html',{'editdata':displaydata,'branch_name':branch_name})
 
 # def approve_staff(request,account_id):
 #     updatedata=Staff.objects.get(account_id=account_id)
@@ -341,6 +362,7 @@ def admins_staff_edit(request,account_id):
     print(displaydata)
     updatedata=Staff.objects.get(account_id=account_id)
     print(account_id)
+    branch_name=Branch.objects.all()
     if request.method == "POST":
         print('post')
         form=editforms1(request.POST or None,instance=updatedata)
@@ -352,7 +374,7 @@ def admins_staff_edit(request,account_id):
             return redirect("../staff")
         else:
             return HttpResponse(messages)
-    return render(request,'admins/staffedit.html',{'editdata':displaydata})
+    return render(request,'admins/staffedit.html',{'editdata':displaydata,'branch_name':branch_name})
 
 # def edit_staff(request,account_id):
 #     updatedata=Staff.objects.get(account_id=account_id)
@@ -515,7 +537,7 @@ def manage_course_view(request,course_code, *args, **kwargs):
         currentFaculty = Staff.objects.get(employee_id=faculty.faculty_id)
         assignedFaculties.append([faculty.faculty_id, currentFaculty.firstName + " " + currentFaculty.lastName])
     
-    facultyList = Staff.objects.filter(branch=courseBranch.branch_name, isPending=False).order_by('firstName')
+    facultyList = Staff.objects.filter(branch=courseBranch.code, isPending=False).order_by('firstName')
 
     for faculty in facultyList:
         add = True

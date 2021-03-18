@@ -90,6 +90,11 @@ class Assignment(models.Model):
     assignment_file = models.FileField(verbose_name="Assignment File", blank=True, upload_to='assignments', validators=[validate_file_extension])
 
 
+
+    
+
+
+
 # Create your models here.
 # class AppUser(models.Model):
 #     categories = (('Student', 'Student'),

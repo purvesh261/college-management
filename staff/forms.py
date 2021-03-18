@@ -7,6 +7,8 @@ from admins.models import Branch
 from django.utils.safestring import mark_safe
 import re
 import pandas as pd
+from students.models import Result
+
 
 class StaffForm(forms.ModelForm):
     gender_choice=Staff.gender_choices
@@ -271,6 +273,31 @@ class StaffForm(forms.ModelForm):
         else:
             return cleaned_data
 
+
+#for student result
+class resultform(forms.ModelForm):
+    class Meta:
+        model=Result
+        fields= [
+            'account_id',
+            'enrolment',
+            'branch',
+            'sem',
+            'course_name',
+            'marks',
+            'exam',
+            ]
+
+class editresultform(forms.ModelForm):
+    class Meta:
+        model=Result
+        fields=[
+            'account_id',
+            'enrolment',
+            'sem',
+            'course_name',
+            'marks',
+        ]
 class CreateAssignmentForm(forms.ModelForm):
     title = forms.CharField(label='Title:', min_length=3, max_length=160,
                 widget=forms.TextInput(attrs={"placeholder":"Enter a title",

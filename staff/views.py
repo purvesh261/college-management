@@ -375,7 +375,7 @@ def sem_result(request,branch_code,*args):
     binfo=branch_info[0][0]+branch_info[1][0] #fetching short form
     print(binfo) #printing short form
 
-    displaydata=Student.objects.filter(sem=s1,branch=binfo,isPending=False) #fetching the student by filtering the data
+    displaydata=Student.objects.filter(sem=s1,branch=branch_code,isPending=False) #fetching the student by filtering the data
     print(displaydata) #print filtered data of students
     return render(request,"staff/result.html",{'student':displaydata,'branch':b1.branch_name,'sem':s1})
 
@@ -460,7 +460,7 @@ def student_internal_results(request,branch_code,*args):
     exam=url[6]
     print('examname',exam)
 
-    displaydata=Result.objects.filter(sem=s1,branch=binfo,exam=exam) #fetching the student by filtering the data
+    displaydata=Result.objects.filter(sem=s1,branch=branch_code,exam=exam) #fetching the student by filtering the data
     print(displaydata) #print filtered data of students
     return render(request,"staff/stdresult.html",{'student':displaydata,'branch':b1.branch_name,'examname':exam})
 

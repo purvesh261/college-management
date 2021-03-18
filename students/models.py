@@ -88,18 +88,9 @@ class Student(models.Model):
                     choices=categories)
                
 class Result(models.Model):
-     branch_choices=(('CE','Computer Engineering'),
-                       ('IT','Information Technology'),
-                       ('EC','Electronics and Comm. Engineering'),
-                       ('BME','Bio-Medical Engineering'),
-                       ('MC','Mechantronics Engineering'),
-                       ('ME','Mechanical Engineering'),
-                       ('CE','Civil Engineering'),
-                       ('EE','Electrical Engineering'),
-                       ('ME','Marine Engineering'),
-                       ('AE','Automobile Engineering'),
-                       ('PE','Petrochemical Engineering'))
-
+     branches = Branch.objects.values_list('branch_name','code')
+     branch_choices = ((branch[1],branch[0]) for branch in branches)
+    
      sem_choices=(('1','I'),
                     ('2','II'),
                     ('3','III'),

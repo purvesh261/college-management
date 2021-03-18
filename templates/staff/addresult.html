@@ -1,0 +1,38 @@
+{% extends './base.html' %}
+
+{% block content %}
+
+<div class="student-result">
+    <center>
+    <h2> Student Result</h2>
+    <form method="POST" >{% csrf_token %} 
+        <table >
+        {% for field in resultform1 %}
+        <tr>
+        <td class="result_label" >
+            {{ field.label }}:
+        </td>
+        <td class="result_field" >
+            {{ field }}
+            <p> {{ field.errors }} </p>
+            </td>
+    </tr>
+    {%endfor%}
+</table>
+<input type="submit" value="Add" onclick="mark_add()"/>
+
+
+
+<input type="button" value="Cancel" onclick="location.href='../'"/>
+  
+</div>
+</form>
+<script>
+    function mark_add() {
+      alert("Marks Added");
+    }
+    </script>
+</br>
+</center>
+
+{%endblock%}

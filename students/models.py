@@ -1,4 +1,5 @@
 from django.db import models
+from common.models import Course
 
 
 class Student(models.Model):
@@ -82,5 +83,62 @@ class Student(models.Model):
                     verbose_name="Category",
                     default="Student",
                     choices=categories)
+               
+class Result(models.Model):
+     branch_choices=(('CE','Computer Engineering'),
+                       ('IT','Information Technology'),
+                       ('EC','Electronics and Comm. Engineering'),
+                       ('BME','Bio-Medical Engineering'),
+                       ('MC','Mechantronics Engineering'),
+                       ('ME','Mechanical Engineering'),
+                       ('CE','Civil Engineering'),
+                       ('EE','Electrical Engineering'),
+                       ('ME','Marine Engineering'),
+                       ('AE','Automobile Engineering'),
+                       ('PE','Petrochemical Engineering'))
+
+     sem_choices=(('1','I'),
+                    ('2','II'),
+                    ('3','III'),
+                    ('4','IV'),
+                    ('5','V'),
+                    ('6','VI'),
+                    ('7','VII'),
+                    ('8','VIII'))
+     exam_choices=(('Internal-1','I1'),
+                    ('Internal-2','I2'),
+                    ('Internal','I'))
+
+     # courses = Course.objects.values_list('course_name')
+     # courses_choices = ((course[0],course[0]) for course in courses) 
+
+     # sub=Course.objects.values_list('subject_code')
+     # subcode=((subject[0],subject[0]) for subject in sub)
+
+     # courseid=Course.objects.values_list('course_id')
+
+     account_id = models.CharField(max_length=20,
+                    verbose_name="Account Id", default='', primary_key=True)
+     branch=models.CharField(max_length=70,
+                    verbose_name="Branch",
+                    choices=branch_choices)
+     sem=models.CharField(max_length=5,
+                    verbose_name="Semester",
+                    choices=sem_choices)
+
+     course_name = models.CharField(max_length=100,
+                            verbose_name="Course Name",
+                            blank=True)
+    
+     enrolment = models.CharField(max_length=70,
+                    verbose_name="Enrolment Number")
+
+     marks=models.CharField(max_length=5,
+                            verbose_name="Marks",
+                            blank=True)
+     exam=models.CharField(max_length=25,
+                            verbose_name="Exam Name",
+                            choices=exam_choices)
+     
 
 

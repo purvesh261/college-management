@@ -70,6 +70,11 @@ class CourseFaculty(models.Model):
 
 
 
+
+    
+
+
+
 # Create your models here.
 # class AppUser(models.Model):
 #     categories = (('Student', 'Student'),

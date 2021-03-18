@@ -2,6 +2,7 @@ from django import forms
 from students.models import Student
 from django.contrib.auth.password_validation import validate_password
 from staff.models import Staff
+from common.models import Assignment
 from admins.models import Branch
 from django.utils.safestring import mark_safe
 import re
@@ -15,12 +16,12 @@ class StaffForm(forms.ModelForm):
     designation_choices=Staff.designation_choices
 
     # branch_choices= Staff.branch_choices
-    branches = Branch.objects.values_list('branch_name')
+    branches = Branch.objects.values_list('branch_name','code')
     # branch_choices = []
     # for i in branches:
     #     branch_choices.append((i[0],i[0]))
 
-    branch_choices = ((branch[0],branch[0]) for branch in branches)
+    branch_choices = ((branch[1],branch[0]) for branch in branches)
     # branch_choices = tuple(branch_choices)
     print(branch_choices)
 
@@ -297,3 +298,78 @@ class editresultform(forms.ModelForm):
             'course_name',
             'marks',
         ]
+class CreateAssignmentForm(forms.ModelForm):
+    title = forms.CharField(label='Title:', min_length=3, max_length=160,
+                widget=forms.TextInput(attrs={"placeholder":"Enter a title",
+                                             "size":"40",
+                                             "class":"text"}))
+    
+    description = forms.CharField(label='Description:',max_length=500,required=False,
+                widget=forms.Textarea(attrs={"placeholder":"Enter Description",
+                                             "size":"40",
+                                             "class":"text desc-box",
+                                             "height":"5",
+                                             "width":"100",
+                                             "name":"description"}))
+                                             
+    start_date = forms.DateField(label="Start Date:",required=False,
+                widget=forms.TextInput(attrs={
+                    "placeholder":"dd/mm/yyyy",
+                    "class":"datefield",
+                    'type':"date"
+                }))
+    
+    end_date = forms.DateField(label="End Date:",required=False,
+                widget=forms.TextInput(attrs={
+                    "placeholder":"dd/mm/yyyy",
+                    "class":"datefield",
+                    'type':"date"
+                }))
+
+    assignment_file = forms.FileField(label="Attachment:",required=False,
+                widget=forms.FileInput(attrs={
+                    'type':'file',
+                    'class':'file',
+                    'name':'file',
+                }))
+
+    class Meta:
+        model = Assignment
+        fields = [
+            'title',
+            'description',
+            'start_date',
+            'end_date',
+            'assignment_file',
+        ]
+
+    def clean(self,*args,**kwargs):
+        cleaned_data = super().clean()
+        title = str(self.cleaned_data.get('title'))
+        startDate = self.cleaned_data.get('start_date')
+        endDate = self.cleaned_data.get('end_date')
+
+        try:
+            if not re.search('^[A-Za-z0-9\s]+$',title):
+                raise forms.ValidationError("Not a valid title")
+        except forms.ValidationError as e:
+            self.add_error('title', e)
+
+        try:
+            if (startDate and endDate) and (startDate > endDate):
+                raise forms.ValidationError("Start date is greater than end date")
+        except forms.ValidationError as e:
+            self.add_error('end_date', e)
+        
+        return cleaned_data
+
+    #     if assignment_file:
+    #         ext = os.path.splitext(assignment_file.name)[1]  # [0] returns path+filename
+    #         valid_extensions = ['.pdf']
+    #         try:
+    #             if not ext.lower() in valid_extensions:
+    #                 raise forms.ValidationError('Unsupported file extension.')
+    #         except forms.ValidationError as e:
+    #             self.add_error('assignment_file',e)
+
+    #     return cleaned_data

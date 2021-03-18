@@ -13,8 +13,8 @@ class StudentForm(forms.ModelForm):
 
     gender_choice=Student.gender_choices
 
-    branches = Branch.objects.values_list('branch_name')
-    branch_choices = ((branch[0],branch[0]) for branch in branches)
+    branches = Branch.objects.values_list('branch_name','code')
+    branch_choices = ((branch[1],branch[0]) for branch in branches)
 
     sem_choices=Student.sem_choices
     

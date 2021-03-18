@@ -1,8 +1,10 @@
 {% load static %}
 <html>
     <head>
-        <title>Staff</title>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/landing.css' %}"/>
+        <title>{% block title %}Staff{% endblock %}</title>
+        {% block css %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/staff.css' %}"/>
+        {% endblock %}
     </head>
     <body>
         <div class="header">
@@ -19,7 +21,7 @@
                 {% endblock %}
                 
             </div>
-            </div>
+        </div>
         </br>
         <div class="footer">
             <p>

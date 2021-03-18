@@ -1,0 +1,123 @@
+{% extends './base.html' %}
+
+{% block title %} {{ selectedAssignment.title }} {% endblock %}
+{% block content %}
+<script type = "text/javascript">
+       function Warn() {
+          alert ("This is a warning message!");
+          document.write ("This is a warning message!");
+       }
+ </script>     
+
+<div id='wrapper'>
+    <div id="mySidenav" class="sidenav">
+        <div id="sidebar-title">Your Courses</div>
+        {% if courses %}
+            {% for sem,courseList in courses.items %}
+                <div id="courses-item">
+                    <ul id="sem">
+                        <div id="sem-head">Semester {{ sem }}</div>
+                        <ul id="course">
+                            {% for course in courseList %}
+                                <a href="/staff/courses/{{ course.0 }}"><li>{{ course.1 }}</li></a>
+                            {% endfor %}
+                        </ul>
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div id="empty-list">
+                No Courses...
+            </div>
+        {% endif %}
+    </div>
+    {% if courses %}
+    <div id="content">
+        <div class="course-title btm-border">
+            {{ selectedAssignment.title }}
+            <div id="buttons">
+                <button onclick="location.href='./assignments'" id="white-button">
+                    Edit
+                </button>
+                <button onclick="location.href='/staff/assignments/delete/{{ selectedAssignment.assignment_id }}'" id="delete" onclick = "Warn();" >
+                    Delete
+                </button>
+            </div>
+        </div>
+        <div id="course-description">
+            <table>
+                <tr>
+                    <td>Description:</td>
+                    <td>{{ selectedAssignment.description|linebreaksbr }}</td>
+                </tr>
+                <tr>
+                    <td>Created By:</td>
+                    <td>{{ selectedAssignment.faculty.firstName }} {{ selectedAssignment.faculty.lastName }}</td>
+                </tr>
+                <tr>
+                    <td>Start Date:</td>
+                    <td>{{ selectedAssignment.start_date }}</td>
+                </tr>
+                <tr>
+                    <td>Deadline:</td>
+                    {% if selectedAssignment.end_date%}
+                        <td>{{ selectedAssignment.end_date }}</td>
+                    {% else %}
+                        <td>-</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>Course:</td>
+                    <td>{{ selectedAssignment.course.course_name }}</td>
+                </tr>
+                <tr>
+                    <td>Attachment:</td>
+                    {% if selectedAssignment.assignment_file %}
+                    <td><a href="{{ selectedAssignment.assignment_file.url }}" download>Download</a></td>
+                    {% else %}
+                    <td>-</td>
+                    {% endif %}
+                </tr>
+            </table>
+        </div>
+        <div id="course-sub-title">
+            Submissions
+        </div>
+            <div id="assignment">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Enrolment No</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Submission</th>
+                            <th>Submitted On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if students %}
+                            {% for student in students %}
+                                <tr>
+                                    <td>{{ student.enrolment }}</td>
+                                    <td>{{ student.firstName }} {{ student.lastName }}</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5" id="empty-table">No students enrolled...</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+    </div>
+    {% else %}
+        <div id="content-none">
+            <div>No courses have been assigned to you yet...</div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

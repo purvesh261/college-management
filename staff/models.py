@@ -15,8 +15,8 @@ class Staff(models.Model):
      #                   ('Automobile Engineering','Automobile Engineering'),
      #                   ('Petrochemical Engineering','Petrochemical Engineering'))  
 
-     branches = Branch.objects.values_list('branch_name')
-     branch_choices = ((branch[0],branch[0]) for branch in branches)
+     branches = Branch.objects.values_list('branch_name','code')
+     branch_choices = ((branch[1],branch[0]) for branch in branches)
 
      designation_choices=(('Head of Department','Head of Department'),
                     ('Professor','Professor'),

@@ -1,5 +1,105 @@
 {% extends './base.html' %}
 
-{% block content %}
+{% block title%} {{ selectedCourse.course_name }} {% endblock %}
 
+{% block content %}
+<div id='wrapper'>
+    <div id="mySidenav" class="sidenav">
+        <div id="sidebar-title">Your Courses</div>
+        {% if courses %}
+            {% for sem,courseList in courses.items %}
+                <div id="courses-item">
+                    <ul id="sem">
+                        <div id="sem-head">Semester {{ sem }}</div>
+                        <ul id="course">
+                            {% for course in courseList %}
+                                <a href="../{{ course.0 }}"><li>{{ course.1 }}</li></a>
+                            {% endfor %}
+                        </ul>
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div id="empty-list">
+                No Courses...
+            </div>
+        {% endif %}
+    </div>
+    {% if courses %}
+    <div id="content">
+        <div class="course-title">
+            {{ selectedCourse.course_name }}
+        </div>
+        {% if selectedCourse.description %}
+            <div id="course-description">
+                <div id="course-description-content">
+                    {{ selectedCourse.description|linebreaksbr }}
+                </div>
+            </div>
+        {% endif %}
+        <div id="assignment">
+            <div id="course-sub-title">
+                Assignments
+                <div id="buttons">
+                    <button onclick="location.href='./assignments'" id="white-button">
+                        View All
+                    </button>
+                    <button onclick="location.href='./create-assignment'" id="white-button">
+                        <b>+</b> Create Assignment
+                    </button>
+                </div>
+            </div>
+            <div id="table-wrapper">
+                <div id="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Assignment ID</th>
+                                <th>Title</th>
+                                <th>Start Date</th>
+                                <th>Deadline</th>
+                                <th>Created by</th>
+                                <th>Attachment</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        {% if assignments %}
+                            <tbody>
+                                {% for assignment in assignments %}
+                                    <tr>
+                                        <td>{{ assignment.assignment_id }}</td>
+                                        <td><a href="/staff/assignments/{{ selectedCourse.course_id }}/{{ assignment.assignment_id }}">{{ assignment.title }}</a></td>
+                                        <td>{{ assignment.start_date }}</td>
+                                        {% if assignment.end_date %}
+                                        <td>{{ assignment.end_date }}</td>
+                                        {% else %}
+                                        <td>-</td>
+                                        {% endif %}
+                                        <td>{{ assignment.faculty.firstName }} {{ assignment.faculty.lastName }}</td>
+                                        {% if assignment.assignment_file %}
+                                        <td><a href="{{ assignment.assignment_file.url }}" download>Download</a></td>
+                                        {% else %}
+                                        <td>-</td>
+                                        {% endif %}
+                                        <td><a href="/staff/assignments/delete/{{ assignment.assignment_id }}">Delete</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" id="empty-table">No assignments yet...</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <div id="content-none">
+            <div>No courses have been assigned to you yet...</div>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

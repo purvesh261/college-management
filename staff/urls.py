@@ -4,7 +4,7 @@ from .views import *
 app_name = 'staff'
 urlpatterns = [
     path('home/', staff_home_view, name="home"),
-    path('courses/',staff_courses_view, name="courses"),
+    # path('courses/',staff_courses_view, name="courses"),
     path('results/',staff_results_view, name="results"),
     path('attendance/',staff_attendance_view, name="attendance"),
     path('profile/',staff_profile_view, name="profile"),
@@ -33,4 +33,11 @@ urlpatterns = [
 
     #re_path(r'courses/(?P<course_code>[0-9]{2})/add-course/$', add_course_view, name="add-course"),
 
+    path('courses/', courses_redirect_view, name="courses_redirect_view"),
+    path('courses/mt/', no_course_view, name="no_course_view"),
+    re_path(r'^courses/(?P<course_code>[0-9]{10})/$', staff_courses_view, name="courses_view"),
+    re_path(r'^courses/(?P<course_code>[0-9]{10})/create-assignment$', create_assignment_view, name="create-assignment"),
+    re_path(r'^assignments/(?P<course_code>[0-9]{10})/(?P<assignment_id>[0-9]{10})/$', manage_assignment_view, name="manage_assignment"),
+    re_path(r'^courses/(?P<course_code>[0-9]{10})/assignments/$', view_assignments_view, name="assignments-view"),
+    re_path(r'^assignments/delete/(?P<assignment_id>[0-9]{10})/$', delete_assignment_view, name="delete_assignment"),
 ]

@@ -1,0 +1,58 @@
+{% extends './base.html' %}
+
+{% block content %}
+<div id='wrapper'>
+    <div id="mySidenav" class="sidenav">
+        <div id="sidebar-title">Your Courses</div>
+        {% if courses %}
+            {% for sem,courseList in courses.items %}
+                <div id="courses-item">
+                    <ul id="sem">
+                        <div id="sem-head">Semester {{ sem }}</div>
+                        <ul id="course">
+                            {% for course in courseList %}
+                                <a href="/staff/attendance/{{ course.0 }}"><li>{{ course.1 }}</li></a>
+                            {% endfor %}
+                        </ul>
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div id="empty-list">
+                No Courses...
+            </div>
+        {% endif %}
+    </div>
+    <div id="content">
+        <form method="POST"> {% csrf_token %}
+            <div id="attendance-form">
+                Edit Attendance: {{ date }}
+            </div>
+            <table border="1" id="attendance-table">
+                <tr>
+                    <th>Enrolment No</th>
+                    <th>Name</th>
+                    <th>Present</th>
+                    <th>Absent</th>
+                </tr>
+                {% for student in attendance %}
+                <tr>
+                    <td>{{ student.student.enrolment }}</td>
+                    <td>{{ student.student.firstName }} {{ student.student.lastName }}</td>
+                    {% if student.status == "P" %}
+                        <td><input type='radio' value="P" name="{{ student.student.enrolment }}" checked/></td>
+                        <td><input type='radio' value="A" name="{{ student.student.enrolment }}" /></td>
+                    {% else %}
+                        <td><input type='radio' value="P" name="{{ student.student.enrolment }}" /></td>
+                        <td><input type='radio' value="A" name="{{ student.student.enrolment }}" checked/></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+            <div id="attendance-form">
+                <input type="submit" value="Submit" id='attendance-sub'/>
+            </div>
+            
+        </form>
+    </div>
+    {% endblock %}

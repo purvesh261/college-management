@@ -1,9 +1,11 @@
 {% load static %}
 <html>
     <head>
+        <script src="{% static 'javascript/staff.js' %}"></script> 
         <title>{% block title %}Staff{% endblock %}</title>
         {% block css %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/staff.css' %}"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         {% endblock %}
     </head>
     <body>

@@ -86,5 +86,3 @@ class Staff(models.Model):
                     default=True,
                     )
      
-
-

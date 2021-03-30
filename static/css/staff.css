@@ -169,11 +169,15 @@ table {
     margin: 5px;
 }
 
-
 #white-button:hover {
     background-color: rgb(19, 15, 235);
     color: white;
     transition: 0.3s;
+}
+
+.icon-button {
+    color: black;
+    margin-left: 5px;
 }
 
 #delete {
@@ -316,8 +320,25 @@ table {
     background-color: rgb(19, 15, 235);
 }
 
-
 .footer {
     margin-top: 50;
 }
 
+/* Attendance */
+#attendance-form{
+    padding: 20px 0 0 15px;
+}
+
+#attendance-date{
+    width: max-content;
+}
+
+#attendance-table{
+    margin: auto;
+    width: 95%;
+}
+
+#attendance-sub{
+    width: 10%;
+    padding-left: 15px;
+}

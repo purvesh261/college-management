@@ -2,12 +2,6 @@
 
 {% block title %} {{ selectedAssignment.title }} {% endblock %}
 {% block content %}
-<script type = "text/javascript">
-       function Warn() {
-          alert ("This is a warning message!");
-          document.write ("This is a warning message!");
-       }
- </script>     
 
 <div id='wrapper'>
     <div id="mySidenav" class="sidenav">
@@ -36,10 +30,10 @@
         <div class="course-title btm-border">
             {{ selectedAssignment.title }}
             <div id="buttons">
-                <button onclick="location.href='./assignments'" id="white-button">
+                <button onclick="location.href='./edit'" id="white-button">
                     Edit
                 </button>
-                <button onclick="location.href='/staff/assignments/delete/{{ selectedAssignment.assignment_id }}'" id="delete" onclick = "Warn();" >
+                <button onclick="location.href='/staff/assignments/delete/{{ selectedAssignment.assignment_id }}'" id="delete" >
                     Delete
                 </button>
             </div>
@@ -48,7 +42,11 @@
             <table>
                 <tr>
                     <td>Description:</td>
+                    {% if selectedAssignment.description %}
                     <td>{{ selectedAssignment.description|linebreaksbr }}</td>
+                    {% else %}
+                    <td>No description</td>
+                    {% endif %}
                 </tr>
                 <tr>
                     <td>Created By:</td>
@@ -73,7 +71,7 @@
                 <tr>
                     <td>Attachment:</td>
                     {% if selectedAssignment.assignment_file %}
-                    <td><a href="{{ selectedAssignment.assignment_file.url }}" download>Download</a></td>
+                    <td><a href="{{ selectedAssignment.assignment_file.url }}" download>Download</a> <a class="icon-button" href='..'><i class="fa fa-trash" ></i></a> <input type="file"/></td>
                     {% else %}
                     <td>-</td>
                     {% endif %}

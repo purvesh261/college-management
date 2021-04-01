@@ -1,0 +1,20 @@
+{% extends './base.html' %}
+{% load static %}
+{% block css %}
+        {% endblock %}
+
+{% block content %}
+
+<h2 align=center>{{branch}}</h2> 
+
+<div class="sem">
+    <button onclick="location.href='./1/student-list'">Sem I</button>
+    <button onclick="location.href='./2/student-list'">Sem II</button>
+    <button onclick="location.href='./3/student-list'">Sem III</button>
+    <button onclick="location.href='./4/student-list'">Sem IV</button>
+    <button onclick="location.href='./5/student-list'">Sem V</button>
+    <button onclick="location.href='./6/student-list/'">Sem VI</button>
+    <button onclick="location.href='./7/student-list'">Sem VII</button>
+    <button onclick="location.href='./8/student-list'">Sem VIII</button>
+</div>
+{% endblock %}

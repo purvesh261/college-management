@@ -288,6 +288,27 @@ class resultform(forms.ModelForm):
             'exam',
             ]
 
+    def clean(self, *args, **kwargs):
+        cleaned_data = super().clean()
+        enrolment = str(self.cleaned_data.get("enrolment"))
+        branch = str(self.cleaned_data.get("branch"))
+        course = str(self.cleaned_data.get("course_name"))
+        exam = str(self.cleaned_data.get("exam"))
+        try:
+            if Result.objects.filter(enrolment=enrolment,branch=branch,course_name=course,exam=exam).exists():
+                course_exists_error = course + "Marks already Exist</br>for this Student."
+                course_exists_error = mark_safe(course_exists_error)
+                raise forms.ValidationError(course_exists_error)
+
+        except forms.ValidationError as e:
+            self.add_error('course_name', e)
+        return cleaned_data
+
+
+
+
+
+
 class editresultform(forms.ModelForm):
     class Meta:
         model=Result
@@ -400,6 +421,25 @@ class EditAssignmentForm(forms.ModelForm):
             'end_date',
         ]
 
+    #     return cleaned_data
+
+
+#for profile
+
+class editforms1(forms.ModelForm):
+    class Meta:
+        model=Staff
+        fields= [
+            'firstName',
+            'middleName',
+            'lastName',
+            'username',
+            'account_id',
+            'mobile',
+            'branch',
+            'email',
+            'gender',
+            'isPending',
     def clean(self,*args,**kwargs):
         cleaned_data = super().clean()
         title = str(self.cleaned_data.get('title'))

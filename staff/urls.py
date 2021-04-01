@@ -30,13 +30,21 @@ urlpatterns = [
 
     #path('add-result/<int:account_id>',add_result,name='addresult'),
 
-    re_path(r'^results/(?P<branch_code>[0-9]{2})/$', result_view, name="sem-details"),
-    re_path(r'results/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/add-result/$', sem_result, name="sem-result"),
-    re_path(r'results/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/add-result/(?P<account_id>[0-9]{10})/$', add_result, name="add-result"),
-    re_path(r'results/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/add-result/(Internal-1|Internal-2|Internal)', student_internal_results, name="sem-result"),
-    re_path(r'results/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/edit-result/(?P<account_id>[0-9]{10})', student_result_edit, name="sem-result"),
+   # re_path(r'^results/(?P<branch_code>[0-9]{2})/$', result_view, name="sem-details"),
+    # re_path(r'results/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/add-result/$', sem_result, name="sem-result"),
+    # re_path(r'results/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/add-result/(?P<account_id>[0-9]{10})/$', add_result, name="add-result"),
+    # re_path(r'results/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/add-result/(Internal-1|Internal-2|Internal)', student_internal_results, name="sem-result"),
+    # re_path(r'results/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/edit-result/(?P<account_id>[0-9]{10})', student_result_edit, name="sem-result"),
 
     #re_path(r'courses/(?P<course_code>[0-9]{2})/add-course/$', add_course_view, name="add-course"),
+
+    
+    path('results/', courses_redirect_view, name="courses_redirect_view"),
+    path('results/mt/', no_course_view, name="no_course_view"),
+    re_path(r'^results/(?P<course_code>[0-9]{10})/$', staff_results_view, name="courses_view"),
+    re_path(r'^results/(?P<course_code>[0-9]{10})/add-result/(?P<account_id>[0-9]{10})$', add_result, name="courses_view"),
+    re_path(r'^results/(?P<course_code>[0-9]{10})/(Internal-1|Internal-2|Internal)/', student_internal_results, name="sem-result"),
+    re_path(r'^results/(?P<course_code>[0-9]{10})/edit-result/(?P<account_id>[0-9]{10})', student_result_edit, name="edit-result"),
 
     path('courses/', courses_redirect_view, name="courses_redirect_view"),
     path('courses/mt/', no_course_view, name="no_course_view"),

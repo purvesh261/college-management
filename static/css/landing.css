@@ -10,26 +10,27 @@ body{
     margin: auto;
     color: black;
     background-attachment: fixed;
-    background-color: #e6ecf7;
+    background-color: #eaeef5;
     /* font-family: Arial, Helvetica, sans-serif; */
     font-family: 'Open Sans', sans-serif;
 }
 
 .header {
     overflow: hidden;
-    background: rgb(0,73,255);
-    background: linear-gradient(180deg, rgb(138, 170, 250) 0%, rgb(220, 225, 241) 100%);
     display: inline-block;
     position: fixed; /* Set the navbar to fixed position */
     top: 0; /* Position the navbar at the top of the page */
     width: 100%; /* Full width */
-    box-shadow: 2px 5px 14px 2px rgba(134, 134, 134, 0.534);
+    box-shadow: 2px 5px 15px 2px rgba(134, 134, 134, 0.534);
+    background: rgb(0,73,255);
+    background: linear-gradient(180deg, rgb(138, 170, 250) 0%, rgb(220, 225, 241) 100%);
+
 }
 
 .navbar{
     float: right;
     display: block;
-}
+    }
 
 /* Links inside the navbar */
 .navbar a {
@@ -58,8 +59,8 @@ body{
 }
 
 .navbar a.active {
-    color: white;
-    background-color: rgb(19, 15, 235);
+    color: rgb(21, 16, 87);
+    font-weight: bold;
 }
 
 .navbar a.active:hover {
@@ -87,7 +88,7 @@ body{
     width: 22.5%;
     box-sizing: border-box;
     padding-bottom: 20px;
-    box-shadow: 0px 0px 5px 0px rgba(92, 132, 235, 0.45);
+    box-shadow: 2px 5px 14px 2px rgba(134, 134, 134, 0.35);
 }
 
 input {
@@ -96,7 +97,7 @@ input {
     margin: 8px 0;
     font-size: 16px;
     display: inline-block;
-    border: 1px solid #ccc;
+    border: 1px solid rgb(173, 173, 173);
     border-radius: 4px;
     box-sizing: border-box;
   }
@@ -108,8 +109,8 @@ input:hover {
 
 input:focus {
     background-color: rgb(241, 241, 241);
-    border: 1px solid rgba(81, 203, 238, 1);
-    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+ border: 1px solid rgba(81, 203, 238, 1);
+box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 }
 
 .login-form{
@@ -171,7 +172,8 @@ label{
     overflow: hidden;
     min-height: 700px;
     padding-bottom: 20px;
-    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.30);
+    box-shadow: 2px 5px 14px 2px rgba(138, 153, 189, 0.35);
+
 }
 
 .announcements h3 {
@@ -181,7 +183,7 @@ label{
 }
 
 #head {
-    border-bottom: 2px solid;
+    border-bottom: 2px solid rgb(173, 173, 173);
 }
 
 #announcements_table{
@@ -190,7 +192,7 @@ label{
 #announcements_table tr td {
     padding: 15px 5px 5px 5px;
     width: 100%;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid rgb(173, 173, 173);
 }
 
 #announcements_table tr td:hover{
@@ -201,14 +203,15 @@ label{
     width: 100%;
     background-color: #c3d5f5;
     float: right;
-    margin-top: 50%;
+    margin-top: 10%;
     padding-bottom: 30px;
     bottom: 10;
-    border-top: 1px solid #c3d5f5;
+    border-top: 0.5px solid #c3d5f5;
     color: rgb(153, 144, 144);
 }
 
 .footer p {
+    padding-top:15px;
     text-align: center;
 }
 
@@ -505,6 +508,20 @@ font-weight: bold;
     background-color:white;
     margin-left: 14px;
 }
+#back{
+    width:12%;
+    display: inline-block;
+    font-size:16px;
+    text-align: center;
+    height: 6%;
+    background-color:#ddd;
+    margin-left: 14px;
+}
+#back hover{
+    background: #ddd;
+    color: black;
+    
+}
 #Internal-1{
     width:16%;
     display: inline-block;
@@ -589,3 +606,130 @@ font-weight: bold;
 .result-edit th{
     text-align: left;
 }
+
+/*staff profile*/
+.staff_profile{
+    border: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    border-style: solid;
+    min-height: 520px;
+    width: auto;
+    margin-left: 20%;
+    margin-right: 20%;
+    padding-bottom: 20px;
+    margin-top: 5%;
+    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.30);
+}
+#staffprofile {
+   width: 80%;
+   margin-left: 60px;
+   margin-top: 5%;
+   table-layout:fixed;
+}
+#staffprofile tr td  {
+    text-align: left;
+    font-size: 18px;
+    height: 55px;
+    width: 40%;
+}
+.profile_btn input[type=button]{
+  background-color: blue;
+  color: white;
+  width:27%;
+  margin:5 auto;
+  margin-left: 5%;
+  position: relative;
+  font-size: 18px;
+  display:inline-block
+  
+}
+.profile_btn a{
+    display: block;
+    width: 115px;
+    height: 25px;
+    background: blue;
+    padding: 10px;
+    display: inline;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    line-height: 25px;
+}
+
+/*staff edit ptofile*/
+
+.profile-edit{
+    text-align: center;
+    background-color: white;
+    margin: auto;
+    width: 20%t;
+    margin-top: 3%;
+    margin-left: 20%;
+    margin-right: 20%;
+    border: 1px rgb(255, 255, 255);
+    padding-right: 10%;
+    padding-left: 10%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    height: auto;
+    box-shadow: 0px 0px 5px 0px rgba(58, 57, 57, 0.3);
+    border-radius: 3px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.profile-edit h2{
+font-size: 30px;
+text-align: center;
+margin-top: 2%;
+}
+
+.profile-edit[type=text]{
+        width: 80%;
+        padding: 6px 10px;
+        margin: 8px 0;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        -ms-box-sizing:content-box;
+        -moz-box-sizing:content-box;
+        -webkit-box-sizing:content-box; 
+        box-sizing:content-box;
+        font-family: Arial, Helvetica, sans-serif;
+    
+}
+.staff-profilelist tr td{
+   width:75%;
+}
+.staff-profilelist th{
+    margin-top: 15%;
+    font-size: 18px;
+    display: inline-block;
+}
+
+.profile-edit [type=submit]{
+border-radius: 4px;
+background-color: rgb(19, 15, 235);
+border: none;
+color: #FFFFFF;
+text-align: center;
+font-size: 18px;
+padding: 15px;
+width: 30%;
+height: auto;
+cursor: pointer;
+margin: 5px;
+}
+.profile-edit [type=button]{
+    border-radius: 4px;
+    background-color: rgb(19, 15, 235);
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 18px;
+    padding: 15px;
+    width: 30%;
+    height: auto;
+    cursor: pointer;
+    margin: 5px;
+    }

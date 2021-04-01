@@ -138,11 +138,21 @@ def admins_home_view(request, *args, **kwargs):
 
 #@login_required(login_url=common.views.login_view)
 def admins_students_view(request, *args, **kwargs):
-    return render(request, "admins/students.html")
+    branches = Branch.objects.all().order_by('branch_name')
+    print(branches)
+    context = {
+        'branches' : branches,
+            }
+    return render(request, "admins/students.html",context)
 
-#@login_required(login_url=common.views.login_view)
-def admins_staff_view(request, *args, **kwargs):
-    return render(request, "admins/staff.html")
+def admins_student_sem_view(request,*args,branch_code):
+    branches = Branch.objects.all().order_by('branch_name')
+    b1=get_object_or_404(Branch,code=branch_code)
+    print(b1.branch_name)
+    print(branch_code)
+    return render(request,'admins/student_sem.html',{'branch':b1.branch_name})
+
+
 
 #@login_required(login_url=common.views.login_view)
 # admin profile edit
@@ -191,29 +201,58 @@ def admins_profile_edit(request,account_id):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+
 #@login_required(login_url=common.views.login_view)
-def admins_student_pending_detail_view(request,*args,**kwargs):
-    obj=Student.objects.filter(isPending=True)
+def admins_student_detail_view(request,*args,branch_code):
+    sem=(request.path.split('/')) #split the whole url /
+    s1=sem[4] #to fetch the sem from url
+    print('sem',sem[4])
+    b1=get_object_or_404(Branch,code=branch_code) #get the branch bane using branch code
+    b2=b1.branch_name #get the branch name
+    print(b2) #print branch name
+    obj=Student.objects.filter(sem=s1,branch=branch_code,isPending=False)
+    branch_dict={}
+    for student in obj:
+        branch_dict[student.enrolment] = Branch.objects.get(code=student.branch).branch_name
+    return render(request,"admins/students_list.html",{'student':obj,'branch_name':branch_dict})
+
+
+#@login_required(login_url=common.views.login_view)
+def admins_student_pending_detail_view(request,branch_code,*args,**kwargs):
+    sem=(request.path.split('/')) #split the whole url /
+    s1=sem[4] #to fetch the sem from url
+    print('sem',sem[4])
+    b1=get_object_or_404(Branch,code=branch_code) #get the branch bane using branch code
+    b2=b1.branch_name #get the branch name
+    print(b2) #print branch name
+    obj=Student.objects.filter(sem=s1,branch=branch_code,isPending=True)
     branch_dict={}
     for student in obj:
         branch_dict[student.enrolment] = Branch.objects.get(code=student.branch).branch_name
     print(obj)
     print(branch_dict)
-    return render(request,"admins/students.html",{'student':obj,'branch_name':branch_dict})
+    return render(request,"admins/student_pending.html",{'student':obj,'branch_name':branch_dict})
     
 # load approved acounts
 # @login_required(login_url=common.views.login_view)  
-def admins_student_approved_detail_view(request,*args,**kwargs):
-    obj=Student.objects.filter(isPending=False)
-    branch_dict={}
-    for student in obj:
-        branch_dict[student.enrolment] = Branch.objects.get(code=student.branch).branch_name
-    return render(request,"admins/studentapproved.html",{'student':obj,'branch_name':branch_dict})
+# def admins_student_approved_detail_view(request,*args,branch_code,**kwargs):
+#     sem=(request.path.split('/')) #split the whole url /
+#     s1=sem[4] #to fetch the sem from url
+#     print('sem',sem[4])
+#     b1=get_object_or_404(Branch,code=branch_code) #get the branch bane using branch code
+#     b2=b1.branch_name #get the branch name
+#     print(b2) #print branch name
+#     obj=Student.objects.filter(sem=s1,branch=branch_code,isPending=False)
+#     branch_dict={}
+#     for student in obj:
+#         branch_dict[student.enrolment] = Branch.objects.get(code=student.branch).branch_name
+#     return render(request,"admins/studentapproved.html",{'student':obj,'branch_name':branch_dict})
 
 
 #approve page will be called to to approve accounts
 #@login_required(login_url=common.views.login_view)
-def admins_student_approve(request,account_id):
+def admins_student_approve(request,account_id,branch_code):
     print(account_id)
     displaydata=Student.objects.get(account_id=account_id)
     print(displaydata)
@@ -253,12 +292,10 @@ def admins_student_approve(request,account_id):
 #edit page will be called for unapproved details of students
 
 #edit student details
-#@login_required(login_url=common.views.login_view)
-def admins_student_detail_view(request,*args,**kwargs):
-    return render(request,"admins/students.html")
+
   
 #@login_required(login_url=common.views.login_view)
-def admins_student_edit(request,account_id):
+def admins_student_edit(request,account_id,branch_code):
     # print(account_id)
     displaydata=Student.objects.get(account_id=account_id)
     # print(displaydata)
@@ -273,7 +310,7 @@ def admins_student_edit(request,account_id):
             form.save()
             #messages.success(request,"student data updated")
             #return render(request,'admins/studentedit.html',{'editdata':updatedata})
-            return redirect("../students")
+            return redirect("../")
         else:
             return HttpResponse(messages)
     #print(form.errors)
@@ -298,7 +335,25 @@ def admins_student_edit(request,account_id):
 
 
 
-#for extraction of staff
+#for staff
+
+#@login_required(login_url=common.views.login_view)
+def admins_staff_view(request, *args, **kwargs):
+    branches = Branch.objects.all().order_by('branch_name')
+    print(branches)
+    context = {
+        'branches' : branches,
+            }
+    return render(request, "admins/staff.html",context)
+
+def admins_staff_detail_view(request,branch_code,*args):
+    obj=Staff.objects.filter(isPending=False,branch=branch_code)
+    branch_dict={}
+    for staff in obj:
+        branch_dict[staff.employee_id] = Branch.objects.get(code=staff.branch).branch_name
+    return render(request,"admins/staff_list.html",{'staff':obj,'branch_name':branch_dict})
+
+
 #@login_required(login_url=common.views.login_view)
 def admins_staff_pending_detail_view(request,*args,**kwargs):
     obj=Staff.objects.filter(isPending=True)
@@ -306,19 +361,19 @@ def admins_staff_pending_detail_view(request,*args,**kwargs):
     branch_dict={}
     for staff in obj:
         branch_dict[staff.employee_id] = Branch.objects.get(code=staff.branch).branch_name
-    return render(request,"admins/staff.html",{'staff':obj,'branch_name':branch_dict})
+    return render(request,"admins/staff_pending.html",{'staff':obj,'branch_name':branch_dict})
 
 #@login_required(login_url=common.views.login_view)
-def admins_staff_approved_detail_view(request,*args,**kwargs):
-    obj=Staff.objects.filter(isPending=False)
-    branch_dict={}
-    for staff in obj:
-        branch_dict[staff.employee_id] = Branch.objects.get(code=staff.branch).branch_name
-    return render(request,"admins/staffapproved.html",{'staff':obj,'branch_name':branch_dict})
+# def admins_staff_approved_detail_view(request,*args,**kwargs):
+#     obj=Staff.objects.filter(isPending=False)
+#     branch_dict={}
+#     for staff in obj:
+#         branch_dict[staff.employee_id] = Branch.objects.get(code=staff.branch).branch_name
+#     return render(request,"admins/staffapproved.html",{'staff':obj,'branch_name':branch_dict})
 
 #to approve staff accounts
 #@login_required(login_url=common.views.login_view)
-def admins_staff_approve(request,account_id):
+def admins_staff_approve(request,account_id,branch_code):
     print(account_id)
     displaydata=Staff.objects.get(account_id=account_id)
     print(displaydata)
@@ -356,7 +411,7 @@ def admins_staff_approve(request,account_id):
 
 # edit staff details
 #@login_required(login_url=common.views.login_view)
-def admins_staff_edit(request,account_id):
+def admins_staff_edit(request,account_id,branch_code):
     print(account_id)
     displaydata=Staff.objects.get(account_id=account_id)
     print(displaydata)
@@ -371,7 +426,7 @@ def admins_staff_edit(request,account_id):
             form.save()
             #messages.success(request,"Staff Member data updated")
             #return render(request,'admins/staffedit.html',{'editdata':updatedata})
-            return redirect("../staff")
+            return redirect("../")
         else:
             return HttpResponse(messages)
     return render(request,'admins/staffedit.html',{'editdata':displaydata,'branch_name':branch_name})

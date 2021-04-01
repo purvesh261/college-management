@@ -1,0 +1,76 @@
+{% extends './base.html' %}
+{% load static %}
+
+
+{% block title %}Staff - Profile{% endblock %}
+
+{% block content %}
+<div class="profile-edit">
+<center>
+<h2>Profile Edit</h2>
+<form method="POST" action="../edit-profile/{{editdata.account_id}}">   
+    {% csrf_token %}
+    {{ form.errors }}
+    {{ form.non_field_errors }}
+    <table class="staff-profilelist" align="center"> 
+        <tr>
+            <th>First-Name:</th>
+            <td><input type="text" name="firstName" value="{{editdata.firstName}}" ></td>
+        </tr>
+
+        <tr>
+            <th>Last-Name:</th>
+            <td><input type="text" name="lastName" value="{{editdata.lastName}}" ></td>
+        </tr>
+        <tr>
+            <th>Account_id:</th>
+            <td><input type="text" name="account_id" value="{{editdata.account_id}}" readonly></td>
+        </tr>
+
+        <tr>
+            <th>User-Name:</th>
+            <td><input type="text" name="username" value="{{editdata.username}}" readonly></td>
+        </tr>
+
+        <tr>
+            <th>Mobile:</th>
+            <td><input type="text" name="mobile" value="{{editdata.mobile}}" ></td>
+        </tr>
+       
+        <tr>
+            <th>Branch:</th>
+            <td><input type="text" name="branch" value="{{editdata.branch}}" readonly></td>
+        </tr>
+
+        <tr>
+            <th>Email:</th>
+            <td><input type="text" name="email" value="{{editdata.email}}"></td>
+        </tr>
+
+        <tr>
+            <th>Gender:</th>
+            <td><input type="text" name="gender" value="{{editdata.gender}}"></td>
+        </tr>
+        <tr>
+            <th>Account_id:</th>
+            <td><input type="text" name="account_id" value="{{editdata.account_id}}"></td>
+        </tr>
+        
+
+</table>
+<input type="submit" value="Update" onclick="profile_update()"/>
+<input type="button" value="Cancel"  onclick="location.href='../profile'">
+<input type="button" value="Back"  onclick="location.href='../profile'">
+
+</form> 
+</center>
+<script>
+    function profile_update() {
+      alert("Profile Updated");
+    }
+    </script>
+</div>
+
+
+
+{% endblock %}

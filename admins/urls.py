@@ -24,28 +24,35 @@ urlpatterns = [
     path('delete-announcement/<int:account_id>',staff_delete_view,name='staffannouncementdelete'),
 
 
+    #for student sem
+    re_path(r'^students/(?P<branch_code>[0-9]{2})/$', admins_student_sem_view, name="sem-details"),
+
+    re_path(r'students/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/student-list/$',admins_student_detail_view ,name="student_list"),
 
 
-    path('student-account-pending-details/',admins_student_pending_detail_view,name='studentsdetails'),
-    path('student-account-approved-details/',admins_student_approved_detail_view,name='studentsdetails2'),
+
+
+    re_path(r'students/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/student-list/student-account-pending-details/',admins_student_pending_detail_view,name='studentsdetails'),
+    #re_path(r'students/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/student-list/student-account-approved-details/',admins_student_approved_detail_view,name='studentsdetails2'),
 
     #for edit
-    path('approve-student/<int:account_id>',admins_student_approve,name='studentapprove'),
+    re_path(r'students/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/student-list/approve-student/(?P<account_id>[0-9]{10})',admins_student_approve,name='studentapprove'),
     #path('approved-student/<int:account_id>/',approve_student,name='studentapproved'),
 
-    path('edit-student/<int:account_id>',admins_student_edit,name='studentedit'),
+    re_path(r'students/(?P<branch_code>[0-9]{2})/(1|2|3|4|5|6|7|8)/student-list/edit-student/(?P<account_id>[0-9]{10})',admins_student_edit,name='studentedit'),
     #path('update-student/<int:account_id>/',edit_student,name='studentupdate'),
 
 
     #for staff
-    path('staff-account-pending-details/',admins_staff_pending_detail_view,name='staffdetails'),
-    path('staff-account-approved-details/',admins_staff_approved_detail_view,name='staffdetails2'),
+    re_path(r'^staff/(?P<branch_code>[0-9]{2})/$', admins_staff_detail_view, name="staff-details"),
+    re_path(r'^staff/(?P<branch_code>[0-9]{2})/staff-account-pending-details/',admins_staff_pending_detail_view,name='staffdetails'),
+   # path('staff-account-approved-details/',admins_staff_approved_detail_view,name='staffdetails2'),
 
     #for edit
-    path('approve-staff/<int:account_id>',admins_staff_approve,name='staffapprove'),
+    re_path(r'^staff/(?P<branch_code>[0-9]{2})/approve-staff/(?P<account_id>[0-9]{10})',admins_staff_approve,name='staffapprove'),
     #path('approved-staff/<int:account_id>/',approve_staff,name='staffapproved'),
 
-    path('edit-staff/<int:account_id>',admins_staff_edit,name='staffedit'),
+    re_path(r'^staff/(?P<branch_code>[0-9]{2})/edit-staff/(?P<account_id>[0-9]{10})',admins_staff_edit,name='staffedit'),
     #path('update-staff/<int:account_id>/',edit_staff,name='staffupdate'),
 
 

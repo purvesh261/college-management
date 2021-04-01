@@ -11,14 +11,12 @@ from  . import forms
 from django.contrib import messages
 from .models import Branch
 from staff.models import Staff
-from staff.forms import resultform, CreateAssignmentForm, EditAssignmentForm
+from staff.forms import resultform, CreateAssignmentForm, EditAssignmentForm, editforms1
 from common.models import  Course, CourseFaculty
 from students.models import Student, Attendance
 from students.models import Result
 from staff.forms import editresultform
 import collections
-
-
 
 # Create your views here.
 
@@ -374,6 +372,7 @@ def staff_attendance_view(request, course_code, *args, **kwargs):
                 else:
                     courseList[course.course_id.semester] = [(course.course_id.course_id,course.course_id.course_name)]
             courseList = collections.OrderedDict(sorted(courseList.items()))
+           
             attendanceHistory = Attendance.objects.filter(course=selectedCourse)
             dates = set()
             percentage = {}
@@ -386,7 +385,7 @@ def staff_attendance_view(request, course_code, *args, **kwargs):
                 dates.add(item.date)
 
             for key in percentage.keys():
-                percentage[key] = [(percentage[key].count('P') / len(percentage[key])) * 100, 100 - (percentage[key].count('P') / len(percentage[key])) * 100, key.strftime('%d%m%Y')]
+                percentage[key] = [round((percentage[key].count('P') / len(percentage[key])) * 100, 2), round(100 - (percentage[key].count('P') / len(percentage[key])) * 100, 2), key.strftime('%d%m%Y')]
 
             dates = list(percentage.keys())
 
@@ -401,21 +400,30 @@ def staff_attendance_view(request, course_code, *args, **kwargs):
 
             for date in res:
                 sortedDict[date] = percentage[date]
+            
+            student_list = Student.objects.filter(sem=selectedCourse.semester, branch=selectedCourse.branch, isPending=False)
+            
+            studentAttendance = {}
+            for stud in student_list:
 
-            # while percentage:
-            #     first = max(dates)
-            #     print(dateDict)
-            #     print(percentage)
-            #     dateDict[first] = percentage[first]
-            #     percentage.pop(first)
-            #     dates.pop(first)
+                studentHist = Attendance.objects.filter(course=selectedCourse, student=stud)
+                if len(studentHist) > 0:
+                    studentPresent = 0
+                    for item in studentHist:
+                        if item.status == 'P':
+                            studentPresent += 1
+                    studentAttendance[stud.enrolment] = round((studentPresent / len(studentHist)) * 100, 2)
+                else:
+                    studentAttendance[stud.enrolment] = 'N.A.'
 
-            dates = list(dates)
+            print(studentAttendance)
 
         context = {
             'courses' : courseList,
             'selectedCourse' : selectedCourse,
             'history': sortedDict,
+            'students': student_list,
+            'studentPercentage': studentAttendance,
         }
     return render(request, "staff/attendance_course_list.html", context)
 
@@ -460,7 +468,7 @@ def enter_attendance_view(request, course_code, *args, **kwargs):
                 else:
                     courseList[course.course_id.semester] = [(course.course_id.course_id,course.course_id.course_name)]
             courseList = collections.OrderedDict(sorted(courseList.items()))
-            student_list = Student.objects.filter(sem=selectedCourse.semester, branch=selectedCourse.branch)
+            student_list = Student.objects.filter(sem=selectedCourse.semester, branch=selectedCourse.branch, isPending=False)
 
         if request.method == "POST":
             attendance = list(request.POST.items())
@@ -474,7 +482,6 @@ def enter_attendance_view(request, course_code, *args, **kwargs):
                         AttendanceObj = Attendance(student=stud, date=selectedDate, course=selectedCourse, faculty=user, status=status)
                         AttendanceObj.save()
                         break
-
 
         context = {
             'courses' : courseList,
@@ -510,7 +517,7 @@ def edit_attendance_view(request, course_code, date, *args, **kwargs):
                 else:
                     courseList[course.course_id.semester] = [(course.course_id.course_id,course.course_id.course_name)]
             courseList = collections.OrderedDict(sorted(courseList.items()))
-            student_list = Student.objects.filter(sem=selectedCourse.semester, branch=selectedCourse.branch)
+            student_list = Student.objects.filter(sem=selectedCourse.semester, branch=selectedCourse.branch, isPending=False)
             attendanceObj = Attendance.objects.filter(date=selectedDate, course=selectedCourse)
         if request.method == "POST":
             attendance = list(request.POST.items())
@@ -526,6 +533,8 @@ def edit_attendance_view(request, course_code, date, *args, **kwargs):
                         AttendanceObj.status = status
                         AttendanceObj.save()
                         break
+            path = '/staff/attendance/' + course_code + '/'
+            return redirect(path)
 
         context = {
             'attendance': attendanceObj,
@@ -544,6 +553,8 @@ def staff_results_view(request, *args, **kwargs):
             }
     return render(request, "staff/results.html",context)
 
+def student_attendance_details_view(request, course_code, student_id, *args):
+    return None
 # @login_required(login_url=common.views.login_view)
 def result_view(request, branch_code, *args):
     branches = Branch.objects.all().order_by('branch_name')
@@ -643,12 +654,12 @@ def add_result(request,account_id,branch_code):
 
 #staff-student internals result
 def student_internal_results(request,branch_code,*args):
-    url=(request.path.split('/')) #split the whole url /
-    s1=url[4] #to fetch the sem from url
-    print('sem',url[4]) #print the extracted sem from url
+    url=(request.path.split('/')) # split the whole url /
+    s1=url[4] # to fetch the sem from url
+    print('sem',url[4]) # print the extracted sem from url
 
-    b1=get_object_or_404(Branch,code=branch_code) #get the branch bane using branch code
-    b2=b1.branch_name #get the branch name
+    b1=get_object_or_404(Branch,code=branch_code) # get the branch bane using branch code
+    b2=b1.branch_name # get the branch name
     print(b2) #print branch name
 
     branch_info=b2.split(' ') #model acceptes Short form branch name eg(CE)so using split
@@ -663,7 +674,6 @@ def student_internal_results(request,branch_code,*args):
     displaydata=Result.objects.filter(sem=s1,branch=branch_code,exam=exam) #fetching the student by filtering the data
     print(displaydata) #print filtered data of students
     return render(request,"staff/stdresult.html",{'student':displaydata,'branch':b1.branch_name,'examname':exam})
-
 
 def student_result_edit(request,branch_code,account_id,*args):
     print(account_id)
@@ -686,10 +696,36 @@ def student_result_edit(request,branch_code,account_id,*args):
             return HttpResponse(messages)    
     return render(request,'staff/editresult.html',{'editdata':displaydata})
 
-
-
 # @login_required(login_url=common.views.login_view)
 def staff_profile_view(request, *args, **kwargs):
-    return render(request, "staff/profile.html")
+    if request.user.is_authenticated:
+        if not request.session.get('userId'):
+            userEmail = request.user.email
+            user = Staff.objects.get(email=userEmail)
+            request.session['userId'] = user.employee_id
+    obj=Staff.objects.filter(employee_id=request.session['userId'])
+    for i in obj:
+        br=i.branch
+    print(br)
+    branch=Branch.objects.filter(code=br)
+    print(branch)
+    return render(request, "staff/profile.html",{'staff':obj,'branch':branch})
 
-
+def staff_profile_edit(request,account_id,*args,**kwargs):
+    print(account_id)
+    displaydata=Staff.objects.get(account_id=account_id)
+    print(displaydata)
+    updatedata=Staff.objects.get(account_id=account_id)
+    print(account_id)
+    if request.method == "POST":
+        print('post')
+        form=editforms1(request.POST or None,instance=updatedata)
+        #error here
+        if form.is_valid():
+            form.save()
+            #messages.success(request,"Your Profile updated")
+            #return render(request,'admins/adminprofileedit.html',{'editdata':updatedata})
+            return redirect("../profile")
+        else:
+            return HttpResponse(messages)
+    return render(request,'staff/edit_profile.html',{'editdata':displaydata})

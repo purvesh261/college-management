@@ -10,8 +10,10 @@ urlpatterns = [
     re_path(r'^attendance/(?P<course_code>[0-9]{10})/$',staff_attendance_view, name="attendance"),
     re_path(r'^attendance/(?P<course_code>[0-9]{10})/enter-attendance/$',enter_attendance_view, name="enter-attendance"),
     re_path(r'^attendance/(?P<course_code>[0-9]{10})/(?P<date>[0-9]{8})/edit/$',edit_attendance_view, name="edit-attendance"),
+    re_path(r'^attendance/(?P<course_code>[0-9]{10})/(?P<student_id>[0-9]{10})/edit/$',student_attendance_details_view, name="student-attendance"),
     
     path('profile/',staff_profile_view, name="profile"),
+    path('edit-profile/<int:account_id>',staff_profile_edit,name='profile-edit'),
 
     path('announcement/',staff_announcement,name='adminannoucement'),
     #path('announcement-done/',staff_announcement_done,name='annoucementdone'),

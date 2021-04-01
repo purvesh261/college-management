@@ -229,6 +229,19 @@ table {
     color: white;
 }
 
+.table-btn{
+    background-color: rgb(19, 15, 235);
+    color: white;
+    width: max-content;
+    padding: 10px;
+    border: 0;
+    border-radius: 2px;
+}
+
+.table-btn:hover{
+    background-color: rgb(12, 10, 102);
+    transition: 0.3s;
+}
 .form {
     text-align: center;
     background-color: white;
@@ -342,3 +355,130 @@ table {
     width: 10%;
     padding-left: 15px;
 }
+
+/*staff profile*/
+.staff_profile{
+    border: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    border-style: solid;
+    min-height: 520px;
+    width: auto;
+    margin-left: 20%;
+    margin-right: 20%;
+    padding-bottom: 20px;
+    margin-top: 5%;
+    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.30);
+}
+#staffprofile {
+   width: 80%;
+   margin-left: 60px;
+   margin-top: 5%;
+   table-layout:fixed;
+}
+#staffprofile tr td  {
+    text-align: left;
+    font-size: 18px;
+    height: 55px;
+    width: 40%;
+}
+.profile_btn input[type=button]{
+  background-color: blue;
+  color: white;
+  width:27%;
+  margin:5 auto;
+  margin-left: 5%;
+  position: relative;
+  font-size: 18px;
+  display:inline-block
+  
+}
+.profile_btn a{
+    display: block;
+    width: 115px;
+    height: 25px;
+    background: blue;
+    padding: 10px;
+    display: inline;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    line-height: 25px;
+}
+
+/*staff edit ptofile*/
+
+.profile-edit{
+    text-align: center;
+    background-color: white;
+    margin: auto;
+    width: 20%t;
+    margin-top: 3%;
+    margin-left: 20%;
+    margin-right: 20%;
+    border: 1px rgb(255, 255, 255);
+    padding-right: 10%;
+    padding-left: 10%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    height: auto;
+    box-shadow: 0px 0px 5px 0px rgba(58, 57, 57, 0.3);
+    border-radius: 3px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.profile-edit h2{
+font-size: 30px;
+text-align: center;
+margin-top: 2%;
+}
+
+.profile-edit[type=text]{
+        width: 80%;
+        padding: 6px 10px;
+        margin: 8px 0;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        -ms-box-sizing:content-box;
+        -moz-box-sizing:content-box;
+        -webkit-box-sizing:content-box; 
+        box-sizing:content-box;
+        font-family: Arial, Helvetica, sans-serif;
+    
+}
+.staff-profilelist tr td{
+   width:75%;
+}
+.staff-profilelist th{
+    margin-top: 15%;
+    font-size: 18px;
+    display: inline-block;
+}
+
+.profile-edit [type=submit]{
+border-radius: 4px;
+background-color: rgb(19, 15, 235);
+border: none;
+color: #FFFFFF;
+text-align: center;
+font-size: 18px;
+padding: 15px;
+width: 30%;
+height: auto;
+cursor: pointer;
+margin: 5px;
+}
+.profile-edit [type=button]{
+    border-radius: 4px;
+    background-color: rgb(19, 15, 235);
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 18px;
+    padding: 15px;
+    width: 30%;
+    height: auto;
+    cursor: pointer;
+    margin: 5px;
+    }

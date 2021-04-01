@@ -430,3 +430,19 @@ class AttendanceForm(forms.ModelForm):
             'date',
             'status',
         ]
+
+class editforms1(forms.ModelForm):
+    class Meta:
+        model = Staff
+        fields= [
+            'firstName',
+            'middleName',
+            'lastName',
+            'username',
+            'account_id',
+            'mobile',
+            'branch',
+            'email',
+            'gender',
+            'isPending',
+        ]

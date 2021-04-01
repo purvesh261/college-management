@@ -10,19 +10,20 @@ body{
     margin: auto;
     color: black;
     background-attachment: fixed;
-    background-color: rgb(247, 244, 241);
+    background-color: #e6ecf7;
     /* font-family: Arial, Helvetica, sans-serif; */
     font-family: 'Open Sans', sans-serif;
 }
 
 .header {
     overflow: hidden;
-    background-color: rgb(255, 255, 255);
+    background: rgb(0,73,255);
+    background: linear-gradient(180deg, rgb(138, 170, 250) 0%, rgb(220, 225, 241) 100%);
     display: inline-block;
     position: fixed; /* Set the navbar to fixed position */
     top: 0; /* Position the navbar at the top of the page */
     width: 100%; /* Full width */
-    box-shadow: 0px 5px 14px 0px rgba(0,0,0,0.45);
+    box-shadow: 2px 5px 14px 2px rgba(134, 134, 134, 0.534);
 }
 
 .navbar{
@@ -86,7 +87,7 @@ body{
     width: 22.5%;
     box-sizing: border-box;
     padding-bottom: 20px;
-    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.30);
+    box-shadow: 0px 0px 5px 0px rgba(92, 132, 235, 0.45);
 }
 
 input {
@@ -107,6 +108,8 @@ input:hover {
 
 input:focus {
     background-color: rgb(241, 241, 241);
+    border: 1px solid rgba(81, 203, 238, 1);
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 }
 
 .login-form{
@@ -196,12 +199,12 @@ label{
 
 .footer {
     width: 100%;
-    background-color: rgb(247, 244, 241);
+    background-color: #c3d5f5;
     float: right;
     margin-top: 50%;
     padding-bottom: 30px;
     bottom: 10;
-    border-top: 1px solid;
+    border-top: 1px solid #c3d5f5;
     color: rgb(153, 144, 144);
 }
 

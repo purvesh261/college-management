@@ -290,8 +290,7 @@ input {
     font-size:16px;
     text-align: center;
     height: 6%;
-    background-color:white;
-    
+    background-color:white;  
 }
 
 /* new for student*/
@@ -313,9 +312,10 @@ input {
     background: #ddd;
     color: black;
 }
+
 .newsearch input:focus{
         background-color: rgb(241, 241, 241);
-    }
+}
 
     /* for staff page*/
 .newstaffsearch input:hover{
@@ -324,11 +324,13 @@ input {
 }
 .newstaffsearch input:focus{
         background-color: rgb(241, 241, 241);
-    }     
+}     
+
 #staffsearch{
         width:15%;
         margin-left: 15px;
-    } 
+}
+
 #pending{
     width:14%;
     display: inline-block;

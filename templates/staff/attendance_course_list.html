@@ -1,0 +1,86 @@
+{% extends './base.html' %}
+
+{% block content %}
+<div id='wrapper'>
+    <div id="mySidenav" class="sidenav">
+        <div id="sidebar-title">Your Courses</div>
+        {% if courses %}
+            {% for sem,courseList in courses.items %}
+                <div id="courses-item">
+                    <ul id="sem">
+                        <div id="sem-head">Semester {{ sem }}</div>
+                        <ul id="course">
+                            {% for course in courseList %}
+                                <a href="/staff/attendance/{{ course.0 }}"><li>{{ course.1 }}</li></a>
+                            {% endfor %}
+                        </ul>
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div id="empty-list">
+                No Courses...
+            </div>
+        {% endif %}
+    </div>
+    {% if courses %}
+    <div id="content">
+        <div class="course-title">
+            {{ selectedCourse.course_name }}
+        </div>
+        {% if selectedCourse.description %}
+            <div id="course-description">
+                <div id="course-description-content">
+                    {{ selectedCourse.description|linebreaksbr }}
+                </div>
+            </div>
+        {% endif %}
+        <div id="assignment">
+            <div id="course-sub-title">
+                Attendance
+                <div id="buttons">
+                    <button onclick="location.href='./enter-attendance'" id="white-button">
+                        <b>+</b> Enter Attendance
+                    </button>
+                </div>
+            </div>
+            <div id="table-wrapper">
+                <div id="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Present</th>
+                                <th>Absent</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        {% if history %}
+                            <tbody>
+                                {% for key,value in history.items %}
+                                    <tr>
+                                        <td>{{ key }}</td>
+                                        <td>{{ value.0 }} %</td>
+                                        <td>{{ value.1 }} %</td>
+                                        <td><a href="./{{ value.2 }}/edit/">Edit</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" id="empty-table">No attendance yet...</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <div id="content-none">
+            <div>No courses have been assigned to you yet...</div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

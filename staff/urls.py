@@ -5,11 +5,14 @@ app_name = 'staff'
 urlpatterns = [
     path('home/', staff_home_view, name="home"),
     # path('courses/',staff_courses_view, name="courses"),
-    #path('results/',staff_results_view, name="results"),
-    path('attendance/',staff_attendance_view, name="attendance"),
+    path('results/',staff_results_view, name="results"),
+    path('attendance/', attendance_redirect_view, name="attendance_redirect_view"),
+    re_path(r'^attendance/(?P<course_code>[0-9]{10})/$',staff_attendance_view, name="attendance"),
+    re_path(r'^attendance/(?P<course_code>[0-9]{10})/enter-attendance/$',enter_attendance_view, name="enter-attendance"),
+    re_path(r'^attendance/(?P<course_code>[0-9]{10})/(?P<date>[0-9]{8})/edit/$',edit_attendance_view, name="edit-attendance"),
+    
     path('profile/',staff_profile_view, name="profile"),
     path('edit-profile/<int:account_id>',staff_profile_edit,name='profile-edit'),
-
 
     path('announcement/',staff_announcement,name='adminannoucement'),
     #path('announcement-done/',staff_announcement_done,name='annoucementdone'),
@@ -48,5 +51,6 @@ urlpatterns = [
     re_path(r'^courses/(?P<course_code>[0-9]{10})/create-assignment$', create_assignment_view, name="create-assignment"),
     re_path(r'^assignments/(?P<course_code>[0-9]{10})/(?P<assignment_id>[0-9]{10})/$', manage_assignment_view, name="manage_assignment"),
     re_path(r'^courses/(?P<course_code>[0-9]{10})/assignments/$', view_assignments_view, name="assignments-view"),
+    re_path(r'^assignments/(?P<course_code>[0-9]{10})/(?P<assignment_id>[0-9]{10})/edit/$', edit_assignment_view, name='edit-assignment'),
     re_path(r'^assignments/delete/(?P<assignment_id>[0-9]{10})/$', delete_assignment_view, name="delete_assignment"),
 ]

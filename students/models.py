@@ -1,6 +1,8 @@
 from django.db import models
 from admins.models import Branch
-
+from common.models import Course
+from staff.models import Staff
+from datetime import datetime
 
 class Student(models.Model):
      gender_choices=(('M','Male'),('F','Female'),('O','Other'),)
@@ -135,4 +137,10 @@ class Result(models.Model):
                             choices=exam_choices)
      
 
-
+class Attendance(models.Model):
+     attendance_choices = (('P','Present'), ('A', 'Absent'))
+     student = models.ForeignKey(Student, on_delete=models.CASCADE)
+     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+     faculty = models.ForeignKey(Staff, on_delete=models.CASCADE)
+     date = models.DateField(verbose_name="Date")
+     status = models.CharField(max_length=10, verbose_name="Status", choices=attendance_choices)

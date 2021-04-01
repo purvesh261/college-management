@@ -11,10 +11,9 @@ from  . import forms
 from django.contrib import messages
 from .models import Branch
 from staff.models import Staff
-from staff.forms import CreateAssignmentForm
+from staff.forms import resultform, CreateAssignmentForm, EditAssignmentForm
 from common.models import  Course, CourseFaculty
-from students.models import Student
-from staff.forms import resultform
+from students.models import Student, Attendance
 from students.models import Result
 from staff.forms import editresultform
 import collections
@@ -223,9 +222,8 @@ def create_assignment_view(request,course_code, *args, **kwargs):
                 description = details['description']
                 startDate = details['start_date']
                 endDate = details['end_date']
-                print(dict(request.FILES))
                 if not startDate:
-                    startDate = c
+                    startDate = datetime.today()
                 new_assignment = Assignment(assignment_id=str(assignmentID),
                                     course=selectedCourse,
                                     faculty=user,
@@ -318,6 +316,30 @@ def manage_assignment_view(request, course_code, assignment_id, *args, **kwargs)
         }
     return render(request, 'staff/manage_assignment.html', context)
 
+def edit_assignment_view(request,assignment_id, *args, **kwargs):
+    selectedAssignment = Assignment.objects.get(assignment_id=assignment_id)
+    if not request.session.get('userId'):
+            userEmail = request.user.email
+            user = Staff.objects.get(email=userEmail)
+            request.session['userId'] = user.employee_id
+    course = selectedAssignment.course
+    if CourseFaculty.objects.filter(course_id=course, faculty_id=request.session['userId']):
+        if request.method == "POST":
+            form = EditAssignmentForm(request.POST, request.FILES, instance=selectedAssignment)
+            if form.is_valid():
+                form.save()
+                return redirect('..')
+        else:
+            form = EditAssignmentForm(request.POST or None, instance=selectedAssignment)
+            for field in form.errors:
+                form[field].field.widget.attrs['class'] += 'error'
+
+    context = {
+        'form': form,
+    }
+    
+    return render(request, "staff/edit_assignment.html",context)
+
 def delete_assignment_view(request,assignment_id, *args, **kwargs):
     selectedAssignment = Assignment.objects.get(assignment_id=assignment_id)
     if not request.session.get('userId'):
@@ -333,9 +355,187 @@ def delete_assignment_view(request,assignment_id, *args, **kwargs):
         return redirect("..../courses/" + course.course_id)
 
 # @login_required(login_url=common.views.login_view)
-def staff_attendance_view(request, *args, **kwargs):
-    return render(request, "staff/attendance.html")
+def staff_attendance_view(request, course_code, *args, **kwargs):
+    if request.user.is_authenticated:
+        if not request.session.get('userId'):
+            userEmail = request.user.email
+            user = Staff.objects.get(email=userEmail)
+            request.session['userId'] = user.employee_id
 
+        selectedCourse = Course.objects.get(course_id=course_code)
+        selectedObj = get_object_or_404(CourseFaculty, faculty_id=request.session['userId'],course_id=selectedCourse)
+        courseList = {}
+        assignments = None
+        if selectedObj:
+            courses = CourseFaculty.objects.filter(faculty_id=request.session['userId'])
+            for course in courses:
+                if courseList.get(course.course_id.semester):
+                    courseList[course.course_id.semester].append((course.course_id.course_id,course.course_id.course_name))
+                else:
+                    courseList[course.course_id.semester] = [(course.course_id.course_id,course.course_id.course_name)]
+            courseList = collections.OrderedDict(sorted(courseList.items()))
+            attendanceHistory = Attendance.objects.filter(course=selectedCourse)
+            dates = set()
+            percentage = {}
+            for item in attendanceHistory:
+                if percentage.get(item.date):
+                    percentage[item.date].append(item.status)
+                else:
+                    percentage[item.date] = [item.status]
+
+                dates.add(item.date)
+
+            for key in percentage.keys():
+                percentage[key] = [(percentage[key].count('P') / len(percentage[key])) * 100, 100 - (percentage[key].count('P') / len(percentage[key])) * 100, key.strftime('%d%m%Y')]
+
+            dates = list(percentage.keys())
+
+            dateDict = {}
+
+            res = []
+
+            sortedDict = {}
+            
+            for ele in reversed(sorted(percentage.keys())):
+                res.append(ele)
+
+            for date in res:
+                sortedDict[date] = percentage[date]
+
+            # while percentage:
+            #     first = max(dates)
+            #     print(dateDict)
+            #     print(percentage)
+            #     dateDict[first] = percentage[first]
+            #     percentage.pop(first)
+            #     dates.pop(first)
+
+            dates = list(dates)
+
+        context = {
+            'courses' : courseList,
+            'selectedCourse' : selectedCourse,
+            'history': sortedDict,
+        }
+    return render(request, "staff/attendance_course_list.html", context)
+
+def attendance_redirect_view(request, *args, **kwargs):
+    if request.user.is_authenticated:
+        if not request.session.get('userId'):
+            userEmail = request.user.email
+            user = Staff.objects.get(email=userEmail)
+            request.session['userId'] = user.employee_id
+
+        courses = CourseFaculty.objects.filter(faculty_id=request.session['userId'])
+        courseList = {}
+        for course in courses:
+            if courseList.get(course.course_id.semester):
+                courseList[course.course_id.semester].append((course.course_id.course_id,course.course_id.course_name))
+            else:
+                courseList[course.course_id.semester] = [(course.course_id.course_id,course.course_id.course_name)]
+        if list(courseList):
+            course_code = list(courseList.values())[0][0][0]
+        else:
+            course_code = 'mt'
+
+        return redirect("./" + course_code)
+    else:
+        print("OK!!!!!")
+
+def enter_attendance_view(request, course_code, *args, **kwargs):
+    if request.user.is_authenticated:
+        userEmail = request.user.email
+        user = Staff.objects.get(email=userEmail)
+        request.session['userId'] = user.employee_id
+
+        selectedCourse = Course.objects.get(course_id=course_code)
+        selectedObj = get_object_or_404(CourseFaculty, faculty_id=request.session['userId'],course_id=selectedCourse)
+        courseList = {}
+        assignments = None
+        if selectedObj:
+            courses = CourseFaculty.objects.filter(faculty_id=request.session['userId'])
+            for course in courses:
+                if courseList.get(course.course_id.semester):
+                    courseList[course.course_id.semester].append((course.course_id.course_id,course.course_id.course_name))
+                else:
+                    courseList[course.course_id.semester] = [(course.course_id.course_id,course.course_id.course_name)]
+            courseList = collections.OrderedDict(sorted(courseList.items()))
+            student_list = Student.objects.filter(sem=selectedCourse.semester, branch=selectedCourse.branch)
+
+        if request.method == "POST":
+            attendance = list(request.POST.items())
+            selectedDate = attendance[1][1]
+            for i in range(2,len(attendance)):
+                item = attendance[i]
+                enrol = item[0]
+                status = item[1]
+                for stud in student_list:
+                    if stud.enrolment == enrol:
+                        AttendanceObj = Attendance(student=stud, date=selectedDate, course=selectedCourse, faculty=user, status=status)
+                        AttendanceObj.save()
+                        break
+
+
+        context = {
+            'courses' : courseList,
+            'selectedCourse' : selectedCourse,
+            'students' : student_list,
+            'date': datetime.date(datetime.today()),
+        }
+    return render(request, 'staff/enter_attendance.html', context)
+
+# def create_attendance_obj(request, course_code, *args, **kwargs):
+
+def edit_attendance_view(request, course_code, date, *args, **kwargs):
+    if request.user.is_authenticated:
+        userEmail = request.user.email
+        user = Staff.objects.get(email=userEmail)
+        request.session['userId'] = user.employee_id
+        day = date[0:2]
+        month = date[2:4]
+        year = date[4:]
+
+        selectedDate = datetime(int(year), int(month), int(day))
+        print(selectedDate)
+        selectedDate1 = selectedDate.strftime('%Y-%m-%d')
+        date = selectedDate.strftime('%A, %d %B %Y')
+        selectedCourse = Course.objects.get(course_id=course_code)
+        selectedObj = get_object_or_404(CourseFaculty, faculty_id=request.session['userId'],course_id=selectedCourse)
+        courseList = {}
+        if selectedObj:
+            courses = CourseFaculty.objects.filter(faculty_id=request.session['userId'])
+            for course in courses:
+                if courseList.get(course.course_id.semester):
+                    courseList[course.course_id.semester].append((course.course_id.course_id,course.course_id.course_name))
+                else:
+                    courseList[course.course_id.semester] = [(course.course_id.course_id,course.course_id.course_name)]
+            courseList = collections.OrderedDict(sorted(courseList.items()))
+            student_list = Student.objects.filter(sem=selectedCourse.semester, branch=selectedCourse.branch)
+            attendanceObj = Attendance.objects.filter(date=selectedDate, course=selectedCourse)
+        if request.method == "POST":
+            attendance = list(request.POST.items())
+            print(attendance)
+            for i in range(1,len(attendance)):
+                item = attendance[i]
+                enrol = item[0]
+                status = item[1]
+                for stud in student_list:
+                    if stud.enrolment == enrol:
+                        AttendanceObj = Attendance.objects.get(student=stud, date=selectedDate1, course=selectedCourse)
+                        print(AttendanceObj)
+                        AttendanceObj.status = status
+                        AttendanceObj.save()
+                        break
+
+        context = {
+            'attendance': attendanceObj,
+            'date' : date,
+            'courses' : courseList,
+
+        }
+        print(selectedDate)
+
+    return render(request,'staff/edit_attendance.html', context)
 # @login_required(login_url=common.views.login_view)
 def staff_results_view(request, course_code, *args, **kwargs):
     if request.user.is_authenticated:
@@ -373,7 +573,7 @@ def staff_results_view(request, course_code, *args, **kwargs):
     return render(request, "staff/results.html",context)
 
 # @login_required(login_url=common.views.login_view)
-def result_view(request, *args,branch_code):
+def result_view(request, branch_code, *args):
     branches = Branch.objects.all().order_by('branch_name')
     b1=get_object_or_404(Branch,code=branch_code)
     print(b1.branch_name)

@@ -7,7 +7,7 @@ from admins.models import Branch
 from django.utils.safestring import mark_safe
 import re
 import pandas as pd
-from students.models import Result
+from students.models import Result, Attendance
 
 
 class StaffForm(forms.ModelForm):
@@ -384,14 +384,42 @@ class CreateAssignmentForm(forms.ModelForm):
         
         return cleaned_data
 
-    #     if assignment_file:
-    #         ext = os.path.splitext(assignment_file.name)[1]  # [0] returns path+filename
-    #         valid_extensions = ['.pdf']
-    #         try:
-    #             if not ext.lower() in valid_extensions:
-    #                 raise forms.ValidationError('Unsupported file extension.')
-    #         except forms.ValidationError as e:
-    #             self.add_error('assignment_file',e)
+class EditAssignmentForm(forms.ModelForm):
+    title = forms.CharField(label='Title:', min_length=3, max_length=160,
+                widget=forms.TextInput(attrs={"placeholder":"Enter a title",
+                                             "size":"40",
+                                             "class":"text"}))
+    
+    description = forms.CharField(label='Description:',max_length=500,required=False,
+                widget=forms.Textarea(attrs={"placeholder":"Enter Description",
+                                             "size":"40",
+                                             "class":"text desc-box",
+                                             "height":"5",
+                                             "width":"100",
+                                             "name":"description"}))
+                                             
+    start_date = forms.DateField(label="Start Date:",required=False,
+                widget=forms.TextInput(attrs={
+                    "placeholder":"dd/mm/yyyy",
+                    "class":"datefield",
+                    'type':"date"
+                }))
+    
+    end_date = forms.DateField(label="End Date:",required=False,
+                widget=forms.TextInput(attrs={
+                    "placeholder":"dd/mm/yyyy",
+                    "class":"datefield",
+                    'type':"date"
+                }))
+
+    class Meta:
+        model = Assignment
+        fields = [
+            'title',
+            'description',
+            'start_date',
+            'end_date',
+        ]
 
     #     return cleaned_data
 
@@ -412,4 +440,33 @@ class editforms1(forms.ModelForm):
             'email',
             'gender',
             'isPending',
+    def clean(self,*args,**kwargs):
+        cleaned_data = super().clean()
+        title = str(self.cleaned_data.get('title'))
+        startDate = self.cleaned_data.get('start_date')
+        endDate = self.cleaned_data.get('end_date')
+
+        try:
+            if not re.search('^[A-Za-z0-9\s]+$',title):
+                raise forms.ValidationError("Not a valid title")
+        except forms.ValidationError as e:
+            self.add_error('title', e)
+
+        try:
+            if (startDate and endDate) and (startDate > endDate):
+                raise forms.ValidationError("Start date is greater than end date")
+        except forms.ValidationError as e:
+            self.add_error('end_date', e)
+        
+        return cleaned_data
+
+class AttendanceForm(forms.ModelForm):
+    class Meta:
+        model=Attendance
+        fields= [
+            'student',
+            'course',
+            'faculty',
+            'date',
+            'status',
         ]

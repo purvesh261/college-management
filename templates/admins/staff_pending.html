@@ -1,0 +1,92 @@
+{% extends './base.html' %}
+{% load static %}
+
+
+{% block title %}Admin - Staff{% endblock %}
+
+{% block bodyclass %}
+    <body id="staff" onload="changeActive(this.id)">
+{% endblock %}
+
+{% block content %}
+<div class="stafflabel">
+    <p>Pending Staff</p>
+</div>
+<!--<div class="searchstudent">
+
+    <select name="Branch" class=branch>
+        <option value="-1" selected>Branch</option>
+       <option value="ce">Computer Engineering</option>
+       <option value="it">IT Engineering</option>
+       <option value="me">Mechanical Engineering</option>
+       <option value='civil'>Civil Engineering</option>
+       <option value='bm'>Bio-Medical Engineering</option>
+       <option value='auto'>Autommobile Engineering</option>
+       <option value="el">Electrical Engineering</option>
+   </select>
+   <select name="sem" class=sem>
+    <option value="-1" selected>Sem</option>
+   <option value="I">I</option>
+   <option value="II">II</option>
+   <option value="III">III</option>
+   <option value="III">IV</option>
+   <option value="III">V</option>
+   <option value="III">VI</option>
+   <option value="III">VII</option>
+   <option value="III">VIII</option>
+</select>
+<input type="submit" name="search" id="search" value="Search" >-->
+
+</div>
+<div class="newstaffsearch">
+    <input type="text" name="staffsearch" id="staffsearch" placeholder="Search Designation" onkeyup="searchstaffrecords();">
+    <input type="submit" name="pending" id="pending" value="Back" onclick="location.href='../'" >
+    <!-- <input type="submit" name="approved" id="approved" value="Approved Accounts" onclick="location.href='../staff-account-approved-details'" > -->
+
+<!--actual path-->
+<!--<input type="submit" name="pending" id="pending" value="Pending Accounts" onclick="location.href='http://127.0.0.1:8000/college-admin/staff-account-pending-details'" >
+    <input type="submit" name="approved" id="approved" value="Approved Accounts" onclick="location.href='http://127.0.0.1:8000/college-admin/staff-account-approved-details'" >-->
+
+</div>
+<div class="datasection_staff">
+    <table id="staff_list1" border="1">
+        <tr>
+            <th>Account_id</th>
+            <th>First-Name</th>
+            <th>Middle-Name</th>
+            <th>Last-Name</th>
+            <th>Mobile</th>
+            <th>Branch</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Designation</th>
+            <th>Request</th>
+            <th>Status</th>
+            <th>Edit</th>
+        </tr>
+
+    {% for i in staff %}
+        <tr>
+            <td>{{i.account_id}}</td>
+            <td>{{i.firstName}}</td>
+            <td>{{i.middleName}} </td>
+            <td>{{i.lastName}} </td>
+            <td>{{i.mobile}}</td>
+            <td>{{branch_name|get_item:i.employee_id}}</td>
+            <td>{{i.email}}</td>
+            <td>{{i.gender}}</td>
+            <td>{{i.designation}}</td>
+            <td>{{i.isPending}}</td>
+            <td><a href="../approve-staff/{{i.account_id}}">Approve</td>
+            <td> <a href="../edit-staff/{{i.account_id}}">Edit</a></td>
+
+            <!--actudal path-->
+            <!--<td><a href="http://127.0.0.1:8000/college-admin/approve-staff/{{i.account_id}}">Approve</a></td>
+            <td> <a href="http://127.0.01:8000/college-admin/edit-staff/{{i.account_id}}">Edit</a></td>-->
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+{% endblock %}

@@ -10,24 +10,44 @@
 
 {% block content %}
 <div class="studentlabel">
-    <p>Approved Students</p>
+    <p>Pending Students</p>
 </div>
+<!--<div class="searchstudent">
+
+    <select name="Branch" class=branch>
+        <option value="-1" selected>Branch</option>
+       <option value="ce">Computer Engineering</option>
+       <option value="it">IT Engineering</option>
+       <option value="me">Mechanical Engineering</option>
+       <option value='civil'>Civil Engineering</option>
+       <option value='bm'>Bio-Medical Engineering</option>
+       <option value='auto'>Autommobile Engineering</option>
+       <option value="el">Electrical Engineering</option>
+   </select>
+   <select name="sem" class=sem>
+    <option value="-1" selected>Sem</option>
+   <option value="I">I</option>
+   <option value="II">II</option>
+   <option value="III">III</option>
+   <option value="III">IV</option>
+   <option value="III">V</option>
+   <option value="III">VI</option>
+   <option value="III">VII</option>
+   <option value="III">VIII</option>
+</select>
+<input type="submit" name="search" id="search" value="Search" >-->
 
 </div>
 <div class="newsearch">
     <input type="text" name="searchtext" id="searchtxt" placeholder="Search by Enrolment" onkeyup="searchrecords();">
     <!-- <input type="text" name="stdbranch" id="stdbranch" placeholder="Search by Branch" onkeyup="searchbranch();">
     <input type="text" name="stdsem" id="stdsem" placeholder="Search by Sem" onkeyup="searchsem();"> -->
-
     <input type="submit" name="pending" id="pending" value="Back" onclick="location.href='../'" >
 
-
     <!--actual path-->
-<!-- <input type="submit" name="pending" id="pending" value="Pending Accounts" onclick="location.href='http://127.0.0.1:8000/college-admin/student-account-pending-details'" >
+    <!-- <input type="submit" name="pending" id="pending" value="Pending Accounts" onclick="location.href='http://127.0.0.1:8000/college-admin/student-account-pending-details'" >
     <input type="submit" name="approved" id="approved" value="Approved Accounts" onclick="location.href='http://127.0.0.1:8000/college-admin/student-account-approved-details'" >-->
-    
 </div>
-
 <div class="datasection_student">
     <table id="student_list1" border="1">
         <tr>
@@ -48,7 +68,6 @@
 
     {% for i in student %}
         <tr>
-            
             <td>{{i.account_id}}</td>
             <td>{{i.enrolment}} </td>
             <td>{{i.firstName}}</td>
@@ -59,12 +78,13 @@
             <td>{{i.sem}}</td>
             <td>{{i.email}}</td>
             <td>{{i.gender}}</td>
-            <td>Accpeted</td>
-            <td>Approved</td>
+            <td>{{i.isPending}}</td>
+            <td><a href="../approve-student/{{i.account_id}}">Approve</a></td>
             <td> <a href="../edit-student/{{i.account_id}}">Edit</a></td>
 
             <!--actual path-->
-            <!--<td> <a href="http://127.0.01:8000/college-admin/edit-student/{{i.account_id}}">Edit</a></td>-->
+            <!--<td><a href="http://127.0.0.1:8000/college-admin/approve-student/{{i.account_id}}">Approve</a></td>
+            <td> <a href="http://127.0.01:8000/college-admin/edit-student/{{i.account_id}}">Edit</a></td>-->
         </tr>
         {% endfor %}
     </table>

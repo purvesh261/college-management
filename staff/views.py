@@ -17,7 +17,7 @@ from students.models import Student, Attendance
 from students.models import Result
 from staff.forms import editresultform
 import collections
-
+from staff.forms import editforms1
 
 
 # Create your views here.
@@ -537,10 +537,38 @@ def edit_attendance_view(request, course_code, date, *args, **kwargs):
 
     return render(request,'staff/edit_attendance.html', context)
 # @login_required(login_url=common.views.login_view)
-def staff_results_view(request, *args, **kwargs):
+def staff_results_view(request, course_code, *args, **kwargs):
+    if request.user.is_authenticated:
+        if not request.session.get('userId'):
+            userEmail = request.user.email
+            user = Staff.objects.get(email=userEmail)
+            request.session['userId'] = user.employee_id
+        selectedCourse = Course.objects.get(course_id=course_code)
+        selectedObj = get_object_or_404(CourseFaculty, faculty_id=request.session['userId'],course_id=selectedCourse)
+        courseList = {}
+        if selectedObj:
+            courses = CourseFaculty.objects.filter(faculty_id=request.session['userId'])
+            for course in courses:
+                if courseList.get(course.course_id.semester):
+                    courseList[course.course_id.semester].append((course.course_id.course_id,course.course_id.course_name))
+                else:
+                    courseList[course.course_id.semester] = [(course.course_id.course_id,course.course_id.course_name)]
+            courseList = collections.OrderedDict(sorted(courseList.items()))
+
     branches = Branch.objects.all().order_by('branch_name')
+    print(selectedCourse.course_name)
+    sem=selectedCourse.semester
+    br_code=selectedCourse.branch
+    b1=get_object_or_404(Branch,code=br_code)
+    print(sem)
+    print(branches)
+    displaydata=Student.objects.filter(sem=sem,branch=br_code)   
     context = {
         'branches' : branches,
+        'courses' : courseList,
+        'selectedCourse' : selectedCourse,
+        'student':displaydata,
+        'branch_name':b1.branch_name
             }
     return render(request, "staff/results.html",context)
 
@@ -580,30 +608,21 @@ def sem_result(request,branch_code,*args):
     return render(request,"staff/result.html",{'student':displaydata,'branch':b1.branch_name,'sem':s1})
 
 
-def add_result(request,account_id,branch_code):
-    b1=get_object_or_404(Branch,code=branch_code)
-    sem=(request.path.split('/')) #split the whole url /
-    s1=sem[4] #fetching semester
-    # cd=sem[3] #fetching branch code
-    # cname=Course.objects.filter(semester=s1,branch=cd)
-    # print(cname)
-    # subname=[]
-    # for i in cname:
-    #     subname.append(i.course_name)
-    #     print(i.course_name)
-    # #subname=cname.course_name
-    # #print('cname',cname.course_name)
-    # print('subname',subname[0]) #subject name
-    # #print(b2)
-    # #print('s1',s1)
-    # sname="h1,h2"
+def add_result(request,account_id,course_code,*args):
+    branches = Branch.objects.all().order_by('branch_name')
+    selectedCourse = Course.objects.get(course_id=course_code)
+    print(selectedCourse.course_name)
+    s1=selectedCourse.semester
+    br_code=selectedCourse.branch
+    b1=get_object_or_404(Branch,code=br_code)
+    print(branches)
     displaydata=Student.objects.get(account_id=account_id)
     initial_dict={
         'account_id':id_generator,
         'enrolment':displaydata.enrolment,
         'branch':displaydata.branch,
         'sem':s1,
-        
+        'course_name':selectedCourse.course_name
     }
     resultform1 = resultform(request.POST or None, initial=initial_dict)
     if request.method == 'POST':
@@ -636,36 +655,43 @@ def add_result(request,account_id,branch_code):
             #messages.success(request,"Announcement Added")
             return redirect("../")
         else:
-            return HttpResponse(messages)
+            print('error')
+                
     
     print('post')
     return render(request,"staff/addresult.html",{'resultform1':resultform1,'sem':s1,'displaydata':displaydata})
 
 #staff-student internals result
-def student_internal_results(request,branch_code,*args):
+def student_internal_results(request,course_code,*args):
     url=(request.path.split('/')) #split the whole url /
-    s1=url[4] #to fetch the sem from url
-    print('sem',url[4]) #print the extracted sem from url
+    # s1=url[4] #to fetch the sem from url
+    # print('sem',url[4]) #print the extracted sem from url
 
-    b1=get_object_or_404(Branch,code=branch_code) #get the branch bane using branch code
-    b2=b1.branch_name #get the branch name
-    print(b2) #print branch name
+    # b1=get_object_or_404(Branch,code=branch_code) #get the branch bane using branch code
+    # b2=b1.branch_name #get the branch name
+    # print(b2) #print branch name
 
-    branch_info=b2.split(' ') #model acceptes Short form branch name eg(CE)so using split
-    print(branch_info) #print splited branch_info
+    # branch_info=b2.split(' ') #model acceptes Short form branch name eg(CE)so using split
+    # print(branch_info) #print splited branch_info
 
-    binfo=branch_info[0][0]+branch_info[1][0] #fetching short form
-    print(binfo) #printing short form
-
-    exam=url[6]
+    # binfo=branch_info[0][0]+branch_info[1][0] #fetching short form
+    # print(binfo) #printing short form
+    branches = Branch.objects.all().order_by('branch_name')
+    selectedCourse = Course.objects.get(course_id=course_code)
+    print(selectedCourse.course_name)
+    s1=selectedCourse.semester
+    br_code=selectedCourse.branch
+    b1=get_object_or_404(Branch,code=br_code)
+    print(branches)
+    exam=url[4]
     print('examname',exam)
 
-    displaydata=Result.objects.filter(sem=s1,branch=branch_code,exam=exam) #fetching the student by filtering the data
+    displaydata=Result.objects.filter(sem=s1,branch=br_code,exam=exam,course_name=selectedCourse.course_name) #fetching the student by filtering the data
     print(displaydata) #print filtered data of students
     return render(request,"staff/stdresult.html",{'student':displaydata,'branch':b1.branch_name,'examname':exam})
 
 
-def student_result_edit(request,branch_code,account_id,*args):
+def student_result_edit(request,course_code,account_id,*args):
     print(account_id)
     displaydata=Result.objects.get(account_id=account_id)
     print(displaydata)
@@ -680,7 +706,7 @@ def student_result_edit(request,branch_code,account_id,*args):
             print('inform')
             form.save()
             #messages.success(request,"Announcement updated")
-            return redirect("../add-result")
+            return redirect("../")
             #return render(request,'common/announcementedit.html',{'editdata':updatedata})
         else:
             return HttpResponse(messages)    
@@ -690,6 +716,36 @@ def student_result_edit(request,branch_code,account_id,*args):
 
 # @login_required(login_url=common.views.login_view)
 def staff_profile_view(request, *args, **kwargs):
-    return render(request, "staff/profile.html")
+    if request.user.is_authenticated:
+        if not request.session.get('userId'):
+            userEmail = request.user.email
+            user = Staff.objects.get(email=userEmail)
+            request.session['userId'] = user.employee_id
+    obj=Staff.objects.filter(employee_id=request.session['userId'])
+    for i in obj:
+        br=i.branch
+    print(br)
+    branch=Branch.objects.filter(code=br)
+    print(branch)
+    return render(request, "staff/profile.html",{'staff':obj,'branch':branch})
+
+def staff_profile_edit(request,account_id,*args,**kwargs):
+    print(account_id)
+    displaydata=Staff.objects.get(account_id=account_id)
+    print(displaydata)
+    updatedata=Staff.objects.get(account_id=account_id)
+    print(account_id)
+    if request.method == "POST":
+        print('post')
+        form=editforms1(request.POST or None,instance=updatedata)
+        #error here
+        if form.is_valid():
+            form.save()
+            #messages.success(request,"Your Profile updated")
+            #return render(request,'admins/adminprofileedit.html',{'editdata':updatedata})
+            return redirect("../profile")
+        else:
+            return HttpResponse(messages)
+    return render(request,'staff/edit_profile.html',{'editdata':displaydata})
 
 

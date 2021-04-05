@@ -252,4 +252,16 @@ class StudentForm(forms.ModelForm):
 
 
 
-    
+class editforms(forms.ModelForm):
+    class Meta:
+        model=Student
+        fields= [
+            'firstName',
+            'lastName',
+            'username',
+            'account_id',
+            'enrolment',
+            'mobile',
+            'email',
+            'gender',
+        ]

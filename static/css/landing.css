@@ -1,5 +1,5 @@
 * {
-    font-family: 'Open Sans', sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 h1 {
@@ -10,7 +10,7 @@ body{
     margin: auto;
     color: black;
     background-attachment: fixed;
-    background-color: #eaeef5;
+    background-color: #EEF2F9;
     /* font-family: Arial, Helvetica, sans-serif; */
     font-family: 'Open Sans', sans-serif;
 }
@@ -21,9 +21,8 @@ body{
     position: fixed; /* Set the navbar to fixed position */
     top: 0; /* Position the navbar at the top of the page */
     width: 100%; /* Full width */
-    box-shadow: 2px 5px 15px 2px rgba(134, 134, 134, 0.534);
-    background: rgb(0,73,255);
-    background: linear-gradient(180deg, rgb(138, 170, 250) 0%, rgb(220, 225, 241) 100%);
+    box-shadow: 2px 5px 15px 2px rgba(134, 134, 134, 0.78);
+    background-color: #2E0080;
 
 }
 
@@ -36,7 +35,7 @@ body{
 .navbar a {
     float: right;
     display: block;
-    color: rgb(21, 16, 87);
+    color: rgb(255, 255, 255);
     text-align: center;
     height: auto;
     font-size: larger;
@@ -46,9 +45,11 @@ body{
 }
 
 .navbar a:hover {
-  background: #ddd;
-  color: black;
+    background: #fafafa;  
+    color: black;
+    transition: 0.3s;
 }
+
 
 .top-logo {
     width: 120px;
@@ -57,10 +58,10 @@ body{
     padding-top: 5px;
     padding-left: 25px;
 }
-
 .navbar a.active {
-    color: rgb(21, 16, 87);
-    font-weight: bold;
+    color: rgb(0, 0, 0);
+    background-color: #F7F8FC;
+     
 }
 
 .navbar a.active:hover {
@@ -77,18 +78,19 @@ body{
 
 .login {
     float: left;
-    border: rgb(255, 255, 255);
-    background-color: rgb(255, 255, 255);
-    border-style: solid;
-    border-radius: 3px;
-    border-width: 1px;
-    margin-left: 35px;
+    /* border: #EEEEEE; */
+    /* background-color: rgb(255, 255, 255); */
+     background-color: #F7F8FC; 
+    /* border-style: solid; */
+    /* border-radius: 2px; */
+    /* border-width: 2px; */
+    margin-left: 25px;
     margin-right: 1%;
     text-align: center;
     width: 22.5%;
     box-sizing: border-box;
     padding-bottom: 20px;
-    box-shadow: 2px 5px 14px 2px rgba(134, 134, 134, 0.35);
+    box-shadow: 2px 5px 14px 2px rgba(134, 134, 134, 0.20);
 }
 
 input {
@@ -103,14 +105,12 @@ input {
   }
 
 input:hover {
-    background: #ddd;
+    background: #F7F8FC;
     color: black;
 }
 
 input:focus {
-    background-color: rgb(241, 241, 241);
- border: 1px solid rgba(81, 203, 238, 1);
-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    background-color: #F7F8FC;
 }
 
 .login-form{
@@ -127,7 +127,8 @@ box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 
 #btn{
     border-radius: 4px;
-    background-color: rgb(19, 15, 235);
+    /* background-color: rgb(19, 15, 235); */
+    background-color: #070599;
     border: none;
     color: #FFFFFF;
     text-align: center;
@@ -145,7 +146,8 @@ box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 }
 
 #btn:active{
-    background-color: rgb(19, 15, 235);
+    background-color: rgb(27, 7, 126);
+    /* background-color: white; */
 }
 
 p {
@@ -160,10 +162,11 @@ label{
 
 .announcements {
     border: rgb(255, 255, 255);
-    background-color: rgb(255, 255, 255);
-    border-style: solid;
-    border-radius: 3px;
-    border-width: 1px;
+    /* background-color: rgb(255, 255, 255); */
+    background-color: #F7F8FC;
+    /* border-style: solid; */
+    /* border-radius: 2px;
+    border-width: 2px; */
     height: auto;
     margin-left: 1%;
     margin-right: 1%;
@@ -172,7 +175,7 @@ label{
     overflow: hidden;
     min-height: 700px;
     padding-bottom: 20px;
-    box-shadow: 2px 5px 14px 2px rgba(138, 153, 189, 0.35);
+    box-shadow: 2px 5px 14px 2px rgba(138, 153, 189, 0.30);
 
 }
 
@@ -184,24 +187,37 @@ label{
 
 #head {
     border-bottom: 2px solid rgb(173, 173, 173);
+    padding-left: 10px;
+}
+#head_notify{
+    border-bottom: 2px solid;
+}
+
+#announcement-content{
+    display: flex;
+    justify-content: space-between;
+    
 }
 
 #announcements_table{
     width: 100%;
+    
 }
 #announcements_table tr td {
     padding: 15px 5px 5px 5px;
     width: 100%;
-    border-bottom: 1px solid rgb(173, 173, 173);
+    border-bottom: 1px solid black;
+    
+   
 }
 
 #announcements_table tr td:hover{
-    background-color: #ddd;
+    background-color: rgb(239, 243, 252);
 }
 
 .footer {
     width: 100%;
-    background-color: #c3d5f5;
+    background-color: #F7F7F7;
     float: right;
     margin-top: 10%;
     padding-bottom: 30px;
@@ -213,6 +229,7 @@ label{
 .footer p {
     padding-top:15px;
     text-align: center;
+    color:#58759E;
 }
 
 
@@ -221,13 +238,14 @@ label{
 #welcome-msg {
     width: auto;
     margin: 2px 1% 5px 2%;
+    background-color: #F7F8FC;
 }
 
 
 #welcome-msg #welcome-content{
     display: flex;
     width: auto;
-    background-color: white;
+    /* background-color: white; */
     margin-top: 1%;
     border: 1px solid rgb(255, 255, 255);
     border-radius: 3px;
@@ -262,7 +280,7 @@ input[type=button] {
 }
 
 .staff-announcements{
-    background-color: rgb(255, 255, 255);
+    background-color: #F7F8FC;
     border: 1px solid rgb(255, 255, 255);
     border-radius: 3px;
     border-width: 1px;
@@ -292,8 +310,9 @@ input[type=button] {
     border-bottom: 1px solid black;
 }
 
-#satff_announcement_list tr td:hover{
-    background-color: #ddd;
+
+#staff_announcement_list tr td:hover{
+    background-color: rgb(239, 243, 252);
 }
 
 
@@ -313,7 +332,7 @@ input[type=button] {
 .staff-notification{
     float: left;
     border: rgb(255, 255, 255);
-    background-color: rgb(255, 255, 255);
+    background-color: #F7F8FC;
     border: 1px solid rgb(255, 255, 255);
     border-radius: 3px;
     margin-left: 2%;
@@ -354,7 +373,7 @@ input[type=button] {
     color: blue;
 }
 #results-content {
-    background-color: white;
+    background-color: #F7F8FC;
     margin: 10px 1% 2% 1%;
     border: 1px solid rgb(255, 255, 255);
     border-radius: 3px;
@@ -431,7 +450,7 @@ input[type=button] {
 
 }
 .student_result{
-    background-color: rgb(255, 255, 255);
+    background-color: #F7F8FC;
     border: rgb(255, 255, 255);
     width: auto;
     overflow: hidden;
@@ -442,17 +461,22 @@ input[type=button] {
     border-radius: 3px;
     box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.30);
 }
-#student_result_list{
+#student_result_list
+{
     width: 100%;
     border-collapse: collapse;
-   
 }
 #student_result_list tr td{
    text-align: center;
    padding: 15px 5px 5px 5px;
    border-style: 1px solid; 
-   
 }
+#student_result_list th{
+    background-color: #070599;
+    font-size: 16px;
+    color: white;
+}
+
 
 .result_branch{
     font-size: 25px;
@@ -462,7 +486,7 @@ input[type=button] {
 
 .student-result{
     text-align: center;
-    background-color: white;
+    background-color: #F7F8FC;
     margin: auto;
     width: 20%t;
     margin-top: 3%;
@@ -480,7 +504,7 @@ input[type=button] {
 }
 .student-result input[type=submit]{
     display: inline-block;
-    background-color: blue;
+    background-color: #070599;
     width:25%;
     color: white;
     margin-top: 5%;
@@ -488,7 +512,7 @@ input[type=button] {
     
 }
 .student-result input[type=button]{
-    background-color: blue;
+    background-color: #070599;
     color: white;
     width: 25%;
     margin-left: 2%;
@@ -498,6 +522,7 @@ width: 50%;
 font-weight: bold;
 }
 
+
 /*student internals result*/
 #searchtxt{
     width:16%;
@@ -505,7 +530,7 @@ font-weight: bold;
     font-size:16px;
     text-align: center;
     height: 6%;
-    background-color:white;
+    background-color:#F7F8FC;
     margin-left: 14px;
 }
 #back{
@@ -528,11 +553,11 @@ font-weight: bold;
     font-size:16px;
     text-align: center;
     height: 6%;
-    background-color:white;
+    background-color:#F7F8FC;
     margin-left: 14px;
 }
 #Internal-1:hover{
-    background: #ddd;
+    background: #eceff8;
     color: black;
 }
 #Internal-2{
@@ -545,7 +570,7 @@ font-weight: bold;
     margin-left: 14px;
 }
 #Internal-2:hover{
-    background: #ddd;
+    background: #eceff8;
     color: black;
 }
 #Internal-40{
@@ -554,19 +579,19 @@ font-weight: bold;
     font-size:16px;
     text-align: center;
     height: 6%;
-    background-color:white;
+    background-color:#F7F8FC7f;
     margin-left: 14px;
 
 }
 #Internal-40:hover{
-    background: #ddd;
+    background: #eceff8;
     color: black;
 }
 
 /*edit student result*/
 .result-edit{
     text-align: center;
-    background-color: white;
+    background-color: #F7F8FC;
     margin: auto;
     width: 20%t;
     margin-top: 3%;
@@ -585,7 +610,7 @@ font-weight: bold;
 
 .result-edit input[type=submit]{
     display: inline-block;
-    background-color: blue;
+    background-color: #070599;
     width:25%;
     color: white;
     margin-top: 5%;
@@ -593,7 +618,7 @@ font-weight: bold;
     
 }
 .result-edit input[type=button]{
-    background-color: blue;
+    background-color:#070599;
     color: white;
     width: 25%;
     margin-left: 2%;
@@ -610,7 +635,7 @@ font-weight: bold;
 /*staff profile*/
 .staff_profile{
     border: rgb(255, 255, 255);
-    background-color: rgb(255, 255, 255);
+    background-color: #F7F8FC;
     border-style: solid;
     min-height: 520px;
     width: auto;
@@ -633,7 +658,7 @@ font-weight: bold;
     width: 40%;
 }
 .profile_btn input[type=button]{
-  background-color: blue;
+  background-color: #070599;
   color: white;
   width:27%;
   margin:5 auto;
@@ -647,7 +672,7 @@ font-weight: bold;
     display: block;
     width: 115px;
     height: 25px;
-    background: blue;
+    background: #070599;
     padding: 10px;
     display: inline;
     text-align: center;
@@ -661,7 +686,7 @@ font-weight: bold;
 
 .profile-edit{
     text-align: center;
-    background-color: white;
+    background-color: #F7F8FC;
     margin: auto;
     width: 20%t;
     margin-top: 3%;
@@ -709,7 +734,7 @@ margin-top: 2%;
 
 .profile-edit [type=submit]{
 border-radius: 4px;
-background-color: rgb(19, 15, 235);
+background-color: #070599;
 border: none;
 color: #FFFFFF;
 text-align: center;
@@ -722,7 +747,7 @@ margin: 5px;
 }
 .profile-edit [type=button]{
     border-radius: 4px;
-    background-color: rgb(19, 15, 235);
+    background-color: #070599;
     border: none;
     color: #FFFFFF;
     text-align: center;

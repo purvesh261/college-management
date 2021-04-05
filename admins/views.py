@@ -504,8 +504,10 @@ def create_branch_view(request, *args, **kwargs):
 #@login_required(login_url=common.views.login_view)
 def branch_view(request, branch_code, *args, **kwargs):
     selectedBranch = get_object_or_404(Branch,code=branch_code)
+    print(selectedBranch.branch_name)
     staffOfBranch = Staff.objects.filter(branch=selectedBranch.branch_name, isPending=False)
     coursesInBranch = Course.objects.filter(branch=branch_code).order_by('semester')
+    print(staffOfBranch)
     context = {
         "branch":selectedBranch,
         "staff":staffOfBranch,

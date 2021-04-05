@@ -2,7 +2,7 @@
 {% load static %}
 
 
-{% block title %}Staff - Profile{% endblock %}
+{% block title %}Student - Profile{% endblock %}
 
 {% block content %}
 <div class="profile-edit">
@@ -23,13 +23,18 @@
             <td><input type="text" name="lastName" value="{{editdata.lastName}}" ></td>
         </tr>
         <tr>
-            <th>Account_id:</th>
-            <td><input type="text" name="account_id" value="{{editdata.account_id}}" readonly></td>
+            <th>Username:</th>
+            <td><input type="text" name="username" value="{{editdata.username}}" ></td>
         </tr>
 
         <tr>
-            <th>User-Name:</th>
-            <td><input type="text" name="username" value="{{editdata.username}}" readonly></td>
+            <th>Account Id:</th>
+            <td><input type="text" name="account_id" value="{{editdata.account_id}}" ></td>
+        </tr>
+
+        <tr>
+            <th>Enrolment</th>
+            <td><input type="text" name="enrolment" value="{{editdata.enrolment}}" readonly></td>
         </tr>
 
         <tr>
@@ -38,20 +43,15 @@
         </tr>
        
         <tr>
-            <th>Branch:</th>
-            <td><input type="text" name="branch" value="{{editdata.branch}}" readonly></td>
-        </tr>
-
-        <tr>
             <th>Email:</th>
             <td><input type="text" name="email" value="{{editdata.email}}"></td>
         </tr>
 
         <tr>
             <th>Gender:</th>
-            <td><input type="text" name="gender" value="{{editdata.gender}}"></td>
+            <td><input type="text" name="gender" value="{{editdata.gender}}" ></td>
         </tr>
-        
+       
         
 
 </table>

@@ -5,7 +5,7 @@ app_name = 'staff'
 urlpatterns = [
     path('home/', staff_home_view, name="home"),
     # path('courses/',staff_courses_view, name="courses"),
-    path('results/',staff_results_view, name="results"),
+    #re_path(r'results/(?P<course_code>[0-9]{10})/',staff_results_view, name="results"),
     path('attendance/', attendance_redirect_view, name="attendance_redirect_view"),
     re_path(r'^attendance/(?P<course_code>[0-9]{10})/$',staff_attendance_view, name="attendance"),
     re_path(r'^attendance/(?P<course_code>[0-9]{10})/enter-attendance/$',enter_attendance_view, name="enter-attendance"),
@@ -44,6 +44,9 @@ urlpatterns = [
     re_path(r'^results/(?P<course_code>[0-9]{10})/add-result/(?P<account_id>[0-9]{10})$', add_result, name="courses_view"),
     re_path(r'^results/(?P<course_code>[0-9]{10})/(Internal-1|Internal-2|Internal)/', student_internal_results, name="sem-result"),
     re_path(r'^results/(?P<course_code>[0-9]{10})/edit-result/(?P<account_id>[0-9]{10})', student_result_edit, name="edit-result"),
+    re_path(r'^results/(?P<course_code>[0-9]{10})/delete-result/(?P<account_id>[0-9]{10})',staff_result_delete,name="result-delete"),
+    # path('delete-result/<int:account_id>',staff_result_delete,name='result-delete'),
+
 
     path('courses/', courses_redirect_view, name="courses_redirect_view"),
     path('courses/mt/', no_course_view, name="no_course_view"),

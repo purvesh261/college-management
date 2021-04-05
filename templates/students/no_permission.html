@@ -1,0 +1,22 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}
+<title>Register</title>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/registration_pages.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/register_option.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/staff.css' %}"/>
+{% endblock %}
+
+{% block content %}
+<div class="register" style="padding:50px;">
+<div class="register-message">
+<p style="padding-bottom:10px;">
+    You do not have permission to view this page.
+</p>
+</div>
+</div>
+{% endblock %}

@@ -1,27 +1,25 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from django.shortcuts import render,redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse, resolve
+import collections
 from datetime import datetime
 from common.announcementform import announcementform
 from common.models import Announcement, Assignment
 from staff.forms2 import editforms2
 from common.methods import id_generator, assignment_id_generator
-from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
 from  . import forms
-from django.contrib import messages
 from .models import Branch
+import common
 from staff.models import Staff
 from staff.forms import resultform, CreateAssignmentForm, EditAssignmentForm, editforms1
 from common.models import  Course, CourseFaculty
 from students.models import Student, Attendance
 from students.models import Result
 from staff.forms import editresultform
-import collections
-<<<<<<< HEAD
-=======
 from staff.forms import editforms1
 
->>>>>>> afc416c60f287f746b31e26ac13831b8f6004360
 
 # Create your views here.
 
@@ -423,15 +421,29 @@ def staff_attendance_view(request, course_code, *args, **kwargs):
 
             print(studentAttendance)
 
+        updated = 0
+        att_date = 0
+        if request.session.get('attendance_added'):
+            updated = request.session['attendance_added']
+            att_date = request.session['attendance_date']
+            request.session['attendance_added'] = 0
+            request.session['attendance_date'] = 0
+
+
         context = {
             'courses' : courseList,
             'selectedCourse' : selectedCourse,
             'history': sortedDict,
             'students': student_list,
             'studentPercentage': studentAttendance,
+            'updated': updated,
+            'date': att_date,
         }
-    return render(request, "staff/attendance_course_list.html", context)
+        return render(request, "staff/attendance_course_list.html", context)
+    else:
+         return redirect(reverse('login'))
 
+# @login_required(login_url=common.views.login_view)
 def attendance_redirect_view(request, *args, **kwargs):
     if request.user.is_authenticated:
         if not request.session.get('userId'):
@@ -450,11 +462,11 @@ def attendance_redirect_view(request, *args, **kwargs):
             course_code = list(courseList.values())[0][0][0]
         else:
             course_code = 'mt'
-
         return redirect("./" + course_code)
     else:
-        print("OK!!!!!")
+        return redirect(reverse('login'))
 
+# @login_required(login_url=common.views.login_view)
 def enter_attendance_view(request, course_code, *args, **kwargs):
     if request.user.is_authenticated:
         userEmail = request.user.email
@@ -478,6 +490,14 @@ def enter_attendance_view(request, course_code, *args, **kwargs):
         if request.method == "POST":
             attendance = list(request.POST.items())
             selectedDate = attendance[1][1]
+            print(selectedDate)
+            attendanceList = Attendance.objects.filter(course=selectedCourse, date=datetime(int(selectedDate[:4].lstrip('0')), int(selectedDate[5:7].lstrip('0')), int(selectedDate[8:].lstrip('0'))))
+            
+            if attendanceList:
+                request.session['date_already_exists'] = 1
+                path = '/staff/attendance/' + course_code + '/enter-attendance/'  
+                return redirect(path)
+
             for i in range(2,len(attendance)):
                 item = attendance[i]
                 enrol = item[0]
@@ -486,18 +506,28 @@ def enter_attendance_view(request, course_code, *args, **kwargs):
                     if stud.enrolment == enrol:
                         AttendanceObj = Attendance(student=stud, date=selectedDate, course=selectedCourse, faculty=user, status=status)
                         AttendanceObj.save()
+                        request.session['attendance_added'] = 1
+                        request.session['attendance_date'] = selectedDate
                         break
+            return redirect(reverse('staff:attendance', kwargs={'course_code':course_code}))
+        exists_error = 0
+        if request.session.get('date_already_exists'):
+            exists_error = 1
+            request.session['date_already_exists'] = 0
 
         context = {
             'courses' : courseList,
             'selectedCourse' : selectedCourse,
             'students' : student_list,
             'date': datetime.date(datetime.today()),
+            'exists_error': exists_error,
         }
-    return render(request, 'staff/enter_attendance.html', context)
+        return render(request, 'staff/enter_attendance.html', context)
 
-# def create_attendance_obj(request, course_code, *args, **kwargs):
+    else:
+         return redirect(reverse('login'))
 
+# @login_required(login_url=common.views.login_view)
 def edit_attendance_view(request, course_code, date, *args, **kwargs):
     if request.user.is_authenticated:
         userEmail = request.user.email
@@ -534,12 +564,12 @@ def edit_attendance_view(request, course_code, date, *args, **kwargs):
                 for stud in student_list:
                     if stud.enrolment == enrol:
                         AttendanceObj = Attendance.objects.get(student=stud, date=selectedDate1, course=selectedCourse)
-                        print(AttendanceObj)
                         AttendanceObj.status = status
                         AttendanceObj.save()
+                        request.session['attendance_added'] = 1
+                        request.session['attendance_date'] = selectedDate1
                         break
-            path = '/staff/attendance/' + course_code + '/'
-            return redirect(path)
+            return redirect(reverse('staff:attendance', kwargs={'course_code':course_code}))
 
         context = {
             'attendance': attendanceObj,
@@ -549,7 +579,85 @@ def edit_attendance_view(request, course_code, date, *args, **kwargs):
         }
         print(selectedDate)
 
-    return render(request,'staff/edit_attendance.html', context)
+        return render(request,'staff/edit_attendance.html', context)
+    else:
+         return redirect(reverse('login'))
+
+# @login_required(login_url=common.views.login_view)
+def student_attendance_details_view(request, course_code, student_id, *args, **kwargs):
+    if request.user.is_authenticated:
+        context = {}
+        if not request.session.get('userId'):
+            userEmail = request.user.email
+            user = Staff.objects.get(email=userEmail)
+            request.session['userId'] = user.employee_id
+
+        selectedCourse = Course.objects.get(course_id=course_code)
+        selectedObj = get_object_or_404(CourseFaculty, faculty_id=request.session['userId'],course_id=selectedCourse)
+        courseList = {}
+        assignments = None
+        if selectedObj:
+            courses = CourseFaculty.objects.filter(faculty_id=request.session['userId'])
+            for course in courses:
+                if courseList.get(course.course_id.semester):
+                    courseList[course.course_id.semester].append((course.course_id.course_id,course.course_id.course_name))
+                else:
+                    courseList[course.course_id.semester] = [(course.course_id.course_id,course.course_id.course_name)]
+            courseList = collections.OrderedDict(sorted(courseList.items()))
+            selectedStudent = get_object_or_404(Student, account_id=student_id)
+
+            studentAttendance = Attendance.objects.filter(student=selectedStudent, course=selectedCourse)
+            attCount = 0
+
+            for att in studentAttendance:
+                if att.status == 'P':
+                    attCount += 1
+            
+            totalAtt = len(studentAttendance)
+            percentage = 100
+            if totalAtt > 0:
+                percentage = round((attCount / totalAtt ) * 100,2)
+            fpath = request.get_full_path()
+            fpath = fpath.split('/')[-1]
+            updated = 0
+            if request.session.get('student_attendance_updated'):
+                updated = request.session['student_attendance_updated']
+                request.session['student_attendance_updated'] = 0
+
+            context = {
+            'courses' : courseList,
+            'selectedCourse' : selectedCourse,
+            'student': selectedStudent,
+            'studentAttendance': studentAttendance,
+            'percentage': percentage,
+            'updated' : updated
+            }
+        
+        if request.method == "POST":
+            attendance = list(request.POST.items())
+            
+            for item in range(1,len(attendance)):
+                for att in studentAttendance:
+                    print(att.date.strftime('%B %#d, %Y'), attendance[item][0])
+                    if att.date.strftime('%B %#d, %Y') == attendance[item][0] and att.status != attendance[item][1]:
+                        att.status = attendance[item][1]
+                        newObj = Attendance.objects.get(date=att.date,course=selectedCourse, student=selectedStudent)
+                        newObj.status = attendance[item][1]
+                        print("YES", att.date)
+                        newObj.save()
+                        break
+            
+            request.session['student_attendance_updated'] = 1
+            path = '/staff/attendance/' + course_code + '/' + student_id + '/'
+            return redirect(path)
+
+        return render(request, "staff/student_attendance.html", context)
+
+        
+    else:
+         return redirect(reverse('login'))
+
+
 # @login_required(login_url=common.views.login_view)
 def staff_results_view(request, course_code, *args, **kwargs):
     if request.user.is_authenticated:
@@ -586,8 +694,7 @@ def staff_results_view(request, course_code, *args, **kwargs):
             }
     return render(request, "staff/results.html",context)
 
-def student_attendance_details_view(request, course_code, student_id, *args):
-    return None
+
 # @login_required(login_url=common.views.login_view)
 def result_view(request, branch_code, *args):
     branches = Branch.objects.all().order_by('branch_name')
@@ -603,7 +710,7 @@ def result_view(request, branch_code, *args):
     return render(request,"staff/semresult.html",{'branch':b1.branch_name})
 
 
-
+# @login_required(login_url=common.views.login_view)
 def sem_result(request,branch_code,*args):
     sem=(request.path.split('/')) #split the whole url /
     s1=sem[4] #to fetch the sem from url
@@ -623,7 +730,7 @@ def sem_result(request,branch_code,*args):
     print(displaydata) #print filtered data of students
     return render(request,"staff/result.html",{'student':displaydata,'branch':b1.branch_name,'sem':s1})
 
-
+# @login_required(login_url=common.views.login_view)
 def add_result(request,account_id,course_code,*args):
     branches = Branch.objects.all().order_by('branch_name')
     selectedCourse = Course.objects.get(course_id=course_code)
@@ -678,6 +785,7 @@ def add_result(request,account_id,course_code,*args):
     return render(request,"staff/addresult.html",{'resultform1':resultform1,'sem':s1,'displaydata':displaydata})
 
 #staff-student internals result
+# @login_required(login_url=common.views.login_view)
 def student_internal_results(request,course_code,*args):
     url=(request.path.split('/')) #split the whole url /
     # s1=url[4] #to fetch the sem from url
@@ -706,7 +814,7 @@ def student_internal_results(request,course_code,*args):
     print(displaydata) #print filtered data of students
     return render(request,"staff/stdresult.html",{'student':displaydata,'branch':b1.branch_name,'examname':exam})
 
-
+# @login_required(login_url=common.views.login_view)
 def student_result_edit(request,course_code,account_id,*args):
     print(account_id)
     displaydata=Result.objects.get(account_id=account_id)
@@ -743,6 +851,7 @@ def staff_profile_view(request, *args, **kwargs):
     print(branch)
     return render(request, "staff/profile.html",{'staff':obj,'branch':branch})
 
+# @login_required(login_url=common.views.login_view)
 def staff_profile_edit(request,account_id,*args,**kwargs):
     print(account_id)
     displaydata=Staff.objects.get(account_id=account_id)

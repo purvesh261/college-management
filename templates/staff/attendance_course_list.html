@@ -36,6 +36,16 @@
             </div>
         {% endif %}
         <div id="assignment">
+            {% if updated == 1%}
+                <div class='success' id='bar'>
+                      <div id="left">
+                        Attendance updated for {{ date }}
+                      </div>
+                      <div id="right">
+                        <a href="#" onclick="Hide(bar);">X</a>
+                      </div>
+                </div>
+            {% endif %}
             <div id="course-sub-title">
                 Attendance
                 <div id="buttons">
@@ -100,7 +110,13 @@
                                         {% if value == 'N.A.' %}
                                             <td>{{ value }}</td>
                                         {% else %}
-                                            <td>{{ value }} %</td>
+                                            {% if value >= 75 %}
+                                                <td style="color: green;">{{ value }} %</td>      
+                                            {% elif value >= 50 %}
+                                                <td>{{ value }} %</td>      
+                                            {% else %}
+                                                <td style="color: red;">{{ value }} %</td>  
+                                            {% endif %}
                                         {% endif %}
                                     {% endif %}
                                 {% endfor %}

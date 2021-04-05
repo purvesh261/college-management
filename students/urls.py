@@ -1,10 +1,12 @@
-from django.urls import path
+from django.urls import path,re_path
 from .views import *
 
 app_name = 'students'
 urlpatterns = [
     path('home/', student_home_view, name="home"),
-    path('courses/',student_courses_view, name="courses"),
+    path('courses/', courses_redirect_view, name="courses_redirect_view"),
+    path('courses/mt/', no_course_view, name="no_course_view"),
+    re_path(r'^courses/(?P<course_code>[0-9]{10})/$', student_courses_view, name="courses_view"),
     path('results/',student_results_view, name="results"),
     path('attendance/',student_attendance_view, name="attendance"),
     path('profile/',student_profile_view, name="profile")

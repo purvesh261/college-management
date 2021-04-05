@@ -24,6 +24,16 @@
         {% endif %}
     </div>
     <div id="content">
+        {% if exists_error == 1%}
+                <div class='error' id='bar'>
+                      <div id="left">
+                        Attendance for selected date already exists.
+                      </div>
+                      <div id="right">
+                        <a href="#" onclick="Hide(bar);">X</a>
+                      </div>
+                </div>
+        {% endif %}
         <form method="POST"> {% csrf_token %}
             <div id="attendance-form">
                 Date:
@@ -40,7 +50,7 @@
                 <tr>
                     <td>{{ student.enrolment }}</td>
                     <td>{{ student.firstName }} {{ student.lastName }}</td>
-                    <td><input type='radio' value="P" name="{{ student.enrolment }}" /></td>
+                    <td><input type='radio' value="P" name="{{ student.enrolment }}" checked/></td>
                     <td><input type='radio' value="A" name="{{ student.enrolment }}" /></td>
                 </tr>
                 {% endfor %}

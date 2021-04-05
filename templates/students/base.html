@@ -1,8 +1,13 @@
 {% load static %}
 <html>
     <head>
+        {% block title %}
         <title>Student</title>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/landing.css' %}"/>
+        {% endblock %}
+
+        {% block css %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/staff.css' %}"/>
+        {% endblock %}
     </head>
     <body>
         <div class="header">

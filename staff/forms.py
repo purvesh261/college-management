@@ -440,6 +440,7 @@ class editforms1(forms.ModelForm):
             'email',
             'gender',
             'isPending',
+        ]
     def clean(self,*args,**kwargs):
         cleaned_data = super().clean()
         title = str(self.cleaned_data.get('title'))

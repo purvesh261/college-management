@@ -29,6 +29,11 @@ table {
     border-bottom: 1px solid rgb(148, 148, 148);
 }
 
+.selected {
+    font-weight: bold;
+    color: #2E0080;
+}
+
 #content {
     margin: 60px 10px 10px 10px;
     width: 100%;
@@ -160,7 +165,7 @@ table {
     text-decoration: none;
 }
 
-.sidenav ul#course:hover{
+.sidenav ul#course li:hover{
     background-color: #dbdad9;
     cursor: pointer;
 }

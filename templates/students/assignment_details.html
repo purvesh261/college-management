@@ -1,0 +1,178 @@
+{% extends './base.html' %}
+{% load static %}
+{% block title %} {{ selectedAssignment.title }} {% endblock %}
+
+{% block css %}
+        <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/staff.css' %}"/> -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/student.css' %}"/>
+{% endblock %}
+
+{% block content %}
+
+<div id='wrapper'>
+    <div id="mySidenav" class="sidenav">
+        <div id="sidebar-title">Your Courses</div>
+        {% if courses %}
+            {% for sem,courseList in courses.items %}
+                <div id="courses-item">
+                    <ul id="sem">
+                        <div id="sem-head">Semester {{ sem }}</div>
+                        <ul id="course">
+                            {% for course in courseList %}
+                                {% if course.0 == selectedCourse.course_id %}
+                                    <a href="/students/courses/{{ course.0 }}" class="selected" style="color: blue;"><li>{{ course.1 }}</li></a>
+                                {% else %}
+                                    <a href="/students/courses/{{ course.0 }}"><li>{{ course.1 }}</li></a>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div id="empty-list">
+                No Courses...
+            </div>
+        {% endif %}
+    </div>
+    {% if courses %}
+    <div id="content">
+        <div class="course-title btm-border">
+            {{ selectedAssignment.title }}
+        </div>
+        <div id="course-description">
+            <table>
+                <tr>
+                    <td>Description:</td>
+                    {% if selectedAssignment.description %}
+                    <td>{{ selectedAssignment.description|linebreaksbr }}</td>
+                    {% else %}
+                    <td>No description</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>Created By:</td>
+                    <td>{{ selectedAssignment.faculty.firstName }} {{ selectedAssignment.faculty.lastName }}</td>
+                </tr>
+                <tr>
+                    <td>Start Date:</td>
+                    <td>{{ selectedAssignment.start_date }}</td>
+                </tr>
+                <tr>
+                    <td>Deadline:</td>
+                    {% if selectedAssignment.end_date%}
+                        <td>{{ selectedAssignment.end_date }}</td>
+                    {% else %}
+                        <td>-</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>Course:</td>
+                    <td>{{ selectedAssignment.course.course_name }}</td>
+                </tr>
+                <tr>
+                    <td>Attachment:</td>
+                    {% if selectedAssignment.assignment_file %}
+                    <td><a href="{{ selectedAssignment.assignment_file.url }}" download><button class='table-btn'>Download</button></a></td>
+                    {% else %}
+                    <td>-</td>
+                    {% endif %}
+                </tr>
+            </table>
+        </div>
+        <div id="course-sub-title">
+            Submission
+            {% if not submission %}
+                <button onclick="Show(submissionpopup);" id="white-button">Create Submission</button>
+            {% endif %}
+        </div>
+        {% if uploadSuccess == '1' %}
+                <div class='success' id='bar'>
+                      <div id="left">
+                        Assignment successfully submitted.
+                      </div>
+                      <div id="right">
+                        <a href="#" onclick="Hide(bar);">X</a>
+                      </div>
+                </div>
+        {% elif uploadSuccess == 'file_error' %}
+            <div class='error' id='bar'>
+                <div id="left">
+                    File type must be pdf.
+                </div>
+                <div id="right">
+                    <a href="#" onclick="Hide(bar);">X</a>
+                </div>
+            </div>
+        {% endif %}
+        <div id="submissionpopup">
+            <div id="popup-head">
+                Upload File
+                <a onclick="Hide(submissionpopup);">X</a>
+            </div>
+            <form id="submission-upload" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                <table>
+                    <tr>
+                        <td><label for="submission-file" style="margin-bottom: 5px;">Select File <span style="color: red;">*</span></label></td>
+                    </tr>
+                    <tr>
+                        <td><input type="file" name="submission-file" required/></td>
+                    </tr>
+                </table>
+                
+                
+                
+                <input type="submit" value="Upload" />
+            </form>
+                
+        </div>
+        <div id="course-description">
+            <table>
+                {% if submission %}
+                <tr>
+                    <td>Status:</td>
+                    {% if submitLate %}
+                        <td style="color: red;">Submitted Late</td>
+                    {% else %}
+                        <td style="color: green;">Submitted</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>Submission Time:</td>
+                    <td>{{ submission.submission_time }}</td>
+                </tr>
+                <tr>
+                    <td>Submission File:</td>
+                    <td><a href="{{ submission.submission_file.url }}" download><button class='table-btn'>Download</button></a></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td>Status:</td>
+                    {% if overdue %}
+                        <td style="color: red;">Overdue</td>
+                    {% else %}
+                        <td>Not Submitted</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>Time Remaining:</td>
+                    {% if overdue %}
+                        <td>{{ timeRemaining }} late</td>
+                    {% elif timeRemaining %}
+                        <td>{{ timeRemaining }} remaining</td>
+                    {% else %}
+                        <td>No deadline</td>
+                    {% endif %}
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+            
+        </div>
+    {% else %}
+        <div id="content-none">
+            <div>No courses have been assigned to you yet...</div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

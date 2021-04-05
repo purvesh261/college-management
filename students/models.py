@@ -1,6 +1,6 @@
 from django.db import models
-from admins.models import Branch
 from common.models import Course
+from admins.models import Branch
 from staff.models import Staff
 from datetime import datetime
 

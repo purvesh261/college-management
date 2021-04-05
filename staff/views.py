@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -6,19 +6,15 @@ from django.urls import reverse, resolve
 import collections
 from datetime import datetime
 from common.announcementform import announcementform
-from common.models import Announcement, Assignment
+from common.models import Announcement, Assignment, Course, CourseFaculty
 from staff.forms2 import editforms2
 from common.methods import id_generator, assignment_id_generator
 from  . import forms
 from .models import Branch
 import common
 from staff.models import Staff
-from staff.forms import resultform, CreateAssignmentForm, EditAssignmentForm, editforms1
-from common.models import  Course, CourseFaculty
-from students.models import Student, Attendance
-from students.models import Result
-from staff.forms import editresultform
-from staff.forms import editforms1
+from staff.forms import resultform, CreateAssignmentForm, EditAssignmentForm, editforms1, editresultform
+from students.models import Student, Attendance, Result
 
 
 # Create your views here.
@@ -194,8 +190,6 @@ def staff_courses_view(request, course_code, *args, **kwargs):
                     ongoingAssignments.append(assignment)
                 elif assignment.start_date <= datetime.date(datetime.today()) and assignment.end_date >= datetime.date(datetime.today()):
                     ongoingAssignments.append(assignment)
-                elif assignment.start_date < datetime.date(datetime.today()) and assignment.end_date < datetime.date(datetime.today()):
-                    break
 
         context = {
             'courses' : courseList,
@@ -286,6 +280,7 @@ def view_assignments_view(request, course_code, *args, **kwargs):
             'upcomingAssignments' : upcomingAssignments,
             }
     return render(request, 'staff/assignments.html', context)
+    
 def manage_assignment_view(request, course_code, assignment_id, *args, **kwargs):
     context = {}
     if request.user.is_authenticated:

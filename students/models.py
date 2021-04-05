@@ -1,22 +1,11 @@
 from django.db import models
-from admins.models import Branch
 from common.models import Course
+from admins.models import Branch
 from staff.models import Staff
 from datetime import datetime
 
 class Student(models.Model):
      gender_choices=(('M','Male'),('F','Female'),('O','Other'),)
-     # branch_choices=(('CE','Computer Engineering'),
-     #                   ('IT','Information Technology'),
-     #                   ('EC','Electronics and Comm. Engineering'),
-     #                   ('BME','Bio-Medical Engineering'),
-     #                   ('MC','Mechantronics Engineering'),
-     #                   ('ME','Mechanical Engineering'),
-     #                   ('CE','Civil Engineering'),
-     #                   ('EE','Electrical Engineering'),
-     #                   ('ME','Marine Engineering'),
-     #                   ('AE','Automobile Engineering'),
-     #                   ('PE','Petrochemical Engineering'))
      
      branches = Branch.objects.values_list('branch_name','code')
      branch_choices = ((branch[1],branch[0]) for branch in branches)

@@ -16,7 +16,11 @@
                         <div id="sem-head">Semester {{ sem }}</div>
                         <ul id="course">
                             {% for course in courseList %}
-                                <a href="../{{ course.0 }}"><li>{{ course.1 }}</li></a>
+                            {% if course.0 == selectedCourse.course_id %}
+                                <a href="/students/results/{{ course.0 }}" class="selected" style="color: blue;"><li>{{ course.1 }}</li></a>
+                            {% else %}
+                                <a href="/students/results/{{ course.0 }}"><li>{{ course.1 }}</li></a>
+                            {% endif %}
                             {% endfor %}
                         </ul>
                     </ul>

@@ -1,6 +1,6 @@
 from students.models import Student
 from staff.models import Staff
-from common.models import Announcement, Course, Assignment
+from common.models import Announcement, Course, Assignment, Submission
 import datetime
 import random
 import string
@@ -44,4 +44,17 @@ def assignment_id_generator(course_code):
             pass
         else:
             break
+    return new_assignment_id
+
+def submission_id_generator(course_code, assignment_id):
+    base = course_code[-2:] + assignment_id[-2:]
+
+    while True:
+        new_assignment_id = ''.join([str(random.choice(string.digits)) for n in range(6)])
+        new_assignment_id = base + new_assignment_id
+        if Student.objects.filter(account_id=new_assignment_id).exists() or Staff.objects.filter(account_id=new_assignment_id).exists() or Announcement.objects.filter(account_id=new_assignment_id).exists() or Course.objects.filter(course_id=new_assignment_id).exists() or Assignment.objects.filter(assignment_id=new_assignment_id) or Submission.objects.filter(submission_id=new_assignment_id):
+            pass
+        else:
+            break
+        
     return new_assignment_id

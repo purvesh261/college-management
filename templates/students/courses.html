@@ -1,5 +1,131 @@
 {% extends './base.html' %}
 
 {% block content %}
-
+<div id='wrapper'>
+    <div id="mySidenav" class="sidenav">
+        <div id="sidebar-title">Your Courses</div>
+        {% if courses %}
+            {% for sem,courseList in courses.items %}
+                <div id="courses-item">
+                    <ul id="sem">
+                        <div id="sem-head">Semester {{ sem }}</div>
+                        <ul id="course">
+                            {% for course in courseList %}
+                            {% if course.0 == selectedCourse.course_id %}
+                                <a href="/students/courses/{{ course.0 }}" class="selected" style="color: blue;"><li>{{ course.1 }}</li></a>
+                            {% else %}
+                                <a href="/students/courses/{{ course.0 }}"><li>{{ course.1 }}</li></a>
+                            {% endif %}
+                                
+                            {% endfor %}
+                        </ul>
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div id="empty-list">
+                No Courses...
+            </div>
+        {% endif %}
+    </div>
+    {% if courses %}
+    <div id="content">
+        <div class="course-title">
+            {{ selectedCourse.course_name }}
+        </div>
+        {% if selectedCourse.description %}
+            <div id="course-description">
+                <div id="course-description-content">
+                    {{ selectedCourse.description|linebreaksbr }}
+                </div>
+            </div>
+        {% endif %}
+            <div id="course-sub-title">
+                Assignments
+                <button onclick="location.href='./assignments'" id="white-button">
+                    View All
+                </button>
+            </div>
+            <div id="assignment">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Start Date</th>
+                            <th>Deadline</th>
+                            <th>Created by</th>
+                            <th>Attachment</th>
+                            <th>Status</th>
+                            <th>Submission</th>
+                        </tr>
+                    </thead>
+                    {% if assignments or overdue %}
+                        <tbody>
+                            {% for assignment in assignments %}
+                                <tr>
+                                    <td><a href="/students/assignments/{{ selectedCourse.course_id }}/{{ assignment.assignment_id }}">{{ assignment.title }}</a></td>
+                                    <td>{{ assignment.start_date }}</td>
+                                    {% if assignment.end_date %}
+                                    <td>{{ assignment.end_date }}</td>
+                                    {% else %}
+                                    <td>-</td>
+                                    {% endif %}
+                                    <td>{{ assignment.faculty.firstName }} {{ assignment.faculty.lastName }}</td>
+                                    {% if assignment.assignment_file %}
+                                    <td><a href="{{ assignment.assignment_file.url }}" download><button class='table-btn'>Download</button></a></td>
+                                    {% else %}
+                                    <td>-</td>
+                                    {% endif %}
+                                    {% for id, stat in submittedAssignments.items %}
+                                        {% if id == assignment.assignment_id %}
+                                            {% if stat == 'Not submitted' %}
+                                                <td>{{ stat }}</td>
+                                                <td><a href="/students/assignments/{{ selectedCourse.course_id }}/{{ assignment.assignment_id }}/"><button class='table-btn'>Create Submission</button></a></td>
+                                            {% else %}
+                                                <td style="color: green;">{{ stat }}</td>
+                                                {% for sub in submissions %}
+                                                    {% if sub.assignment == assignment %}
+                                                        <td><a href="{{ sub.submission_file.url }}" download><button class='table-btn'>Download</button></a></td>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for assignment in overdue %}
+                                    <tr>
+                                        <td><a href="/students/assignments/{{ selectedCourse.course_id }}/{{ assignment.assignment_id }}">{{ assignment.title }}</a></td>
+                                        <td>{{ assignment.start_date }}</td>
+                                        {% if assignment.end_date %}
+                                        <td>{{ assignment.end_date }}</td>
+                                        {% else %}
+                                        <td>-</td>
+                                        {% endif %}
+                                        <td>{{ assignment.faculty.firstName }} {{ assignment.faculty.lastName }}</td>
+                                        {% if assignment.assignment_file %}
+                                        <td><a href="{{ assignment.assignment_file.url }}" download><button class='table-btn'>Download</button></a></td>
+                                        {% else %}
+                                        <td>-</td>
+                                        {% endif %}
+                                        <td style="color: red;">Overdue</td>
+                                        <td><a href="/students/assignments/{{ selectedCourse.course_id }}/{{ assignment.assignment_id }}/"><button class='table-btn'>Create Submission</button></a></td>
+                                    </tr>
+                            {% endfor %}
+                        </tbody>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" id="empty-table">No assignments yet...</td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+            
+    </div>
+    {% else %}
+        <div id="content-none">
+            <div>You aren't enrolled in any courses...</div>
+        </div>
+    {% endif %}
+    
+</div>
 {% endblock %}

@@ -36,6 +36,16 @@
             </div>
         {% endif %}
         <div id="assignment">
+            {% if updated == 1 %}
+                <div class='success' id='bar'>
+                      <div id="left">
+                        Attendance updated for {{ date }}
+                      </div>
+                      <div id="right">
+                        <a href="#" onclick="Hide(bar);">X</a>
+                      </div>
+                </div>
+            {% endif %}
             <div id="course-sub-title">
                 Attendance
                 <div id="buttons">
@@ -62,7 +72,7 @@
                                         <td>{{ key }}</td>
                                         <td>{{ value.0 }} %</td>
                                         <td>{{ value.1 }} %</td>
-                                        <td><a href="./{{ value.2 }}/edit/">Edit</a></td>
+                                        <td><a href="./{{ value.2 }}/edit/"><button class='table-btn'>Edit</button></a></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -76,11 +86,56 @@
                 </div>
             </div>
         </div>
+        <div id="assignment">
+            <div id="course-sub-title">
+                Students
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Enrolment</th>
+                        <th>Name</th>
+                        <th>Attendance</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                {% if students %}
+                    <tbody>
+                        {% for stud in students %}
+                            <tr>
+                                <td>{{ stud.enrolment }}</td>
+                                <td>{{ stud.firstName }} {{ stud.lastName }}</td>
+                                {% for key, value in studentPercentage.items %}
+                                    {% if key == stud.enrolment %}
+                                        {% if value == 'N.A.' %}
+                                            <td>{{ value }}</td>
+                                        {% else %}
+                                            {% if value >= 75 %}
+                                                <td style="color: green;">{{ value }} %</td>      
+                                            {% elif value >= 50 %}
+                                                <td>{{ value }} %</td>      
+                                            {% else %}
+                                                <td style="color: red;">{{ value }} %</td>  
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <td><a href="./{{ stud.account_id }}/"><button class='table-btn'>Details</button></a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                {% else %}
+                    <tr>
+                        <td colspan="7" id="empty-table">No students enrolled...</td>
+                    </tr>
+                {% endif %}
+                </table>
     </div>
     {% else %}
         <div id="content-none">
             <div>No courses have been assigned to you yet...</div>
         </div>
     {% endif %}
+    
 </div>
 {% endblock %}

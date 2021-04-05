@@ -1,0 +1,79 @@
+{% extends './base.html' %}
+
+{% block content %}
+<div id='wrapper'>
+    <div id="mySidenav" class="sidenav">
+        <div id="sidebar-title">Your Courses</div>
+        {% if courses %}
+            {% for sem,courseList in courses.items %}
+                <div id="courses-item">
+                    <ul id="sem">
+                        <div id="sem-head">Semester {{ sem }}</div>
+                        <ul id="course">
+                            {% for course in courseList %}
+                                <a href="/staff/attendance/{{ course.0 }}"><li>{{ course.1 }}</li></a>
+                            {% endfor %}
+                        </ul>
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div id="empty-list">
+                No Courses...
+            </div>
+        {% endif %}
+    </div>
+    <div id="content">
+        <div class="course-title">
+            {{ student.firstName }} {{ student.lastName }} ({{ student.enrolment }})
+        </div>
+            {% if updated == 1%}
+                <div class='success' id='bar'>
+                      <div id="left">
+                        Attendance Updated
+                      </div>
+                      <div id="right">
+                        <a href="#" onclick="Hide(bar);">X</a>
+                      </div>
+                </div>
+            {% endif %}
+            <div id="course-sub-title" style="display: block;">
+                {{ selectedCourse.course_name }} Attendance:
+                {% if percentage >= 75 %}
+                    <span style="color: green;">{{ percentage }} %</span>      
+                {% elif percentage >= 50 %}
+                    <span>{{ percentage }} %</span>      
+                {% else %}
+                    <span style="color: red;">{{ percentage }} %</span>  
+                {% endif %}
+            </div>
+            
+            <form method="POST"> {% csrf_token %}
+                <table border="1" id="attendance-table" style="width: 50%; margin-left: 20;">
+                    <tr>
+                        <th>Date</th>
+                        <th >Present</th>
+                        <th>Absent</th>
+                    </tr>
+                    {% for att in studentAttendance %}
+                    <tr>
+                        <td>{{ att.date }}</td>
+                        {% if att.status == "P" %}
+                            <td><input type='radio' value="P" name="{{ att.date }}" checked/></td>
+                            <td><input type='radio' value="A" name="{{ att.date }}" /></td>
+                        {% else %}
+                            <td><input type='radio' value="P" name="{{ att.date }}" /></td>
+                            <td><input type='radio' value="A" name="{{ att.date }}" checked/></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </table>
+                <div id="attendance-form">
+                    <input type="submit" value="Update" id='attendance-sub'/>
+                </div>
+                
+            </form>
+    </div>
+    
+</div>
+{% endblock %}

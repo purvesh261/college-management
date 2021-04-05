@@ -22,3 +22,13 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 } 
+
+function Hide(HideID) 
+{
+  HideID.style.display = "none"; 
+}
+
+function Show(ShowID) 
+{
+  ShowID.style.display = "block"; 
+}

@@ -1,7 +1,7 @@
 from django.db import models
+from staff.models import Staff
 from datetime import datetime    
 from .validators import validate_file_extension
-from staff.models import Staff
 
 class Announcement(models.Model):
     title=models.CharField(max_length=100,
@@ -89,11 +89,19 @@ class Assignment(models.Model):
 
     assignment_file = models.FileField(verbose_name="Assignment File", blank=True, upload_to='assignments', validators=[validate_file_extension])
 
-
-
+class Submission(models.Model):
+    submission_id = models.CharField(max_length=20, verbose_name="Submission ID",
+                            primary_key=True)
     
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, verbose_name="Course")
 
+    assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE, verbose_name="Assignment")
 
+    student = models.ForeignKey('students.Student', on_delete=models.CASCADE, verbose_name="Student")
+
+    submission_time = models.DateTimeField(default=datetime.now, verbose_name= "Submission Time")
+
+    submission_file = models.FileField(verbose_name="Submission File", blank=True, upload_to="submissions", validators=[validate_file_extension])
 
 # Create your models here.
 # class AppUser(models.Model):

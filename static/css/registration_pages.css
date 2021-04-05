@@ -1,6 +1,6 @@
 body{
     margin: 0;
-    background-color: rgb(247, 244, 241);
+    background-color:#F7F8FC;
 }
 
 .datefield {
@@ -20,9 +20,8 @@ body{
     position: static; /* Set the navbar to fixed position */
     top: 0; /* Position the navbar at the top of the page */
     width: 100%; /* Full width */
-    box-shadow: 2px 5px 15px 2px rgba(134, 134, 134, 0.534);
-    background: rgb(0,73,255);
-    background: linear-gradient(180deg, rgb(138, 170, 250) 0%, rgb(220, 225, 241) 100%);
+    box-shadow: 2px 5px 15px 2px rgba(134, 134, 134, 0.20);
+    background-color: #2E0080;
 }
 
 .top-logo {
@@ -82,11 +81,12 @@ body{
 }
 .body{
     overflow:auto;
+    background-color: #EEF2F9;
 }
 
 .form {
     text-align: center;
-    background-color: white;
+    background-color: #F7F8FC;
     margin: auto;
     width: max-content;
     margin-top: 3%;
@@ -144,7 +144,7 @@ body{
 }
 .form input[type=submit]{
     border-radius: 4px;
-    background-color: rgb(19, 15, 235);
+    background-color: #070599;
     border: none;
     color: #FFFFFF;
     text-align: center;
@@ -161,7 +161,7 @@ body{
 }
 
 .form input[type=submit]:active{
-    background-color: rgb(19, 15, 235);
+    background-color: #070599;
 }
 
 
@@ -205,7 +205,7 @@ body{
 /* announcement */
 .announcementform{
     text-align: center;
-    background-color: white;
+    background-color: #F7F8FC;
     margin: auto;
     width: max-content;
     margin-top: 3%;
@@ -222,7 +222,7 @@ body{
 
 .announcementform input[type=submit]{
     border-radius: 4px;
-    background-color: rgb(19, 15, 235);
+    background-color: #070599;
     border: none;
     color: #FFFFFF;
     text-align: center;
@@ -236,7 +236,7 @@ body{
 }
 .announcementform input[type=button]{
     border-radius: 4px;
-    background-color: rgb(19, 15, 235);
+    background-color:#070599 ;
     border: none;
     color: #FFFFFF;
     text-align: center;
@@ -286,13 +286,18 @@ body{
     text-align: center;
     
 }
+#announcement_list2 th {
+    background-color: #070599;
+    font-size: 18px;
+    color: white;
+  }
 .allannouncement{
     margin-left: 2%;
 }
 
 .announcement-edit{
     text-align: center;
-    background-color: white;
+    background-color: #F7F8FC;
     margin: auto;
     width: 20%t;
     margin-top: 3%;
@@ -340,7 +345,7 @@ body{
 }
  .announcement-edit [type=submit]{
     border-radius: 4px;
-    background-color: rgb(19, 15, 235);
+    background-color: #070599;
     border: none;
     color: #FFFFFF;
     text-align: center;
@@ -353,7 +358,7 @@ body{
     }
 .announcement-edit [type=button]{
         border-radius: 4px;
-        background-color: rgb(19, 15, 235);
+        background-color: #070599;
         border: none;
         color: #FFFFFF;
         text-align: center;

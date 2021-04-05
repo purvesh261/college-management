@@ -1,5 +1,47 @@
 {% extends './base.html' %}
 
 {% block content %}
+<div class="staff_profile">
+   
+    <table  id="staffprofile">
+      {% for i in student %}
+        <tr>
+          <td>Name:</td>
+          <td>{{i.firstName}} {{i.lastName}}</td>
+          <td rowspan="4" ></td>
+        </tr>
+        <tr>
+          <td>Gender:</td>
+          <td>{{i.gender}}</td>
+        </tr>
+         <tr>
+          <td>Phone No:</td>
+          <td>{{i.mobile}}</td>
+        </tr>
+         <tr>
+          <td>Email:</td>
+          <td>{{i.email}}</td>
+        </tr>
+         <tr>
+          <td>Branch:</td>
+          {%for j in branch%}
+          <td>{{j.branch_name}}</td>
+          {%endfor%}
+        </tr>
+        <tr>
+            <td>Sem:</td>
+            <td>{{i.sem}}</td>
+          </tr>
+        <tr>
+          <td>Account_id:</td>
+          <td>{{i.account_id}}</td>
+        </tr>
 
+      </table>
+      {% endfor %}
+      {%for i in student %}
+      <div class="profile_btn">
+        <input type="button" value="Edit Profile" id="Edit_btn" onclick="location.href='../edit-profile/{{i.account_id}}'" >
+      {% endfor %}
+</div>
 {% endblock %}

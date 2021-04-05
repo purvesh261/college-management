@@ -1,5 +1,46 @@
 {% extends './base.html' %}
-
+{% block title %}Student-Home{% endblock %}
 {% block content %}
+<div id="welcome-msg">
+    <div id="welcome-content">
+        <div id="welcome-user">
+            <h2>Welcome, {{ request.user.first_name }}</h2>
+        </div>
+        <div id="timestamp">
+            {{ timestamp }}
+        </div>
+    </div>
+</div>
+<div class="staff-notification">
+    <div id="head_notify">
+        <h3>Notifications</h3>
+    </div>
+    <table id="staff_notification_list">
+        {%for i in res %}
+        <tr>
+            <td>Result ({{i.course_name}}({{i.exam}}))</td>
+        </tr>
+{%endfor%}
+        
+    </table>
+</div>
 
+<div class="staff-announcements">
+    <div id="head">
+        <h3>Announcements</h3>
+    </div>
+    <table id="staff_announcement_list">
+        {% for i in announcement_data %}
+        <tr>
+            <td>
+                <div id="announcement-content">
+                    <span><b>{{i.title}}:</b> </span><span>{{i.date}}</span>
+                </div>
+            </br>
+            {{i.description}}<i>&nbsp&nbsp&nbsp</i></td>
+        </tr>
+        
+        {% endfor %}
+    </table>
+</div>
 {% endblock %}

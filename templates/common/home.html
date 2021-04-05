@@ -18,7 +18,7 @@
         <div class='main'>
                 <div class="login">
                     <div id="head">
-                        <h3>Login</h3>
+                        <h2>Login</h2>
                     </div>
                     <form action="." method="POST" class="login-form"> {% csrf_token %}
                         <div class="container">
@@ -47,16 +47,22 @@
 
                 <div class="announcements">
                     <div id="head">
-                        <h3>Announcements</h3>
+                        <h2>Announcements</h2>
                         </table>
                     </div>
-                    <table id="announcements_table">
-                        {% for i in announcement_data %}
-                        <tr>
-                        <td><b>{{i.title}}:</b> {{i.description}},<i>&nbsp&nbsp&nbsp{{i.date}}</i></td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+                        <table id="announcements_table">
+                            {% for i in announcement_data %}
+                            <tr>
+                                <td>
+                                    <div id="announcement-content">
+                                        <span><b>{{i.title}}:</b> </span><span><i>{{i.date}}</i></span>
+                                    </div>
+                                </br>
+                                {{i.description}}<i>&nbsp&nbsp&nbsp</i></td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                   
                 </div>
             </div>
         </br>

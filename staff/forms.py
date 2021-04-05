@@ -283,6 +283,7 @@ class resultform(forms.ModelForm):
             'enrolment',
             'branch',
             'sem',
+            'course_id',
             'course_name',
             'marks',
             'exam',
@@ -441,6 +442,7 @@ class editforms1(forms.ModelForm):
             'gender',
             'isPending',
         ]
+        
     def clean(self,*args,**kwargs):
         cleaned_data = super().clean()
         title = str(self.cleaned_data.get('title'))

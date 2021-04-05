@@ -144,7 +144,7 @@ table {
 }
 
 .sidenav ul#course{
-    background-color: rgb(243, 243, 243);
+    background-color: #F7F8FC;
     color: rgb(0, 0, 0);
     text-decoration: none;
     list-style: none;
@@ -161,7 +161,7 @@ table {
 }
 
 .sidenav ul#course:hover{
-    background-color: #F7F4F1;
+    background-color: #dbdad9;
     cursor: pointer;
 }
 
@@ -234,7 +234,7 @@ table {
 }
 
 #white-button:hover {
-    background-color: rgb(19, 15, 235);
+    background-color: #070599;
     color: white;
     transition: 0.3s;
 }
@@ -281,7 +281,7 @@ table {
 }
 
 #assignment table tr:nth-child(even){
-    background-color: #f2f2f2;
+    background-color: #F7F8FC;
 }
 
 #assignment table tr {
@@ -289,7 +289,7 @@ table {
 }
 
 #assignment table th {
-    background-color: rgb(19, 15, 235);
+    background-color: #070599;
     color: white;
 }
 
@@ -308,7 +308,7 @@ table {
 }
 .form {
     text-align: center;
-    background-color: white;
+    background-color: #F7F8FC;
     margin: auto;
     width: max-content;
     margin-top: 3%;
@@ -377,7 +377,7 @@ table {
 }
 .form input[type=submit]{
     border-radius: 4px;
-    background-color: rgb(19, 15, 235);
+    background-color: #070599;
     border: none;
     color: #FFFFFF;
     text-align: center;
@@ -394,7 +394,7 @@ table {
 }
 
 .form input[type=submit]:active{
-    background-color: rgb(19, 15, 235);
+    background-color: #070599;
 }
 
 /* .footer {

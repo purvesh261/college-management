@@ -110,6 +110,7 @@ class Result(models.Model):
      sem=models.CharField(max_length=5,
                     verbose_name="Semester",
                     choices=sem_choices)
+     course_id = models.CharField(max_length=20,default='')
 
      course_name = models.CharField(max_length=100,
                             verbose_name="Course Name",

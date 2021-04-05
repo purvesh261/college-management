@@ -677,20 +677,20 @@ def staff_results_view(request, course_code, *args, **kwargs):
                     courseList[course.course_id.semester] = [(course.course_id.course_id,course.course_id.course_name)]
             courseList = collections.OrderedDict(sorted(courseList.items()))
 
-    branches = Branch.objects.all().order_by('branch_name')
-    print(selectedCourse.course_name)
-    sem=selectedCourse.semester
-    br_code=selectedCourse.branch
-    b1=get_object_or_404(Branch,code=br_code)
-    print(sem)
-    print(branches)
-    displaydata=Student.objects.filter(sem=sem,branch=br_code)   
-    context = {
-        'branches' : branches,
-        'courses' : courseList,
-        'selectedCourse' : selectedCourse,
-        'student':displaydata,
-        'branch_name':b1.branch_name
+        branches = Branch.objects.all().order_by('branch_name')
+        print(selectedCourse.course_name)
+        sem=selectedCourse.semester
+        br_code=selectedCourse.branch
+        b1=get_object_or_404(Branch,code=br_code)
+        print(sem)
+        print(branches)
+        displaydata=Student.objects.filter(sem=sem,branch=br_code)   
+        context = {
+            'branches' : branches,
+            'courses' : courseList,
+            'selectedCourse' : selectedCourse,
+            'student':displaydata,
+            'branch_name':b1.branch_name
             }
     return render(request, "staff/results.html",context)
 
@@ -745,6 +745,7 @@ def add_result(request,account_id,course_code,*args):
         'enrolment':displaydata.enrolment,
         'branch':displaydata.branch,
         'sem':s1,
+        'course_id':course_code,
         'course_name':selectedCourse.course_name
     }
     resultform1 = resultform(request.POST or None, initial=initial_dict)
@@ -759,6 +760,7 @@ def add_result(request,account_id,course_code,*args):
             new_branch=details['branch']
             new_sem=details['sem']
             new_course_name=details['course_name']
+            new_course_id=details['course_id']
             new_marks=details['marks']
             new_exam=details['exam']
             
@@ -769,6 +771,7 @@ def add_result(request,account_id,course_code,*args):
                                 enrolment=str(new_enrolment),
                                 branch=str(new_branch),
                                 sem=str(new_sem),
+                                course_id=str(new_course_id),
                                 course_name=str(new_course_name),
                                 marks=str(new_marks),
                                 exam=str(new_exam))
@@ -835,6 +838,19 @@ def student_result_edit(request,course_code,account_id,*args):
         else:
             return HttpResponse(messages)    
     return render(request,'staff/editresult.html',{'editdata':displaydata})
+
+
+def staff_result_delete(request,course_code,account_id):
+    obj=Result.objects.get(account_id=account_id)
+    print(obj)
+    print(request.method)
+    if request.method=="GET":
+        print('get')
+        obj.delete()
+        return redirect("../")
+    else:
+        return HttpResponse(messages)
+    return render(request,'staff/stdresult.html',{'student':obj}) 
 
 # @login_required(login_url=common.views.login_view)
 def staff_profile_view(request, *args, **kwargs):

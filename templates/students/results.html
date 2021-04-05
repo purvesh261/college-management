@@ -1,5 +1,92 @@
 {% extends './base.html' %}
-
+{%load static%}
+{% block title%} {{ selectedCourse.course_name }} {% endblock %}
+{% block css %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/student.css' %}"/>
+        {% endblock %}
 {% block content %}
+
+<div id='wrapper'>
+    <div id="mySidenav" class="sidenav">
+        <div id="sidebar-title">Your Courses</div>
+        {% if courses %}
+            {% for sem,courseList in courses.items %}
+                <div id="courses-item">
+                    <ul id="sem">
+                        <div id="sem-head">Semester {{ sem }}</div>
+                        <ul id="course">
+                            {% for course in courseList %}
+                                <a href="../{{ course.0 }}"><li>{{ course.1 }}</li></a>
+                            {% endfor %}
+                        </ul>
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div id="empty-list">
+                No Courses...
+            </div>
+        {% endif %}
+    </div>
+    {% if courses %}
+    <div id="content">
+        <div class="course-title">
+            {{ selectedCourse.course_name }}
+        </div>
+        {%endif%}
+        
+
+        <div class="Student-result_list">
+            <!-- <table id="student_details_list" >
+                {% for i in student %}
+                <tr>
+                    <td>Name</td>
+                    <td>{{i.firstName}} {{i.lastName}}</td>
+                </tr>
+                <tr>
+                    <td>Enrolment</td>
+                    <td>{{i.enrolment}}</td>
+                </tr>
+            
+               
+                {%endfor%}
+
+        </table> -->
+            <table id="Student-resultlist" border="1">
+                <h2>Result</h2>
+                {% if result %}
+              
+                <tr>
+                    <th>Exam</th>
+                    <th>Marks</th>  
+                    <th>Grade</th>
+                </tr>
+        
+                {% for i,j in zip %}
+                <tr>
+                    <td>{{i.exam}}</td>
+                    <td>{{i.marks}}</td>
+                    <td>{{j}} %</td>
+                
+                  {%endfor%}
+                </tr>
+            
+                 
+               
+                {% else %}
+                    <td><b>No Marks To Display</b> </td>
+               
+                {%endif%}
+             
+                
+                
+            </table>
+
+        </div>
+
+
+
+
+
 
 {% endblock %}

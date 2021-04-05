@@ -1,6 +1,6 @@
 .register {
     text-align: center;
-    background-color: white;
+    background-color: #F7F8FC;
     margin: auto;
     margin-top: 10%;
     border-radius: 3px;
@@ -27,7 +27,7 @@ h1 {
 
 .register input[type=button]{
     border-radius: 4px;
-    background-color: rgb(19, 15, 235);
+    background-color: #070599;
     border: none;
     color: #FFFFFF;
     text-align: center;
@@ -44,7 +44,7 @@ h1 {
 }
 
 .register input[type=button]:active{
-    background-color: rgb(19, 15, 235);
+    background-color: #070599;
 }
 
 #login-redirect{
@@ -53,13 +53,12 @@ h1 {
 
 .footer {
     width: 100%;
-    background-color: whitesmoke;
+    background-color: #F7F7F7;
     float: right;
-    margin-top: 50px;
-    margin-bottom: 30px;
-    border-top: 1px solid;
-    font-family: Arial, Helvetica, sans-serif;
-    color: rgb(202, 189, 189);
+    margin-top: 10%;
+    padding-bottom: 30px;
+    bottom: 10;
+    color: rgb(153, 144, 144);
 }
 
 .footer p {

@@ -9,7 +9,7 @@
 
 </div>
 <input type="text" name="searchtext" id="searchtxt" placeholder="Search by Enrolment" onkeyup="searchrecords();">
-<input type="submit" name="back" id="back" value="Back"  onclick="location.href='../'" >
+<input type="submit" class="back"name="back" id="back" value="Back"  onclick="location.href='../'" >
 <div class="student_result">
     <table id="student_result_list" border="1">
        
@@ -19,7 +19,7 @@
             <th>Sem</th>
             <th>Sub</th>
             <th>Marks</th>
-            <th>Action</th>
+            <th colspan="2">Action</th>
         </tr>
        
         {% for i in student %}
@@ -30,6 +30,7 @@
             <td>{{i.course_name}}</td>
             <td>{{i.marks}}</td>
             <td><a href="../edit-result/{{i.account_id}}">Edit</a></td>
+            <td><a href="../delete-result/{{i.account_id}}" >Delete</a></td>
         </tr>
         {% endfor %}
 </table>

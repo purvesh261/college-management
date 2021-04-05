@@ -16,7 +16,7 @@
     </div>
 </div>
 <div class="staff-notification">
-    <div id="head">
+    <div id="head_notify">
         <h3>Notifications</h3>
     </div>
     <table id="staff_notification_list">
@@ -40,7 +40,12 @@
     <table id="staff_announcement_list">
         {% for i in announcement_data %}
         <tr>
-            <td><b>{{i.title}}:</b> {{i.description}},<i>&nbsp&nbsp&nbsp{{i.date}}</i></td>
+            <td>
+                <div id="announcement-content">
+                    <span><b>{{i.title}}:</b> </span><span>{{i.date}}</span>
+                </div>
+            </br>
+            {{i.description}}<i>&nbsp&nbsp&nbsp</i></td>
         </tr>
         
         {% endfor %}

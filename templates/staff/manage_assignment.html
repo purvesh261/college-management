@@ -71,7 +71,7 @@
                 <tr>
                     <td>Attachment:</td>
                     {% if selectedAssignment.assignment_file %}
-                    <td><a href="{{ selectedAssignment.assignment_file.url }}" download>Download</a> <a class="icon-button" href='..'><i class="fa fa-trash" ></i></a> <input type="file"/></td>
+                    <td><a href="{{ selectedAssignment.assignment_file.url }}" download><button class='table-btn'>Download</button></a></td>
                     {% else %}
                     <td>-</td>
                     {% endif %}
@@ -88,8 +88,8 @@
                             <th>Enrolment No</th>
                             <th>Name</th>
                             <th>Status</th>
-                            <th>Submission</th>
                             <th>Submitted On</th>
+                            <th>Submission</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -98,9 +98,27 @@
                                 <tr>
                                     <td>{{ student.enrolment }}</td>
                                     <td>{{ student.firstName }} {{ student.lastName }}</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
+                                    {% for key, val in submissions.items %}
+                                        {% if key == student.enrolment %}
+                                            {% if val.0 %}
+                                                {% if val.1 == 'Submitted Late' %}
+                                                    <td style="color: red;"> {{ val.1 }} </td>
+                                                {% else %}
+                                                    <td style="color: green;"> {{ val.1 }} </td>
+                                                {% endif %}
+                                                <td> {{ val.0.submission_time }} </td>
+                                                <td><a href="{{ val.0.submission_file.url }}" download><button class='table-btn'>Download</button></a></td>
+                                            {% else %}
+                                            {% if val.1 == 'Overdue' %}
+                                                <td style="color: red;"> {{ val.1 }} </td>
+                                            {% else %}
+                                                <td> {{ val.1 }} </td>
+                                            {% endif %}
+                                                <td>-</td>
+                                                <td>-</td>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
                                 </tr>
                             {% endfor %}
                         {% else %}

@@ -6,7 +6,7 @@ from django.urls import reverse, resolve
 import collections
 from datetime import datetime
 from common.announcementform import announcementform
-from common.models import Announcement, Assignment, Course, CourseFaculty
+from common.models import Announcement, Assignment, Course, CourseFaculty, Submission
 from staff.forms2 import editforms2
 from common.methods import id_generator, assignment_id_generator
 from  . import forms
@@ -304,11 +304,37 @@ def manage_assignment_view(request, course_code, assignment_id, *args, **kwargs)
             selectedAssignment = Assignment.objects.get(assignment_id=assignment_id)
             students = Student.objects.filter(branch=selectedCourse.branch,sem=selectedCourse.semester,isPending=False).order_by('enrolment')
 
+            submissions = Submission.objects.filter(assignment=selectedAssignment)
+
+            submittedStudents = [sub.student.enrolment for sub in submissions]
+            submissionDict = {}
+            for student in students:
+                if student.enrolment in submittedStudents:
+                    status = ''
+                    sub = Submission.objects.get(student=student, assignment=selectedAssignment)
+                    print(sub.submission_time.year)
+                    if selectedAssignment.end_date and datetime.date(sub.submission_time) > selectedAssignment.end_date:
+                        status = 'Submitted Late'
+                    else:
+                        status = 'Submitted'
+
+                    submissionDict[student.enrolment] = [sub, status]
+                else:
+                    status = ''
+                    if selectedAssignment.end_date and datetime.date(datetime.today()) > selectedAssignment.end_date:
+                        status = 'Overdue'
+                    else:
+                        status = 'Not Submitted'
+                    submissionDict[student.enrolment] = [None, status]
+            print(submissionDict)
+
         context = {
             'courses' : courseList,
             'selectedCourse' : selectedCourse,
             'selectedAssignment' : selectedAssignment,
             'students': students,
+            'submittedStudents': submittedStudents,
+            'submissions': submissionDict,
         }
     return render(request, 'staff/manage_assignment.html', context)
 
@@ -638,7 +664,6 @@ def student_attendance_details_view(request, course_code, student_id, *args, **k
                         att.status = attendance[item][1]
                         newObj = Attendance.objects.get(date=att.date,course=selectedCourse, student=selectedStudent)
                         newObj.status = attendance[item][1]
-                        print("YES", att.date)
                         newObj.save()
                         break
             

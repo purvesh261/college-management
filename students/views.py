@@ -31,16 +31,18 @@ def student_home_view(request, *args, **kwargs):
         for i in result:
             res.append(i)
         print(res)
-    time = datetime.now()
-    announcement_data=reversed(Announcement.objects.all())
-    currentTime = time.strftime("%d/%m/%Y %I:%M %p")
-    context = {
-        'timestamp': currentTime,
-        'announcement_data':announcement_data,
-        'res':res
-    }
-   
-    return render(request, "students/home.html",context)
+        time = datetime.now()
+        announcement_data=reversed(Announcement.objects.all())
+        currentTime = time.strftime("%d/%m/%Y %I:%M %p")
+        context = {
+            'timestamp': currentTime,
+            'announcement_data':announcement_data,
+            'res':res
+        }
+    
+        return render(request, "students/home.html",context)
+    else:
+        return redirect(reverse('login'))
 
 
 def courses_redirect_view(request, *args, **kwargs):
@@ -66,7 +68,7 @@ def courses_redirect_view(request, *args, **kwargs):
 
         return redirect("./" + course_code)
     else:
-        print("OK!!!!!")
+        return redirect(reverse('login'))
 
 def no_course_view(request, *args,**kwargs):
     context = {
@@ -134,8 +136,8 @@ def student_courses_view(request, course_code, *args, **kwargs):
             return render(request, "students/courses.html", context)
         else:
             return render(request, "students/no_permission.html")
-
-    return render(request, "students/courses.html")
+    else:
+        return redirect(reverse('login'))
 
 def assignment_details_view(request, course_code, assignment_id, *args, **kwargs):
     if request.user.is_authenticated:
@@ -224,6 +226,8 @@ def assignment_details_view(request, course_code, assignment_id, *args, **kwargs
 
         else:
             return render(request, "students/no_permission.html")
+    else:
+        return redirect(reverse('login'))
     
 def all_assignments_view(request, course_code, *args, **kwargs):
     if request.user.is_authenticated:
@@ -289,13 +293,77 @@ def all_assignments_view(request, course_code, *args, **kwargs):
 
         else:
             return render(request, "students/no_permission.html")
+    else:
+        return redirect(reverse('login'))
     
 
+def attendance_redirect_view(request, *args, **kwargs):
+    if request.user.is_authenticated:
+        if not request.session.get('enrolment'):
+            username = request.user.username
+            user = Student.objects.get(username=username)
+            request.session['enrolment'] = user.enrolment
+
+        user = Student.objects.get(enrolment=request.session['enrolment'])
+        courses = Course.objects.filter(branch=user.branch, semester=user.sem)
+        courseList = {}
+        for course in courses:
+            if courseList.get(course.semester):
+                courseList[course.semester].append((course.course_id,course.course_name))
+            else:
+                courseList[course.semester] = [(course.course_id,course.course_name)]
+        courseList = collections.OrderedDict(sorted(courseList.items()))
+        if list(courseList):
+            course_code = list(courseList.values())[0][0][0]
+        else:
+            course_code = 'mt'
+        return redirect("./" + course_code)
+    else:
+        return redirect(reverse('login'))
 
     
-def student_attendance_view(request, *args, **kwargs):
-    return render(request, "students/attendance.html")
+def student_attendance_view(request, course_code, *args, **kwargs):
+    if request.user.is_authenticated:
+        if not request.session.get('enrolment'):
+            username = request.user.username
+            user = Student.objects.get(username=username)
+            request.session['enrolment'] = user.enrolment
 
+        user = Student.objects.get(enrolment=request.session['enrolment'])
+        selectedCourse = get_object_or_404(Course, course_id=course_code)
+
+        if user.branch == selectedCourse.branch and user.sem == selectedCourse.semester:
+            courses = Course.objects.filter(branch=user.branch, semester=user.sem)
+            courseList = {}
+            for course in courses:
+                if courseList.get(course.semester):
+                    courseList[course.semester].append((course.course_id,course.course_name))
+                else:
+                    courseList[course.semester] = [(course.course_id,course.course_name)]
+            courseList = collections.OrderedDict(sorted(courseList.items()))
+            studentAttendance = Attendance.objects.filter(student=user, course=selectedCourse)
+
+            total = 0
+            present = 0
+            absent = 0
+            if len(studentAttendance) > 0:
+                total = len(studentAttendance)
+                for att in studentAttendance:
+                    if att.status == 'P':
+                        present += 1
+
+                attendancePercentage = round((present / total) * 100, 2)
+                absent = total - present
+            else:
+                attendancePercentage = 'N.A.'
+
+            context = {
+                'courses': courseList,
+                'selectedCourse': selectedCourse,
+                'studentAttendance': studentAttendance,
+                'attendanceStats': [total, present, absent, attendancePercentage]
+            }
+            return render(request, "students/attendance.html", context)
 
 def courses_redirect_view(request, *args, **kwargs):
     if request.user.is_authenticated:

@@ -1,5 +1,114 @@
 {% extends './base.html' %}
 
 {% block content %}
+<div id='wrapper'>
+    <div id="mySidenav" class="sidenav">
+        <div id="sidebar-title">Your Courses</div>
+        {% if courses %}
+            {% for sem,courseList in courses.items %}
+                <div id="courses-item">
+                    <ul id="sem">
+                        <div id="sem-head">Semester {{ sem }}</div>
+                        <ul id="course">
+                            {% for course in courseList %}
+                            {% if course.0 == selectedCourse.course_id %}
+                                <a href="/students/attendance/{{ course.0 }}" class="selected" style="color: blue;"><li>{{ course.1 }}</li></a>
+                            {% else %}
+                                <a href="/students/attendance/{{ course.0 }}"><li>{{ course.1 }}</li></a>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div id="empty-list">
+                No Courses...
+            </div>
+        {% endif %}
+    </div>
+    {% if courses %}
+    <div id="content">
+        <div class="course-title">
+            {{ selectedCourse.course_name }}
+        </div>
+        {% if selectedCourse.description %}
+            <div id="course-description">
+                <div id="course-description-content">
+                    {{ selectedCourse.description|linebreaksbr }}
+                </div>
+            </div>
+        {% endif %}
+        <div id="course-sub-title">
+            Attendance
+        </div>
+        <div id="course-description">
+            <table>
+                <tr>
+                    <td>
+                        Total Sessions:
+                    </td>
+                    <td>
+                        {{ attendanceStats.0 }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Present:
+                    </td>
+                    <td>
+                        {{ attendanceStats.1 }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Absent
+                    </td>
+                    <td>
+                        {{ attendanceStats.2 }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Percentage:
+                    </td>
+                    
+                        {% if attendanceStats.3 == 'N.A.' %}
+                            <td> {{ attendanceStats.3 }} </td>
+                        {% else %}
+                            {% if attendanceStats.3 >= 75 %}
+                                <td style="color: green;"> {{ attendanceStats.3 }} %</td>
+                            {% elif attendanceStats.3 < 50 %}
+                                <td style="color: red;"> {{ attendanceStats.3 }} %</td>
+                            {% else %}
+                                <td> {{ attendanceStats.3 }} %</td>
+                            {% endif %}
+                        {% endif %}
+                </tr>
+            </table>
 
+            <table border="1" id="attendance-table" style="width: 30%; margin-left: 20;">
+                <tr>
+                    <th>Date</th>
+                    <th >Status</th>
+                </tr>
+                {% if studentAttendance %}
+                    {% for att in studentAttendance %}
+                    <tr>
+                        <td>{{ att.date }}</td>
+                        {% if att.status == "P" %}
+                            <td style="color: green; border: 1px solid black;">Present</td>
+                        {% else %}
+                            <td style="color: red; border: 1px solid black;">Absent</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="2" style="color: rgb(92, 92, 92);">No sessions yet...</td>
+                    </tr>
+                {% endif %}
+            </table>
+        </div>
+    {% endif %}
 {% endblock %}

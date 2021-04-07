@@ -119,13 +119,42 @@
                     {% endif %}
                 </table>
             </div>
-            
+            <div class='doubt_btn'>
+                Doubts
+                <button onclick="location.href='./doubts'" id="white-button">Ask Doubt</button>
+            </div>   
+
+            <div class='doubts_list'>
+                <table id='doubts_list'>
+                    <tr>
+                        <th>Enrolment</th>
+                        <th>Doubt</th>
+                        <th>Answer</th>
+                    </tr>
+                    {%if doubts %}
+                    {%for doubt in doubts %}
+                    <tr id='doubt_child'>
+                        <td>{{doubt.enrolment}}</td>
+                        <td>{{doubt.doubt}}</td>
+                        {%if doubt.answer%}
+                        <td>{{doubt.answer}}</td>
+                        {%else%}
+                        <td>Not Answered</td>
+                        {%endif%}
+                    </tr>
+                   
+                    {%endfor%}
+                    {%else%}
+                    <td colspan="3">No Doubts</td>
+                    {%endif%}
+                </table>
+            </div>
     </div>
     {% else %}
         <div id="content-none">
             <div>You aren't enrolled in any courses...</div>
         </div>
     {% endif %}
-    
+ 
 </div>
 {% endblock %}

@@ -14,7 +14,8 @@ from common.methods import submission_id_generator
 from students.forms import editforms
 from datetime import datetime
 import collections
-
+from students.forms import doubtform
+from students.models import Doubt
 
 # Create your views here.
 
@@ -86,6 +87,9 @@ def student_courses_view(request, course_code, *args, **kwargs):
         user = Student.objects.get(enrolment=request.session['enrolment'])
         selectedCourse = get_object_or_404(Course, course_id=course_code)
 
+        doubts=Doubt.objects.filter(enrolment=request.session['userEnrolment'],course_id=course_code)
+
+
         if user.branch == selectedCourse.branch and user.sem == selectedCourse.semester:
             courses = Course.objects.filter(branch=user.branch, semester=user.sem)
             courseList = {}
@@ -130,9 +134,11 @@ def student_courses_view(request, course_code, *args, **kwargs):
             'assignments' : ongoingAssignments,
             'submissions': studentSubmissions,
             'submittedAssignments' : submittedDict,
-            'overdue': overdue
+            'overdue': overdue,
+            'doubts':doubts
             }
-
+        for i in doubts:
+            print('id',i.id)
             return render(request, "students/courses.html", context)
         else:
             return render(request, "students/no_permission.html")
@@ -477,3 +483,50 @@ def student_profile_edit(request,account_id):
         else:
             return HttpResponse(messages)
     return render(request,'students/edit_profile.html',{'editdata':displaydata})
+
+
+def student_courses_doubt(request, course_code, *args, **kwargs):
+    if request.user.is_authenticated:
+        if not request.session.get('userId'):
+            userEmail = request.user.email
+            user = Student.objects.get(email=userEmail)
+            request.session['userEnrolment'] = user.enrolment
+            print(request.session['userEnrolment'])
+            initial_dict={
+                'enrolment':request.session['userEnrolment'],
+                'course_id':course_code
+            }
+            doubtform1=doubtform(request.POST or None,initial=initial_dict)
+            if request.method == 'POST':
+                print('post1')
+                doubtform1 = doubtform(request.POST or None)
+                if doubtform1.is_valid():
+                    print('post')
+                    details = doubtform1.cleaned_data
+                    new_enrolment=details['enrolment']
+                    new_doubt=details['doubt']
+                    new_course=details['course_id']
+                    print(new_enrolment)
+                    print(new_doubt)
+                    newdoubt = Doubt(enrolment=str(new_enrolment.capitalize()),
+                                    doubt=str(new_doubt.capitalize()),
+                                    course_id=str(new_course)
+                                    
+                                    )
+                                           
+                                    
+                    print(newdoubt)
+                    newdoubt.save()
+            #messages.success(request,"Announcement Added")
+                    return redirect("./")
+                else:
+                    return HttpResponse(messages)
+
+
+    context={
+            'doubtform1':doubtform1
+            }
+    return render(request,'students/doubts.html',context)
+
+
+

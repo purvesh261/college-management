@@ -220,6 +220,9 @@ input {
     width: 100%;
     
 }
+#remove{
+    float: right;
+}
 .card {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
@@ -589,7 +592,7 @@ input[type=button]{
 }
 .profile_btn input[type=button]{
   background-color:#070599 ;
-  color: white;
+  color: #F7F8FC;
   width:27%;
   margin:5 auto;
   margin-left: 5%;

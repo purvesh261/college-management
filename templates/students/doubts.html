@@ -1,0 +1,41 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}Student- Doubt{% endblock %}
+
+{% block bodyclass %}
+    <body id="doubts" onload="changeActive(this.id)">
+{% endblock %}
+
+{% block content %}
+<div class ="doubtform">
+    <h2>Doubt</h2>
+<form  method="POST" > {% csrf_token %}
+    <table class="doubt_list1" >
+        {% for field in doubtform1 %}
+        <tr>
+        <td class="doubt_label" style="vertical-align: top;">
+            {{ field.label }}
+        </td>
+        <td class="doubt_field" style="vertical-align: top;">
+            {{ field }}
+            <p> {{ field.errors }} </p>
+            </td>
+    </tr>
+
+        {% endfor %}
+    </table>
+                <input type="submit" value="Ask" />
+           
+                <input type="button" value="Cancel"  onclick="location.href='../'"/>
+            
+                     
+</div>
+
+</form>
+
+</br>
+
+
+
+{%endblock%}

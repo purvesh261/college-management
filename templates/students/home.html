@@ -14,13 +14,23 @@
 <div class="staff-notification">
     <div id="head_notify">
         <h3>Notifications</h3>
+        
     </div>
     <table id="staff_notification_list">
+        {% if res %}
         {%for i in res %}
         <tr>
-            <td>Result ({{i.course_name}}({{i.exam}}))</td>
+            <td>Result ({{i.course_name}}({{i.exam}})) 
+                <button id="remove" onclick="document.getElementById('staff_notification_list').deleteRow(0)">X</button>
+              </td>
         </tr>
+       
 {%endfor%}
+{%else%}
+<tr>
+    <td>No Notifications</td>
+</tr>
+{%endif%}
         
     </table>
 </div>

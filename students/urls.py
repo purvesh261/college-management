@@ -19,4 +19,8 @@ urlpatterns = [
  
     re_path(r'^results/(?P<course_code>[0-9]{10})/$', student_results_view, name="courses_view"),
 
+
+    re_path(r'^courses/(?P<course_code>[0-9]{10})/doubts$', student_courses_doubt, name="doubt"),
+
+
 ]

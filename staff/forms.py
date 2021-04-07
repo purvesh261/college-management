@@ -7,7 +7,8 @@ from admins.models import Branch
 from django.utils.safestring import mark_safe
 import re
 import pandas as pd
-from students.models import Result, Attendance
+from students.models import Result, Attendance,Doubt
+
 
 
 class StaffForm(forms.ModelForm):
@@ -502,4 +503,11 @@ class editforms1(forms.ModelForm):
             'email',
             'gender',
             'isPending',
+        ]
+
+class doubtform(forms.ModelForm):
+    class Meta:
+        model=Doubt
+        fields=[
+            'answer'
         ]

@@ -6,6 +6,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.safestring import mark_safe
 import re
 import pandas as pd
+from students.models import Doubt
 
 class StudentForm(forms.ModelForm):
     error_css_class = 'error'
@@ -264,4 +265,13 @@ class editforms(forms.ModelForm):
             'mobile',
             'email',
             'gender',
+        ]
+
+class doubtform(forms.ModelForm):
+    class Meta:
+        model=Doubt
+        fields=[
+            'enrolment',
+            'doubt',
+            'course_id',
         ]

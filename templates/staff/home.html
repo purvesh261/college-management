@@ -20,16 +20,17 @@
         <h3>Notifications</h3>
     </div>
     <table id="staff_notification_list">
-        
+    
+        {%if doubts %}
         <tr>
-            <td>Notification  1</td>
+            <td>Student Doubt ({{doubts}})<button id="remove" onclick="document.getElementById('staff_notification_list').deleteRow(0)">X</button> </td>
         </tr>
+      
+        {%else%}
         <tr>
-            <td>Notification 2</td>
+            <td>No Notification</td>
         </tr>
-        <tr>
-            <td>Notification 3</td>
-        </tr>
+        {%endif%}
     </table>
 </div>
 

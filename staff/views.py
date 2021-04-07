@@ -16,10 +16,14 @@ import common
 from staff.models import Staff
 from staff.forms import resultform, CreateAssignmentForm, EditAssignmentForm, editforms1, editresultform
 from students.models import Student, Attendance, Result
+from staff.forms import doubtform
+from students.models import Doubt
 
 # @login_required(login_url=common.views.login_view)
 def staff_home_view(request, *args, **kwargs):
     time = datetime.now()
+    doubts=Doubt.objects.filter(answer='')
+    print(len(doubts))
     announcement_data=reversed(Announcement.objects.all())
     print(announcement_data)
     #for i in announcement_data:
@@ -28,8 +32,9 @@ def staff_home_view(request, *args, **kwargs):
     context = {
         'timestamp': currentTime,
         
+        
     }
-    return render(request, "staff/home.html",{'context':context,'announcement_data':announcement_data})
+    return render(request, "staff/home.html",{'context':context,'announcement_data':announcement_data,'doubts':len(doubts)})
 
 #staff announcement
 # @login_required(login_url=common.views.login_view)
@@ -162,12 +167,15 @@ def no_course_view(request, *args,**kwargs):
     return render(request, "staff/courses.html", context)
 
 # @login_required(login_url=common.views.login_view)
-def staff_courses_view(request, course_code, *args, **kwargs):
+def staff_courses_view(request,course_code, *args, **kwargs):
     if request.user.is_authenticated:
         if not request.session.get('userId'):
             userEmail = request.user.email
             user = Staff.objects.get(email=userEmail)
             request.session['userId'] = user.employee_id
+                    
+        doubts=Doubt.objects.filter(course_id=course_code,answer='')
+
 
         selectedCourse = Course.objects.get(course_id=course_code)
         selectedObj = get_object_or_404(CourseFaculty, faculty_id=request.session['userId'],course_id=selectedCourse)
@@ -195,8 +203,53 @@ def staff_courses_view(request, course_code, *args, **kwargs):
             'courses' : courseList,
             'selectedCourse' : selectedCourse,
             'assignments' : ongoingAssignments,
+            'doubts':doubts
         }
     return render(request, "staff/courses.html", context)
+
+def staff_doubt_answer(request,id,course_code):
+    doubts_data=Doubt.objects.filter(id=id)
+    print(doubts_data)
+    for i in doubts_data:
+        enrol=i.enrolment
+        doubt=i.doubt
+        course_id=i.course_id
+        i_d=i.id
+    initial_dict={
+        'id':i_d
+    }
+    doubtform1=doubtform(request.POST,initial=initial_dict)
+    if request.method == 'POST':
+        print('post1')
+        doubtform1 = doubtform(request.POST)
+        if doubtform1.is_valid():
+            print('post')
+            details = doubtform1.cleaned_data
+            new_enrolment=enrol
+            new_doubt=doubt
+            new_answer=details['answer']
+            new_course=course_id
+           
+            new_id=i_d
+            print(new_answer)
+            newdoubt = Doubt(enrolment=str(new_enrolment),
+                             doubt=str(new_doubt),
+                             answer=str(new_answer.capitalize()),
+                             course_id=str(new_course),
+                             id=new_id)              
+            print(newdoubt)
+            newdoubt.save()
+            #messages.success(request,"Announcement Added")
+            return redirect("../")
+        else:
+            return HttpResponse(messages)
+
+
+    context={
+            'doubtform1':doubtform1
+            }
+    return render(request,'staff/doubts.html',context)
+
 
 # @login_required(login_url=common.views.login_view)
 def create_assignment_view(request,course_code, *args, **kwargs):

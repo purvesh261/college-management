@@ -84,7 +84,7 @@ def login_view(request, *args, **kwargs):
                     return redirect("../students/home")
                 
             else:
-                return render(request, 'common/home.html', {'form': form})
+                return render(request, 'common/home.html', {'form': form,'announcement_data':announcement_data})
             # try:
             #     if str(passwd_input) != str(correct_password):
             #         raise ValidationError('Incorrect password')
@@ -104,7 +104,7 @@ def login_view(request, *args, **kwargs):
             #     return redirect("../students/home")
         else:
             form = LoginForm()
-            return render(request, 'common/home.html', {'form': form})
+            return render(request, 'common/home.html', {'form': form,'announcement_data':announcement_data})
     else:
         form = LoginForm()
         return render(request, 'common/home.html', {'form': form,'announcement_data':announcement_data})

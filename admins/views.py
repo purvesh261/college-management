@@ -122,19 +122,28 @@ def staff_delete_view(request, account_id):
 
 #@login_required(login_url=common.views.login_view)
 def admins_home_view(request, *args, **kwargs):
-    time = datetime.now()
-    announcement_data=reversed(Announcement.objects.all())
-    currentTime = time.strftime("%d/%m/%Y %I:%M %p")
-    obj1=Student.objects.filter(isPending=True)
-    obj2=Staff.objects.filter(isPending=True)
-    s1=len(obj1)
-    s2=len(obj2)
-    print(s1)
-    context = {
-        'timestamp': currentTime,
-    }
-   
-    return render(request, "admins/home.html",{'context':context,'announcement_data':announcement_data,'student':s1,'staff':s2})
+    if request.user.is_authenticated:
+        userEmail = request.user.email
+        user = Staff.objects.filter(email=userEmail)
+        if not user:
+            return render(request, "common/no_permission.html")
+        else:
+            if not user[0].isAdmin:
+                return render(request, "students/no_permission.html")
+
+        time = datetime.now()
+        announcement_data=reversed(Announcement.objects.all())
+        currentTime = time.strftime("%d/%m/%Y %I:%M %p")
+        obj1=Student.objects.filter(isPending=True)
+        obj2=Staff.objects.filter(isPending=True)
+        s1=len(obj1)
+        s2=len(obj2)
+        print(s1)
+        context = {
+            'timestamp': currentTime,
+        }
+    
+        return render(request, "admins/home.html",{'context':context,'announcement_data':announcement_data,'student':s1,'staff':s2})
 
 #@login_required(login_url=common.views.login_view)
 def admins_students_view(request, *args, **kwargs):
@@ -663,10 +672,6 @@ def remove_faculty_view(request,course_code,emp_id, *args, **kwargs):
 #@login_required(login_url=common.views.login_view)
 def logout_view(request, *args, **kwargs):
     logout(request)
-    # form = LoginForm(request.post or None)
-    # context = {
-    #     'form':form,
-    # }
     return redirect(common.views.login_view)
 
 

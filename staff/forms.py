@@ -295,6 +295,7 @@ class resultform(forms.ModelForm):
         branch = str(self.cleaned_data.get("branch"))
         course = str(self.cleaned_data.get("course_name"))
         exam = str(self.cleaned_data.get("exam"))
+        marks = int(self.cleaned_data.get('marks'))
         try:
             if Result.objects.filter(enrolment=enrolment,branch=branch,course_name=course,exam=exam).exists():
                 course_exists_error = course + "Marks already Exist</br>for this Student."
@@ -303,6 +304,19 @@ class resultform(forms.ModelForm):
 
         except forms.ValidationError as e:
             self.add_error('course_name', e)
+
+        try:
+            if exam in ['Internal-1', 'Internal-2']:
+                if marks > 20:
+                    marks_error = "Not a valid value"
+                    raise forms.ValidationError(marks_error)
+            elif exam == 'Internal':
+                if marks > 40:
+                    marks_error = "Not a valid value"
+                    raise forms.ValidationError(marks_error)
+        except forms.ValidationError as e:
+            self.add_error('marks', e)
+
         return cleaned_data
 
 

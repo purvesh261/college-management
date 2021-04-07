@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse, resolve
+from django.contrib.auth import logout
 import collections
 from datetime import datetime
 from common.announcementform import announcementform
@@ -16,9 +17,7 @@ from staff.models import Staff
 from staff.forms import resultform, CreateAssignmentForm, EditAssignmentForm, editforms1, editresultform
 from students.models import Student, Attendance, Result
 
-
-# Create your views here.
-
+# @login_required(login_url=common.views.login_view)
 def staff_home_view(request, *args, **kwargs):
     time = datetime.now()
     announcement_data=reversed(Announcement.objects.all())
@@ -33,6 +32,7 @@ def staff_home_view(request, *args, **kwargs):
     return render(request, "staff/home.html",{'context':context,'announcement_data':announcement_data})
 
 #staff announcement
+# @login_required(login_url=common.views.login_view)
 def staff_announcement(request,*args,**kwargs):
     announcementform1 = announcementform(request.POST or None)
     if request.method == 'POST':
@@ -237,6 +237,7 @@ def create_assignment_view(request,course_code, *args, **kwargs):
             form = CreateAssignmentForm(request.POST or None)
             return render(request, 'staff/create_assignment.html', {'form': form})
 
+# @login_required(login_url=common.views.login_view)
 def view_assignments_view(request, course_code, *args, **kwargs):
     context = {}
     if request.user.is_authenticated:
@@ -281,6 +282,7 @@ def view_assignments_view(request, course_code, *args, **kwargs):
             }
     return render(request, 'staff/assignments.html', context)
     
+# @login_required(login_url=common.views.login_view)
 def manage_assignment_view(request, course_code, assignment_id, *args, **kwargs):
     context = {}
     if request.user.is_authenticated:
@@ -338,6 +340,7 @@ def manage_assignment_view(request, course_code, assignment_id, *args, **kwargs)
         }
     return render(request, 'staff/manage_assignment.html', context)
 
+# @login_required(login_url=common.views.login_view)
 def edit_assignment_view(request,assignment_id, *args, **kwargs):
     selectedAssignment = Assignment.objects.get(assignment_id=assignment_id)
     if not request.session.get('userId'):
@@ -362,6 +365,7 @@ def edit_assignment_view(request,assignment_id, *args, **kwargs):
     
     return render(request, "staff/edit_assignment.html",context)
 
+# @login_required(login_url=common.views.login_view)
 def delete_assignment_view(request,assignment_id, *args, **kwargs):
     selectedAssignment = Assignment.objects.get(assignment_id=assignment_id)
     if not request.session.get('userId'):
@@ -859,7 +863,7 @@ def student_result_edit(request,course_code,account_id,*args):
             return HttpResponse(messages)    
     return render(request,'staff/editresult.html',{'editdata':displaydata})
 
-
+# @login_required(login_url=common.views.login_view)
 def staff_result_delete(request,course_code,account_id):
     obj=Result.objects.get(account_id=account_id)
     print(obj)
@@ -907,4 +911,6 @@ def staff_profile_edit(request,account_id,*args,**kwargs):
             return HttpResponse(messages)
     return render(request,'staff/edit_profile.html',{'editdata':displaydata})
 
-
+def logout_view(request, *args, **kwargs):
+    logout(request)
+    return redirect(common.views.login_view)

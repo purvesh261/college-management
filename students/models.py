@@ -90,9 +90,9 @@ class Result(models.Model):
                     ('6','VI'),
                     ('7','VII'),
                     ('8','VIII'))
-     exam_choices=(('Internal-1','I1'),
-                    ('Internal-2','I2'),
-                    ('Internal','I'))
+     exam_choices=(('Internal-1','Internal-1'),
+                    ('Internal-2','Internal-2'),
+                    ('Internal','Internal'))
 
      # courses = Course.objects.values_list('course_name')
      # courses_choices = ((course[0],course[0]) for course in courses) 

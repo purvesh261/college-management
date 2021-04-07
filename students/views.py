@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib.auth import logout
 from .models import Student
 from common.models import Course, Assignment
 from datetime import datetime
@@ -9,6 +10,7 @@ from students.models import Student, Attendance, Result
 from  . import forms
 from admins.models import Branch
 from staff.models import Staff
+import common
 from common.models import Announcement, Assignment, Course, CourseFaculty, Submission
 from common.methods import submission_id_generator
 from students.forms import editforms
@@ -17,7 +19,7 @@ import collections
 
 
 # Create your views here.
-
+# @login_required(login_url=common.views.login_view)
 def student_home_view(request, *args, **kwargs):
     if request.user.is_authenticated:
         if not request.session.get('userEnrolment'):
@@ -44,7 +46,7 @@ def student_home_view(request, *args, **kwargs):
     else:
         return redirect(reverse('login'))
 
-
+# @login_required(login_url=common.views.login_view)
 def courses_redirect_view(request, *args, **kwargs):
     if request.user.is_authenticated:
         if not request.session.get('enrolment'):
@@ -70,12 +72,14 @@ def courses_redirect_view(request, *args, **kwargs):
     else:
         return redirect(reverse('login'))
 
+# @login_required(login_url=common.views.login_view)
 def no_course_view(request, *args,**kwargs):
     context = {
         'courses': []
     }
     return render(request, "students/courses.html", context)
 
+# @login_required(login_url=common.views.login_view)
 def student_courses_view(request, course_code, *args, **kwargs):
     if request.user.is_authenticated:
         if not request.session.get('enrolment'):
@@ -135,10 +139,11 @@ def student_courses_view(request, course_code, *args, **kwargs):
 
             return render(request, "students/courses.html", context)
         else:
-            return render(request, "students/no_permission.html")
+            return render(request, "common/no_permission.html")
     else:
         return redirect(reverse('login'))
 
+# @login_required(login_url=common.views.login_view)
 def assignment_details_view(request, course_code, assignment_id, *args, **kwargs):
     if request.user.is_authenticated:
         if not request.session.get('enrolment'):
@@ -179,7 +184,7 @@ def assignment_details_view(request, course_code, assignment_id, *args, **kwargs
                 return redirect(path)
 
             if selectedAssignment.course != selectedCourse or selectedAssignment.course.branch != user.branch or selectedAssignment.course.semester != user.sem:
-                return render(request, "students/no_permission.html")
+                return render(request, "common/no_permission.html")
 
             studentSubmission = Submission.objects.filter(student=user, assignment=selectedAssignment)
             
@@ -225,10 +230,11 @@ def assignment_details_view(request, course_code, assignment_id, *args, **kwargs
             return render(request, "students/assignment_details.html", context)
 
         else:
-            return render(request, "students/no_permission.html")
+            return render(request, "common/no_permission.html")
     else:
         return redirect(reverse('login'))
     
+# @login_required(login_url=common.views.login_view)
 def all_assignments_view(request, course_code, *args, **kwargs):
     if request.user.is_authenticated:
         if not request.session.get('enrolment'):
@@ -292,11 +298,11 @@ def all_assignments_view(request, course_code, *args, **kwargs):
             return render(request, "students/all_assignments.html", context)
 
         else:
-            return render(request, "students/no_permission.html")
+            return render(request, "common/no_permission.html")
     else:
         return redirect(reverse('login'))
     
-
+# @login_required(login_url=common.views.login_view)
 def attendance_redirect_view(request, *args, **kwargs):
     if request.user.is_authenticated:
         if not request.session.get('enrolment'):
@@ -321,7 +327,7 @@ def attendance_redirect_view(request, *args, **kwargs):
     else:
         return redirect(reverse('login'))
 
-    
+# @login_required(login_url=common.views.login_view)
 def student_attendance_view(request, course_code, *args, **kwargs):
     if request.user.is_authenticated:
         if not request.session.get('enrolment'):
@@ -365,6 +371,7 @@ def student_attendance_view(request, course_code, *args, **kwargs):
             }
             return render(request, "students/attendance.html", context)
 
+# @login_required(login_url=common.views.login_view)
 def courses_redirect_view(request, *args, **kwargs):
     if request.user.is_authenticated:
         if not request.session.get('userSem'):
@@ -390,7 +397,7 @@ def courses_redirect_view(request, *args, **kwargs):
     else:
         print("OK!!!!!")
 
-
+# @login_required(login_url=common.views.login_view)
 def student_results_view(request,course_code, *args, **kwargs):
     if request.user.is_authenticated:
         if not request.session.get('userName'):
@@ -436,11 +443,15 @@ def student_results_view(request,course_code, *args, **kwargs):
         }
 
     return render(request, "students/results.html",context)
+
+# @login_required(login_url=common.views.login_view)
 def no_course_view(request, *args,**kwargs):
     context = {
         'courses': []
     }
     return render(request, "staff/results.html", context)
+
+# @login_required(login_url=common.views.login_view)
 def student_profile_view(request, *args, **kwargs):
     if request.user.is_authenticated:
         if not request.session.get('userId'):
@@ -459,6 +470,7 @@ def student_profile_view(request, *args, **kwargs):
     }
     return render(request, "students/profile.html",context)
 
+# @login_required(login_url=common.views.login_view)
 def student_profile_edit(request,account_id):
     print(account_id)
     displaydata=Student.objects.get(account_id=account_id)
@@ -477,3 +489,7 @@ def student_profile_edit(request,account_id):
         else:
             return HttpResponse(messages)
     return render(request,'students/edit_profile.html',{'editdata':displaydata})
+
+def logout_view(request, *args, **kwargs):
+    logout(request)
+    return redirect(common.views.login_view)

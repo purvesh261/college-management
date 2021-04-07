@@ -45,6 +45,9 @@ width: 10%;
     border-radius: 5px;
     overflow: hidden;
 }
+#remove{
+    float: right;
+}
 
 #popup-head{
     display: flex;
@@ -87,4 +90,89 @@ width: 10%;
 
 #submission-upload input[type="submit"]:hover{
     background-color: #070599;
+}
+
+/*student doubt*/
+.doubts_list {
+    padding-left: 2.5% ;
+}
+#doubts_list tr td{
+    text-align: center;
+    width: 10.1%;
+   
+}
+#doubts_list tr:doubt_child(even){
+    background-color: #F7F8FC;
+}
+#doubts_list th{
+        background-color: #070599;
+        color: white;
+        font-size: 18px;
+    }
+.doubt_btn{
+    padding: 10px 3px 10px 15px;
+    font-size: 25px;
+    color: blue;
+    display: flex;
+    justify-content: space-between;
+}
+.doubtform h2{
+    text-align: center;
+}
+.doubtform{
+    text-align: center;
+    background-color: #F7F8FC;
+    margin: auto;
+    width: auto;
+    margin-top: 8%;
+    margin-left: 22%;
+    margin-right: 20%;
+    border: 1px rgb(255, 255, 255);
+    padding-right: 10%;
+    padding-left: 10%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    height: auto;
+    box-shadow: 0px 0px 5px 0px rgba(58, 57, 57, 0.3);
+    border-radius: 3px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.doubt_label{
+    padding-top: 10%;
+    padding-left: 10%;
+    font-weight: bold;
+    width: 20%;
+    font-size: 18px;
+}
+.doubt_field{
+    padding-top: 7%;
+    font-weight: bold;
+    width: 30%;
+}
+.doubts_list1{
+    padding-left: 50%;
+}
+.doubtform input[type=button]{
+  background-color: #070599;
+  color: white;
+  width:20%;
+  margin:5 auto;
+  margin-left: 5%;
+  position: relative;
+  font-size: 18px;
+  display:inline-block;
+  cursor:pointer;
+}
+.doubtform input[type=submit]{
+    border-radius: 4px;
+    background-color: #070599;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 18px;
+    padding: 15px;
+    width: 20%;
+    height: auto;
+    cursor: pointer;
+    margin: 5px;
 }

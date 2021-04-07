@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(Student)
 admin.site.register(Result)
 admin.site.register(Attendance)
+admin.site.register(Doubt)

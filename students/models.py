@@ -134,3 +134,11 @@ class Attendance(models.Model):
      faculty = models.ForeignKey(Staff, on_delete=models.CASCADE)
      date = models.DateField(verbose_name="Date")
      status = models.CharField(max_length=10, verbose_name="Status", choices=attendance_choices)
+
+
+class Doubt(models.Model):
+     enrolment=models.CharField(max_length=70,
+                    verbose_name="Enrolment Number")
+     doubt=models.CharField(max_length=500,verbose_name='Doubt')
+     answer=models.CharField(max_length=500,blank=True,verbose_name='Answer')
+     course_id=models.CharField(max_length=20,blank=True)

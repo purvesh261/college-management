@@ -39,11 +39,13 @@
     </div>
     <table id="table_list">
         <tr>
-            <td>Pending Student Request({{student}}) </td>
+            <td>Pending Student Request({{student}}) <button id="remove" onclick="document.getElementById('table_list').deleteRow(0)">X</button> </td>
+           
         </tr>
         
         <tr>
-            <td>Pending Staff Request({{staff}})</td>
+            <td>Pending Staff Request({{staff}})  <button id="remove" onclick="document.getElementById('table_list').deleteRow(0)">X</button></td>
+           
         </tr>
     </table>
 </div>

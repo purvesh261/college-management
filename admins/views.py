@@ -7,6 +7,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django import forms as djforms
 import common
+from django.contrib.auth.models import User
 from staff.models import Staff
 from  . import forms
 from .forms import editforms, AddBranchForm, EditBranchForm, AddCourseForm, AddFacultyForm,EditCourseForm
@@ -19,15 +20,22 @@ from common.models import Announcement, Course, CourseFaculty
 from admins.forms2 import editforms2
 from django.template.defaulttags import register
 
-'''
-TODO:
-Wherever storing branch information, change from branch name to branch code.
-'''
 
 #admin announcement
 
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def admin_announcement(request,*args,**kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     announcementform1 = announcementform(request.POST or None)
     if request.method == 'POST':
         announcementform1 = announcementform(request.POST or None)
@@ -41,7 +49,6 @@ def admin_announcement(request,*args,**kwargs):
                                            account_id=str(new_account_id))
             print(newannouncement)
             newannouncement.save()
-            #messages.success(request,"Announcement Added")
             return redirect("../announcement/")
         else:
             return HttpResponse(messages)
@@ -49,66 +56,79 @@ def admin_announcement(request,*args,**kwargs):
 
 
 
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def admin_add_announcement(request,*args,**kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
     obj=Announcement.objects.all()
     return render(request,"common/allannouncement.html",{'announcementform1':obj})
 
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def announcement_done(request,*args,**kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     announcementform1 = announcementform(request.POST or None)
     return render(request,"common/announcement.html",{'announcementform1':announcementform1})
 
 #admin announcement edit 
 
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def admins_announcement_edit(request,account_id):
-    print(account_id)
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     displaydata=Announcement.objects.get(account_id=account_id)
-    print(displaydata)
     updatedata=Announcement.objects.get(account_id=account_id)
-    print(updatedata)
-    print(account_id)
     if request.method == "POST":
-        print('post')
         form=editforms2(request.POST or None,instance=updatedata)
         #error here
         if form.is_valid():
-            print('inform')
             form.save()
-            #messages.success(request,"Announcement updated")
             return redirect("../all-announcement")
-            #return render(request,'common/announcementedit.html',{'editdata':updatedata})
-            #return render(request,'common/announcement_updated.html')
         else:
             return HttpResponse(messages)
     return render(request,'common/announcementedit.html',{'editdata':displaydata})
 
-#@login_required(login_url=common.views.login_view)
-#def edit_announcement(request,account_id):
-        #return render(request,'common/announcemet_updated.html')
 
-#     updatedata=Announcement.objects.get(account_id=account_id)
-#     print(updatedata)
-#     print(account_id)
-#     if request.method == "POST":
-#         print('post')
-#         form=editforms2(request.POST or None,instance=updatedata)
-#         #error here
-#         if form.is_valid():
-#             print('inform')
-#             form.save()
-#             messages.success(request,"Announcement updated")
-#             #return redirect("../edit-announcement/")
-#             #return render(request,'common/announcement_updated.html',{'editdata':updatedata})
-#             return render(request,'common/announcement_updated.html')
-#         else:
-#             return HttpResponse(messages)
-
-    
 #announcement delete
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def staff_delete_view(request, account_id):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     obj=Announcement.objects.get(account_id=account_id)
     print(obj)
     print(request.method)
@@ -120,33 +140,46 @@ def staff_delete_view(request, account_id):
         return HttpResponse(messages)
     return render(request,'common/allannouncement.html',{'announcementform1':obj})     
 
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def admins_home_view(request, *args, **kwargs):
-    if request.user.is_authenticated:
-        userEmail = request.user.email
-        user = Staff.objects.filter(email=userEmail)
-        if not user:
-            return render(request, "common/no_permission.html")
-        else:
-            if not user[0].isAdmin:
-                return render(request, "students/no_permission.html")
-
-        time = datetime.now()
-        announcement_data=reversed(Announcement.objects.all())
-        currentTime = time.strftime("%d/%m/%Y %I:%M %p")
-        obj1=Student.objects.filter(isPending=True)
-        obj2=Staff.objects.filter(isPending=True)
-        s1=len(obj1)
-        s2=len(obj2)
-        print(s1)
-        context = {
-            'timestamp': currentTime,
-        }
     
-        return render(request, "admins/home.html",{'context':context,'announcement_data':announcement_data,'student':s1,'staff':s2})
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
 
-#@login_required(login_url=common.views.login_view)
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+    time = datetime.now()
+    announcement_data=reversed(Announcement.objects.all())
+    currentTime = time.strftime("%d/%m/%Y %I:%M %p")
+    obj1=Student.objects.filter(isPending=True)
+    obj2=Staff.objects.filter(isPending=True)
+    s1=len(obj1)
+    s2=len(obj2)
+    print(s1)
+    context = {
+        'timestamp': currentTime,
+    }
+
+    return render(request, "admins/home.html",{'context':context,'announcement_data':announcement_data,'student':s1,'staff':s2})
+
+@login_required(login_url=common.views.login_view)
 def admins_students_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     branches = Branch.objects.all().order_by('branch_name')
     print(branches)
     context = {
@@ -154,7 +187,19 @@ def admins_students_view(request, *args, **kwargs):
             }
     return render(request, "admins/students.html",context)
 
-def admins_student_sem_view(request,*args,branch_code):
+@login_required(login_url=common.views.login_view)
+def admins_student_sem_view(request,branch_code,*args):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     branches = Branch.objects.all().order_by('branch_name')
     b1=get_object_or_404(Branch,code=branch_code)
     print(b1.branch_name)
@@ -162,58 +207,79 @@ def admins_student_sem_view(request,*args,branch_code):
     return render(request,'admins/student_sem.html',{'branch':b1.branch_name})
 
 
-
-#@login_required(login_url=common.views.login_view)
-# admin profile edit
+@login_required(login_url=common.views.login_view)
 def admins_profile_view(request, *args, **kwargs):
-    obj=Staff.objects.filter(isAdmin=True)
-    print(obj)
-    return render(request, "admins/profile.html",{'admin':obj})
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
 
-#@login_required(login_url=common.views.login_view)
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
+    obj = Staff.objects.filter(email=userEmail)[0]
+    branch = obj.branch
+    branch = Branch.objects.get(code=branch)
+    branch = branch.branch_name
+    # obj=Staff.objects.filter(isAdmin=True)
+    print(obj)
+    return render(request, "admins/profile.html",{'admin':obj, 'branch':branch})
+
+@login_required(login_url=common.views.login_view)
 def admins_profile_edit(request,account_id):
-    print(account_id)
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     displaydata=Staff.objects.get(account_id=account_id)
-    print(displaydata)
     updatedata=Staff.objects.get(account_id=account_id)
-    print(account_id)
     if request.method == "POST":
-        print('post')
         form=editforms1(request.POST or None,instance=updatedata)
         #error here
         if form.is_valid():
+            details = form.cleaned_data
+            fName = details['firstName']
+            lName = details['lastName']
+            email = details['email']
             form.save()
-            #messages.success(request,"Your Profile updated")
-            #return render(request,'admins/adminprofileedit.html',{'editdata':updatedata})
+            user = User.objects.get(email=request.user.email)
+            user.first_name = fName
+            user.last_name = lName
+            user.email = email
+            user.save()
+
             return redirect("../profile")
         else:
             return HttpResponse(messages)
     return render(request,'admins/adminprofileedit.html',{'editdata':displaydata})
-
-# def edit_profile(request,account_id):
-#     updatedata=Staff.objects.get(account_id=account_id)
-#     print(account_id)
-#     if request.method == "POST":
-#         print('post')
-#         form=editforms1(request.POST or None,instance=updatedata)
-#         #error here
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request,"Your Profile updated")
-#             return render(request,'admins/adminprofileedit.html',{'editdata':updatedata})
-#         else:
-#             return HttpResponse(messages)
-#     print(form.errors)
-
 
 # for data extraction for student
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
 
+@login_required(login_url=common.views.login_view)
+def admins_student_detail_view(request,branch_code, *args):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
 
-#@login_required(login_url=common.views.login_view)
-def admins_student_detail_view(request,*args,branch_code):
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
     sem=(request.path.split('/')) #split the whole url /
     s1=sem[4] #to fetch the sem from url
     print('sem',sem[4])
@@ -227,8 +293,19 @@ def admins_student_detail_view(request,*args,branch_code):
     return render(request,"admins/students_list.html",{'student':obj,'branch_name':branch_dict})
 
 
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def admins_student_pending_detail_view(request,branch_code,*args,**kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     sem=(request.path.split('/')) #split the whole url /
     s1=sem[4] #to fetch the sem from url
     print('sem',sem[4])
@@ -243,25 +320,21 @@ def admins_student_pending_detail_view(request,branch_code,*args,**kwargs):
     print(branch_dict)
     return render(request,"admins/student_pending.html",{'student':obj,'branch_name':branch_dict})
     
-# load approved acounts
-# @login_required(login_url=common.views.login_view)  
-# def admins_student_approved_detail_view(request,*args,branch_code,**kwargs):
-#     sem=(request.path.split('/')) #split the whole url /
-#     s1=sem[4] #to fetch the sem from url
-#     print('sem',sem[4])
-#     b1=get_object_or_404(Branch,code=branch_code) #get the branch bane using branch code
-#     b2=b1.branch_name #get the branch name
-#     print(b2) #print branch name
-#     obj=Student.objects.filter(sem=s1,branch=branch_code,isPending=False)
-#     branch_dict={}
-#     for student in obj:
-#         branch_dict[student.enrolment] = Branch.objects.get(code=student.branch).branch_name
-#     return render(request,"admins/studentapproved.html",{'student':obj,'branch_name':branch_dict})
 
-
-#approve page will be called to to approve accounts
-#@login_required(login_url=common.views.login_view)
+# approve page will be called to to approve accounts
+@login_required(login_url=common.views.login_view)
 def admins_student_approve(request,account_id,branch_code):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     print(account_id)
     displaydata=Student.objects.get(account_id=account_id)
     print(displaydata)
@@ -269,85 +342,55 @@ def admins_student_approve(request,account_id,branch_code):
     print(account_id)
     branch_name=Branch.objects.all()
     if request.method == "POST":
-        print('post')
         form=editforms(request.POST or None,instance=updatedata)
         #error here
         if form.is_valid():
             form.save()
-            #messages.success(request,"Student Approved")
-            #return render(request,'admins/studentapprove.html',{'editdata':updatedata})
             return redirect("../student-account-pending-details")
         else:
             return HttpResponse(messages)
     return render(request,'admins/studentapprove.html',{'editdata':displaydata,'branch_name':branch_name})
-
-
-#edit approved details will be validated
-# def approve_student(request,account_id):
-#     updatedata=Student.objects.get(account_id=account_id)
-#     print(account_id)
-#     if request.method == "POST":
-#         print('post')
-#         form=editforms(request.POST or None,instance=updatedata)
-#         #error here
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request,"Student Approved")
-#             return render(request,'admins/studentapprove.html',{'editdata':updatedata})
-#         else:
-#             return HttpResponse(messages)
-#     print(form.errors)
-
-#edit page will be called for unapproved details of students
-
-#edit student details
-
   
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def admins_student_edit(request,account_id,branch_code):
-    # print(account_id)
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     displaydata=Student.objects.get(account_id=account_id)
-    # print(displaydata)
     updatedata=Student.objects.get(account_id=account_id)
-    # print(account_id)
     branch_name=Branch.objects.all()
     if request.method == "POST":
-        # print('post')
         form=editforms(request.POST or None,instance=updatedata)
         #error here
         if form.is_valid():
             form.save()
-            #messages.success(request,"student data updated")
-            #return render(request,'admins/studentedit.html',{'editdata':updatedata})
             return redirect("../")
         else:
             return HttpResponse(messages)
     #print(form.errors)
     return render(request,'admins/studentedit.html',{'editdata':displaydata,'branch_name':branch_name})
 
-#to edit unapproved students
-#@login_required(login_url=common.views.login_view)
-# def edit_student(request,account_id):
-#     updatedata=Student.objects.get(account_id=account_id)
-#     print(account_id)
-#     if request.method == "POST":
-#         print('post')
-#         form=editforms(request.POST or None,instance=updatedata)
-#         #error here
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request,"student data updated")
-#             return render(request,'admins/studentedit.html',{'editdata':updatedata})
-#         else:
-#             return HttpResponse(messages)
-#     print(form.errors)
-
-
-
-#for staff
-
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def admins_staff_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     branches = Branch.objects.all().order_by('branch_name')
     print(branches)
     context = {
@@ -355,7 +398,19 @@ def admins_staff_view(request, *args, **kwargs):
             }
     return render(request, "admins/staff.html",context)
 
+@login_required(login_url=common.views.login_view)
 def admins_staff_detail_view(request,branch_code,*args):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     obj=Staff.objects.filter(isPending=False,branch=branch_code)
     branch_dict={}
     for staff in obj:
@@ -363,8 +418,19 @@ def admins_staff_detail_view(request,branch_code,*args):
     return render(request,"admins/staff_list.html",{'staff':obj,'branch_name':branch_dict})
 
 
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def admins_staff_pending_detail_view(request,*args,**kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     obj=Staff.objects.filter(isPending=True)
     print(obj)
     branch_dict={}
@@ -372,98 +438,75 @@ def admins_staff_pending_detail_view(request,*args,**kwargs):
         branch_dict[staff.employee_id] = Branch.objects.get(code=staff.branch).branch_name
     return render(request,"admins/staff_pending.html",{'staff':obj,'branch_name':branch_dict})
 
-#@login_required(login_url=common.views.login_view)
-# def admins_staff_approved_detail_view(request,*args,**kwargs):
-#     obj=Staff.objects.filter(isPending=False)
-#     branch_dict={}
-#     for staff in obj:
-#         branch_dict[staff.employee_id] = Branch.objects.get(code=staff.branch).branch_name
-#     return render(request,"admins/staffapproved.html",{'staff':obj,'branch_name':branch_dict})
-
 #to approve staff accounts
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def admins_staff_approve(request,account_id,branch_code):
-    print(account_id)
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     displaydata=Staff.objects.get(account_id=account_id)
-    print(displaydata)
     updatedata=Staff.objects.get(account_id=account_id)
-    print(account_id)
     branch_name=Branch.objects.all()
 
     if request.method == "POST":
-        print('post')
         form=editforms1(request.POST or None,instance=updatedata)
-        #error here
         if form.is_valid():
+            
             form.save()
-            #messages.success(request,"Staff Member Approved")
-            #return render(request,'admins/staffapprove.html',{'editdata':updatedata})
             return redirect("../staff-account-pending-details")
         else:
             return HttpResponse(messages)
     return render(request,'admins/staffapprove.html',{'editdata':displaydata,'branch_name':branch_name})
 
-# def approve_staff(request,account_id):
-#     updatedata=Staff.objects.get(account_id=account_id)
-#     print(account_id)
-#     if request.method == "POST":
-#         print('post')
-#         form=editforms1(request.POST or None,instance=updatedata)
-#         #error here
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request,"Staff Member Approved")
-#             return render(request,'admins/staffapprove.html',{'editdata':updatedata})
-#         else:
-#             return HttpResponse(messages)
-#     print(form.errors)
-
 # edit staff details
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def admins_staff_edit(request,account_id,branch_code):
-    print(account_id)
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     displaydata=Staff.objects.get(account_id=account_id)
-    print(displaydata)
     updatedata=Staff.objects.get(account_id=account_id)
-    print(account_id)
     branch_name=Branch.objects.all()
     if request.method == "POST":
-        print('post')
         form=editforms1(request.POST or None,instance=updatedata)
         #error here
         if form.is_valid():
             form.save()
-            #messages.success(request,"Staff Member data updated")
-            #return render(request,'admins/staffedit.html',{'editdata':updatedata})
             return redirect("../")
         else:
             return HttpResponse(messages)
     return render(request,'admins/staffedit.html',{'editdata':displaydata,'branch_name':branch_name})
 
-# def edit_staff(request,account_id):
-#     updatedata=Staff.objects.get(account_id=account_id)
-#     print(account_id)
-#     if request.method == "POST":
-#         print('post')
-#         form=editforms1(request.POST or None,instance=updatedata)
-#         #error here
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request,"Staff Member data updated")
-#             return render(request,'admins/staffedit.html',{'editdata':updatedata})
-#         else:
-#             return HttpResponse(messages)
-#     print(form.errors)
 
-
-#notification od admin home
-# def admins_notification(request,*args,**kwargs):
-    
-#     return render(request,"admins/home.html",{'student':obj1,'staff':obj2})
-
-
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def admins_courses_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     branches = Branch.objects.all().order_by('branch_name')
     branch_info = {}
     for branch in branches:
@@ -484,8 +527,19 @@ def admins_courses_view(request, *args, **kwargs):
     }
     return render(request, "admins/courses.html", context)
 
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def create_branch_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     if request.method == "POST":
         form = AddBranchForm(request.POST or None)
         if form.is_valid():
@@ -500,6 +554,7 @@ def create_branch_view(request, *args, **kwargs):
                 description=str(newDescription)
             )
             newBranch.save()
+            return redirect('../courses')
     else:
         form = AddBranchForm(request.POST or None)
         for field in form.errors:
@@ -510,8 +565,19 @@ def create_branch_view(request, *args, **kwargs):
     }
     return render(request, "admins/add_branch.html", context)
 
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def branch_view(request, branch_code, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     selectedBranch = get_object_or_404(Branch,code=branch_code)
     print(selectedBranch.branch_name)
     staffOfBranch = Staff.objects.filter(branch=selectedBranch.code, isPending=False)
@@ -524,8 +590,19 @@ def branch_view(request, branch_code, *args, **kwargs):
     }
     return render(request, "admins/branch_page.html",context)
 
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def edit_branch_view(request, branch_code, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     selectedBranch = get_object_or_404(Branch,code=branch_code)
     if request.method == "POST":
         form = EditBranchForm(request.POST, instance=selectedBranch)
@@ -543,12 +620,19 @@ def edit_branch_view(request, branch_code, *args, **kwargs):
     
     return render(request,'admins/edit_branch.html',context)
 
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def add_course_view(request, *args, **kwargs):
-    '''
-    TODO: 
-    change the branch field from branch name to branch code
-    '''
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     if request.method == "POST":
         form = AddCourseForm(request.POST or None)
         if form.is_valid():
@@ -593,7 +677,19 @@ def add_course_view(request, *args, **kwargs):
 
     return render(request,'admins/add_course.html',context)
 
+@login_required(login_url=common.views.login_view)
 def manage_course_view(request,course_code, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     selectedCourse = get_object_or_404(Course,course_id=course_code)
     courseBranch = Branch.objects.get(code=selectedCourse.branch)
     CourseFacultySet = CourseFaculty.objects.filter(course_id=selectedCourse)
@@ -635,7 +731,19 @@ def manage_course_view(request,course_code, *args, **kwargs):
 
     return render(request,"admins/manage_course.html", context)
 
+@login_required(login_url=common.views.login_view)
 def edit_course_view(request, course_code, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     selectedCourse = get_object_or_404(Course,course_id=course_code)
     initialSubCode = selectedCourse.subject_code
     if request.method == 'POST':
@@ -663,14 +771,37 @@ def edit_course_view(request, course_code, *args, **kwargs):
     }
     return render(request,"admins/edit_course.html", context)
 
+@login_required(login_url=common.views.login_view)
 def remove_faculty_view(request,course_code,emp_id, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     DeleteCourse = Course.objects.get(course_id=course_code)
     deleteObj = CourseFaculty.objects.get(faculty_id=emp_id,course_id=DeleteCourse)
     deleteObj.delete()
     return redirect('/college-admin/courses/' + course_code)
 
-#@login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def logout_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Staff.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+    else:
+        if not user[0].isAdmin:
+            return render(request, "common/no_permission.html")
+
     logout(request)
     return redirect(common.views.login_view)
 

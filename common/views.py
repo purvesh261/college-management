@@ -18,11 +18,29 @@ from common.models import Announcement
 
 
 def login_view(request, *args, **kwargs):
+    if not request.user.is_anonymous:
+        userEmail = request.user.email
+        print(userEmail,"2")
+        user = Staff.objects.filter(email=userEmail, isPending=False)
+        if user:
+            print(user)
+            if user[0].isAdmin:
+                print(user,"2")
+                return redirect('../college-admin/home/')
+            else:
+                return redirect('../staff/home/')
+        else:
+            user = Student.objects.filter(email=userEmail, isPending=False)
+            if user:
+                return redirect('../students/home/')
+            else:
+                print(user,"3")
+                return render(request, "common/no_permission.html")
+        
     next_url = request.POST.get('next')
 
     #announcement
     announcement_data=reversed(Announcement.objects.all())
-    print(announcement_data)
 
     if request.method == 'POST':
         form = LoginForm(request.POST or None)
@@ -31,20 +49,6 @@ def login_view(request, *args, **kwargs):
             username_input = details['username']
             passwd_input = details['passwd']
 
-            # try:
-            #     if not AppUser.objects.filter(username=username_input):
-            #         raise ValidationError('User does not exist')
-            # except ValidationError as e:
-            #     form.add_error('username',e)
-            #     return render(request, 'common/home.html', {'form': form})
-
-            # credentials = AppUser.objects.get(username=username_input)
-            # correct_username = getattr(credentials, 'username')
-            # correct_password = getattr(credentials, 'passwd')
-            # category = getattr(credentials, 'category')
-            # isAdmin = getattr(credentials, 'isAdmin')
-            # isPending = getattr(credentials, 'isPending')
-
             try:
                 user = authenticate(request,username=username_input,
                             password=passwd_input)
@@ -52,7 +56,7 @@ def login_view(request, *args, **kwargs):
                     raise ValidationError("Incorrect username or password")
             except ValidationError as e:
                 form.add_error('passwd',e)
-                return render(request, 'common/home.html', {'form': form})
+                return render(request, 'common/home.html', {'form': form, 'announcement_data':announcement_data})
 
             if user is not None:
                 staffMember = Staff.objects.filter(username=username_input).first()
@@ -85,23 +89,7 @@ def login_view(request, *args, **kwargs):
                 
             else:
                 return render(request, 'common/home.html', {'form': form,'announcement_data':announcement_data})
-            # try:
-            #     if str(passwd_input) != str(correct_password):
-            #         raise ValidationError('Incorrect password')
-            # except ValidationError as e:
-            #     form.add_error('passwd',e)
-            #     return render(request, 'common/home.html', {'form': form})
-            
-            # if isPending == True:
-            #     return redirect("../pending-account")
-            
-            # redirects according to category of user
-            # if category == 'Admin':
-            #     return redirect("../college-admin/home")
-            # elif category in ['Faculty', 'Staff', 'Head of Department']:
-            #     return redirect("../staff/home")
-            # elif category == 'Student':
-            #     return redirect("../students/home")
+
         else:
             form = LoginForm()
             return render(request, 'common/home.html', {'form': form,'announcement_data':announcement_data})
@@ -115,12 +103,56 @@ def admin_login(request,*args,**kwargs):
     return render(request,"admins/home.html")
 
 def registration_view(request,*args,**kwargs):
+    if not request.user.is_anonymous:
+        
+        userEmail = request.user.email
+        user = Staff.objects.filter(email=userEmail, isPending=False)
+        if user:
+            if user[0].isAdmin:
+                return redirect('../college-admin/home/')
+            else:
+                return redirect('../staff/home/')
+        else:
+            user = Student.objects.filter(email=userEmail, isPending=False)
+            if user:
+                return redirect('../students/home/')
+            else:
+                return render(request, "common/no_permission.html")
     return render(request,"common/register.html")
 
 def account_created_view(request,*args,**kwargs):
+    if not request.user.is_anonymous:
+        print('whatt')
+        userEmail = request.user.email
+        user = Staff.objects.filter(email=userEmail, isPending=False)
+        if user:
+            if user[0].isAdmin:
+                return redirect('../college-admin/home/')
+            else:
+                return redirect('../staff/home/')
+        else:
+            user = Student.objects.filter(email=userEmail, isPending=False)
+            if user:
+                return redirect('../students/home/')
+            else:
+                return render(request, "common/no_permission.html")
     return render(request,"common/account_created.html")
 
 def student_registration(request,*args,**kwargs):
+    if not request.user.is_anonymous:
+        userEmail = request.user.email
+        user = Staff.objects.filter(email=userEmail, isPending=False)
+        if user:
+            if user[0].isAdmin:
+                return redirect('../college-admin/home/')
+            else:
+                return redirect('../staff/home/')
+        else:
+            user = Student.objects.filter(email=userEmail, isPending=False)
+            if user:
+                return redirect('../students/home/')
+            else:
+                return render(request, "common/no_permission.html")
     if request.method == "POST":
         form = StudentForm(request.POST or None)
         if form.is_valid():
@@ -190,9 +222,39 @@ def student_registration(request,*args,**kwargs):
     return render(request,"common/studentregistration.html",{'form':form})
 
 def pending_account_view(request,*args,**kwargs):
+    if not request.user.is_anonymous:
+        userEmail = request.user.email
+        user = Staff.objects.filter(email=userEmail, isPending=False)
+        if user:
+            if user[0].isAdmin:
+                return redirect('../college-admin/home/')
+            else:
+                return redirect('../staff/home/')
+        else:
+            user = Student.objects.filter(email=userEmail, isPending=False)
+            if user:
+                return redirect('../students/home/')
+            else:
+                return render(request, "common/no_permission.html")
+    logout(request)
     return render(request,"common/pending_account.html")
 
 def staff_registration(request,*args,**kwargs):
+    if not request.user.is_anonymous:
+        userEmail = request.user.email
+        user = Staff.objects.filter(email=userEmail, isPending=False)
+        if user:
+            if user[0].isAdmin:
+                return redirect('../college-admin/home/')
+            else:
+                return redirect('../staff/home/')
+        else:
+            user = Student.objects.filter(email=userEmail, isPending=False)
+            if user:
+                return redirect('../students/home/')
+            else:
+                return render(request, "common/no_permission.html")
+                
     if request.method == "POST":
         form = StaffForm(request.POST or None)
         if form.is_valid():
@@ -238,14 +300,6 @@ def staff_registration(request,*args,**kwargs):
                 form.add_error('passwd', e)
                 return render(request, "common/staffregistration.html", {'form': form})
             
-            # try:
-            #     user_credentials = [new_username, new_fName, new_lName, new_mName, new_mobile]
-            #     for item in user_credentials:
-            #         if item.lower() in new_passwd.lower():
-            #             raise ValidationError('Password too similar to credentials.')
-            # except ValidationError as e:
-            #     form.add_error('passwd', e)
-            #     return render(request, "common/staffregistration.html", {'form': form})
 
             newStaff = Staff(
                         firstName=str(new_fName.capitalize()),

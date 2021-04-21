@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import logout
@@ -19,9 +21,16 @@ import collections
 from students.forms import doubtform
 from students.models import Doubt
 
-# Create your views here.
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def student_home_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     if request.user.is_authenticated:
         if not request.session.get('userEnrolment'):
             userEmail = request.user.email
@@ -33,7 +42,6 @@ def student_home_view(request, *args, **kwargs):
         res=[]
         for i in result:
             res.append(i)
-        print(res)
         time = datetime.now()
         announcement_data=reversed(Announcement.objects.all())
         currentTime = time.strftime("%d/%m/%Y %I:%M %p")
@@ -47,14 +55,21 @@ def student_home_view(request, *args, **kwargs):
     else:
         return redirect(reverse('login'))
 
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def courses_redirect_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     if request.user.is_authenticated:
         if not request.session.get('enrolment'):
             username = request.user.username
             user = Student.objects.get(username=username)
             request.session['enrolment'] = user.enrolment
-            print(username, user)
 
         user = Student.objects.get(enrolment=request.session['enrolment'])
         courses = Course.objects.filter(branch=user.branch, semester=user.sem)
@@ -73,15 +88,31 @@ def courses_redirect_view(request, *args, **kwargs):
     else:
         return redirect(reverse('login'))
 
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def no_course_view(request, *args,**kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     context = {
         'courses': []
     }
     return render(request, "students/courses.html", context)
 
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def student_courses_view(request, course_code, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     if request.user.is_authenticated:
         if not request.session.get('enrolment'):
             username = request.user.username
@@ -141,16 +172,23 @@ def student_courses_view(request, course_code, *args, **kwargs):
             'overdue': overdue,
             'doubts':doubts
             }
-        for i in doubts:
-            print('id',i.id)
+
             return render(request, "students/courses.html", context)
         else:
             return render(request, "common/no_permission.html")
     else:
         return redirect(reverse('login'))
 
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def assignment_details_view(request, course_code, assignment_id, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     if request.user.is_authenticated:
         if not request.session.get('enrolment'):
             username = request.user.username
@@ -240,8 +278,16 @@ def assignment_details_view(request, course_code, assignment_id, *args, **kwargs
     else:
         return redirect(reverse('login'))
     
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def all_assignments_view(request, course_code, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     if request.user.is_authenticated:
         if not request.session.get('enrolment'):
             username = request.user.username
@@ -261,7 +307,7 @@ def all_assignments_view(request, course_code, *args, **kwargs):
                 else:
                     courseList[course.semester] = [(course.course_id,course.course_name)]
             courseList = collections.OrderedDict(sorted(courseList.items()))
-            assignments = Assignment.objects.filter(course=selectedCourse) #.order_by('start_date').reverse()
+            assignments = Assignment.objects.filter(course=selectedCourse) 
             ongoingAssignments = []
             completedAssignments = []
             for assignment in assignments:
@@ -291,7 +337,6 @@ def all_assignments_view(request, course_code, *args, **kwargs):
                 else:
                     completedStatus[assignment] = 'Overdue'
 
-            print(ongoingStatus, completedStatus)
             context = {
                 'courses': courseList,
                 'selectedCourse' : selectedCourse,
@@ -308,8 +353,16 @@ def all_assignments_view(request, course_code, *args, **kwargs):
     else:
         return redirect(reverse('login'))
     
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def attendance_redirect_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     if request.user.is_authenticated:
         if not request.session.get('enrolment'):
             username = request.user.username
@@ -333,8 +386,16 @@ def attendance_redirect_view(request, *args, **kwargs):
     else:
         return redirect(reverse('login'))
 
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def student_attendance_view(request, course_code, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     if request.user.is_authenticated:
         if not request.session.get('enrolment'):
             username = request.user.username
@@ -377,8 +438,16 @@ def student_attendance_view(request, course_code, *args, **kwargs):
             }
             return render(request, "students/attendance.html", context)
 
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def courses_redirect_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     if request.user.is_authenticated:
         if not request.session.get('userSem'):
             userEmail = request.user.email
@@ -397,14 +466,21 @@ def courses_redirect_view(request, *args, **kwargs):
             course_code = list(courseList.values())[0][0][0]
         else:
             course_code = 'mt'
-        print('code',course_code)
 
         return redirect("./" + course_code)
     else:
-        print("OK!!!!!")
+        return redirect(reverse('login'))
 
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def student_results_view(request,course_code, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     if request.user.is_authenticated:
         if not request.session.get('userName'):
             userEmail = request.user.email
@@ -417,10 +493,7 @@ def student_results_view(request,course_code, *args, **kwargs):
         selectedCourse = Course.objects.get(course_id=course_code)
         courses = Course.objects.filter(semester=request.session['userSem'],branch=request.session['userBranch'])
         result=Result.objects.filter(enrolment=request.session['userEnrolment'],branch=request.session['userBranch'],course_id=course_code)
-        print(reversed(result))
-        print(result)
-        for i in reversed(result):
-            print(i.marks,i.exam,i.course_name)
+
         courseList = {}
         for course in courses:
             if courseList.get(course.semester):
@@ -430,15 +503,12 @@ def student_results_view(request,course_code, *args, **kwargs):
         courseList = collections.OrderedDict(sorted(courseList.items()))     
        
         std=Student.objects.filter(username=request.session['userName'])
-        for i in std:
-            print(i.firstName)
 
         grades=[]
         for g in result:
             print((int(g.marks)/20)*100)
             grade=(int(g.marks)/20)*100
             grades.append(grade)
-        print(grades)
         context={
         'selectedCourse':selectedCourse,
         'courses':courseList,
@@ -450,15 +520,31 @@ def student_results_view(request,course_code, *args, **kwargs):
 
     return render(request, "students/results.html",context)
 
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def no_course_view(request, *args,**kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     context = {
         'courses': []
     }
     return render(request, "staff/results.html", context)
 
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def student_profile_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     if request.user.is_authenticated:
         if not request.session.get('userId'):
             userEmail = request.user.email
@@ -467,74 +553,77 @@ def student_profile_view(request, *args, **kwargs):
     obj=Student.objects.filter(username=request.session['userName'])
     for i in obj:
         br=i.branch
-    print(br)
     branch=Branch.objects.filter(code=br)
-    print(branch)
     context={
         'student':obj,
         'branch':branch
     }
     return render(request, "students/profile.html",context)
 
-# @login_required(login_url=common.views.login_view)
+@login_required(login_url=common.views.login_view)
 def student_profile_edit(request,account_id):
-    print(account_id)
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     displaydata=Student.objects.get(account_id=account_id)
-    print(displaydata)
     updatedata=Student.objects.get(account_id=account_id)
-    print(account_id)
     if request.method == "POST":
-        print('post')
         form=editforms(request.POST or None,instance=updatedata)
         #error here
         if form.is_valid():
+            details = form.cleaned_data
+            fName = details['firstName']
+            lName = details['lastName']
+            email = details['email']
             form.save()
-            #messages.success(request,"Your Profile updated")
-            #return render(request,'admins/adminprofileedit.html',{'editdata':updatedata})
+            user = User.objects.get(email=request.user.email)
+            user.first_name = fName
+            user.last_name = lName
+            user.email = email
+            user.save()
             return redirect("../profile")
         else:
             return HttpResponse(messages)
     return render(request,'students/edit_profile.html',{'editdata':displaydata})
 
-<<<<<<< HEAD
-def logout_view(request, *args, **kwargs):
-    logout(request)
-    return redirect(common.views.login_view)
-=======
-
+@login_required(login_url=common.views.login_view)
 def student_courses_doubt(request, course_code, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
+
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
+
     if request.user.is_authenticated:
         if not request.session.get('userId'):
             userEmail = request.user.email
             user = Student.objects.get(email=userEmail)
             request.session['userEnrolment'] = user.enrolment
-            print(request.session['userEnrolment'])
             initial_dict={
                 'enrolment':request.session['userEnrolment'],
                 'course_id':course_code
             }
             doubtform1=doubtform(request.POST or None,initial=initial_dict)
             if request.method == 'POST':
-                print('post1')
                 doubtform1 = doubtform(request.POST or None)
                 if doubtform1.is_valid():
-                    print('post')
                     details = doubtform1.cleaned_data
                     new_enrolment=details['enrolment']
                     new_doubt=details['doubt']
                     new_course=details['course_id']
-                    print(new_enrolment)
-                    print(new_doubt)
                     newdoubt = Doubt(enrolment=str(new_enrolment.capitalize()),
                                     doubt=str(new_doubt.capitalize()),
                                     course_id=str(new_course)
-                                    
                                     )
-                                           
-                                    
-                    print(newdoubt)
+
                     newdoubt.save()
-            #messages.success(request,"Announcement Added")
                     return redirect("./")
                 else:
                     return HttpResponse(messages)
@@ -545,6 +634,15 @@ def student_courses_doubt(request, course_code, *args, **kwargs):
             }
     return render(request,'students/doubts.html',context)
 
+@login_required(login_url=common.views.login_view)
+def logout_view(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect(reverse('login'))
 
+    userEmail = request.user.email
+    user = Student.objects.filter(email=userEmail)
+    if not user:
+        return render(request, "common/no_permission.html")
 
->>>>>>> f03a0a92b59f0fe38aca556e6b2e36da9ee6b31a
+    logout(request)
+    return redirect(common.views.login_view)

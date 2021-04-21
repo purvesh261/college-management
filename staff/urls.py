@@ -59,5 +59,4 @@ urlpatterns = [
     re_path(r'^assignments/delete/(?P<assignment_id>[0-9]{10})/$', delete_assignment_view, name="delete_assignment"),
     path('logout/',logout_view, name='logout'),
     re_path(r'^courses/(?P<course_code>[0-9]{10})/answer/(?P<id>[0-9]{1})$', staff_doubt_answer, name="doubt_answer"),
-
 ]

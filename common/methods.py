@@ -58,3 +58,4 @@ def submission_id_generator(course_code, assignment_id):
             break
         
     return new_assignment_id
+

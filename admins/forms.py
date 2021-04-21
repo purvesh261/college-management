@@ -405,8 +405,6 @@ class EditCourseForm(forms.ModelForm):
                 raise forms.ValidationError("Invalid value")
         except forms.ValidationError as e:
             self.add_error('course_credits', e)
-
-        c
             
         try:
             codeNotValid = False

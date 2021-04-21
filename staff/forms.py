@@ -157,8 +157,7 @@ class StaffForm(forms.ModelForm):
                 branch_id = patt.group('code')
                 corrBranch = Branch.objects.filter(code=branch_id)
                 if corrBranch:
-                    corrBranchName = corrBranch[0].branch_name
-                    if corrBranchName != branch:
+                    if branch_id != branch:
                         id_error = "Id does not belong to selected branch"
                         raise forms.ValidationError(id_error)
                 else:

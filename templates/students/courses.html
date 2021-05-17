@@ -1,5 +1,9 @@
 {% extends './base.html' %}
 
+{% block body %}
+    <body id="courses" onload="changeActive(this.id)">
+{% endblock %}
+
 {% block content %}
 <div id='wrapper'>
     <div id="mySidenav" class="sidenav">

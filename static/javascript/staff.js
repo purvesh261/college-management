@@ -1,3 +1,11 @@
+function changeActive(id){
+  var body = document.body.id;
+  var itemId = "item-" + body;
+  var element = document.getElementById(itemId);
+  element.classList.add("active");
+  
+}
+
 var modal = document.getElementById("myModal");
 
 // Get the button that opens the modal

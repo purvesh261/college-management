@@ -87,7 +87,6 @@ body{
 .navbar a.active {
     color: rgb(0, 0, 0);
     background-color: #F7F8FC;
-     
 }
 
 #welcome-msg {

@@ -2,9 +2,13 @@
 {% load static %}
 {% block css %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/landing.css' %}"/>
-        {% endblock %}
-{% block content %}
+{% endblock %}
 
+{% block body %}
+    <body id="results" onload="changeActive(this.id)">
+{% endblock %}
+
+{% block content %}
 <div class="student-result">
     <center>
     <h2> Student Result</h2>

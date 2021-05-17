@@ -1,6 +1,11 @@
 {% extends './base.html' %}
 
 {% block title %} {{ selectedAssignment.title }} {% endblock %}
+
+{% block body %}
+    <body id="courses" onload="changeActive(this.id)">
+{% endblock %}
+
 {% block content %}
 
 <div id='wrapper'>

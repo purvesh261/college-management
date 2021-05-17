@@ -3,9 +3,13 @@
 {% block title%} {{ selectedCourse.course_name }} {% endblock %}
 {% block css %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/student.css' %}"/>
-        {% endblock %}
-{% block content %}
+{% endblock %}
 
+{% block body %}
+    <body id="results" onload="changeActive(this.id)">
+{% endblock %}
+
+{% block content %}
 <div id='wrapper'>
     <div id="mySidenav" class="sidenav">
         <div id="sidebar-title">Your Courses</div>

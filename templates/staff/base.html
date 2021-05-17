@@ -8,7 +8,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         {% endblock %}
     </head>
-    <body>
+    {% block body %}
+    <body id="base" onload="changeActive(this.id)">
+    {% endblock %}
         <div class="header">
             <a href="{{ '../home' }}"><img src="{% static 'ganpat_logo.png' %}" alt="My image" class="top-logo"></a>
             <div class="navbar">

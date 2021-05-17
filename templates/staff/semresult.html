@@ -4,6 +4,10 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/landing.css' %}"/>
         {% endblock %}
 
+{% block body %}
+    <body id="results" onload="changeActive(this.id)">
+{% endblock %}
+
 {% block content %}
 
 <h2 align=center>{{branch}}</h2> 

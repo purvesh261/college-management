@@ -35,6 +35,11 @@ table {
     color: #2E0080;
 }
 
+/* .navbar a.active {
+    color: rgb(0, 0, 0);
+    background-color: #F7F8FC;
+} */
+
 #content {
     margin: 60px 10px 10px 10px;
     width: 100%;

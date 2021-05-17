@@ -2,6 +2,10 @@
 {% load static %}
 {% block title %} {{ selectedAssignment.title }} {% endblock %}
 
+{% block body %}
+    <body id="courses" onload="changeActive(this.id)">
+{% endblock %}
+
 {% block css %}
         <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/staff.css' %}"/> -->
         <link rel="stylesheet" type="text/css" href="{% static 'css/student.css' %}"/>

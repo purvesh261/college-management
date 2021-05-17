@@ -68,8 +68,7 @@ def login_view(request, *args, **kwargs):
                     category = getattr(staffMember,'category')
                     request.session['category'] = category
                     login(request,user)
-                    if category == 'Admin':
-
+                    if staffMember.isAdmin:
                         if next_url:
                             return redirect(next_url)
                             
